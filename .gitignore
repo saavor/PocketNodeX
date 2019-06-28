@@ -67,3 +67,4 @@ banned-*.json
 ops.json
 whitelist.json
 docs/
+.idea/workspace.xml
