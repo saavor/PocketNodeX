@@ -12,6 +12,11 @@ class Item implements ItemIds{
     initVars(){
         //little endian
         this._cachedParser = null;
+
+        this._id = -1;
+        this._meta = -1;
+        this._tags = "";
+        this._cachedNBT = null;
     }
 
     static parseCompoundTag(tag){
@@ -42,6 +47,10 @@ class Item implements ItemIds{
 
     static get(id, meta = 0, count = 1, tags = "") : Item{
         return ItemFactory.get(id, meta, count, tags);
+    }
+
+    isNull() : boolean{
+        return this._count <= 0 || this._id === Item.AIR;
     }
 
 }

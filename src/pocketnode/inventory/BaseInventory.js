@@ -72,6 +72,7 @@ class BaseInventory implements Inventory{
     }
 
     setItem(index, item, send = true) : boolean{
+        CheckTypes([Item, item]);
         if (item.isNull()){
 
         }
