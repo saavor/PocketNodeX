@@ -40,6 +40,10 @@ class Item implements ItemIds{
         return self._cachedParser.write(tag);
     }
 
+    static get(id, meta = 0, count = 1, tags = "") : Item{
+        return ItemFactory.get(id, meta, count, tags);
+    }
+
 }
 
 module.exports = Item;

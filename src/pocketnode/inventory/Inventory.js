@@ -1,67 +1,74 @@
-class Inventory{
-    static get MAX_STACK() {return 64};
+const Item = pocketnode("item/Item");
+const InventoryEventProcessor = pocketnode("inventory/InventoryPlayerProcessor");
 
-    getSize(){}
+class Inventory {
+    static get MAX_STACK() {
+        return 64
+    };
 
-    getMaxStackSize(){}
+    getSize(): number;
 
-    setMaxStackSize(size){}
+    getMaxStackSize(): number;
 
-    getName(){}
+    setMaxStackSize(size): void;
 
-    getTitle(){}
+    getName(): string;
 
-    getItem(index){}
+    getTitle(): string;
 
-    setItem(item, index, send = true){}
+    getItem(index): Item;
 
-    addItem(...slots){}
+    setItem(item, index, send = true): boolean;
 
-    canAddItem(item){}
+    addItem(...slots): [];
 
-    removeItem(...slots){}
+    canAddItem(item): boolean;
 
-    getContents(includeEmpty){}
+    removeItem(...slots): [];
 
-    setContents(items, send = true){}
+    getContents(includeEmpty): [];
 
-    dropContents(level, position){}
+    setContents(items, send = true): void;
 
-    sendContents(target){}
+    dropContents(level, position): void;
 
-    sendSlot(index, target){}
+    sendContents(target): void;
 
-    contains(item){}
+    sendSlot(index, target): void;
 
-    all(item){}
+    contains(item): boolean;
 
-    first(){}
+    all(item): [];
 
-    firstEmpty(){}
+    first(): number;
 
-    isSlotEmpty(index) {}
+    firstEmpty(): number;
 
-    remove(item){}
+    isSlotEmpty(index): boolean;
 
-    clear(index, send = true){}
+    remove(item): void;
 
-    clearAll(send = true){}
+    clear(index, send = true): boolean;
 
-    getViewers(){}
+    clearAll(send = true): void;
 
-    onOpen(who){}
+    getViewers(): [];
 
-    open(who){}
+    onOpen(who): void;
 
-    close(who){}
+    open(who): boolean;
 
-    onClose(who){}
+    close(who): void;
 
-    onSlotChange(index, before, send){}
+    onClose(who): void;
 
-    slotExists(slot){}
+    onSlotChange(index, before, send): void;
 
-    getEventProcessor(){}
+    slotExists(slot): boolean;
 
-    setEventProcessor(eventProcessor){}
+    getEventProcessor(): ?InventoryEventProcessor;
+
+    setEventProcessor(eventProcessor): void;
 }
+
+module.exports = Inventory;
