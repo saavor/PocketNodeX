@@ -127,6 +127,14 @@ class CompoundTag extends NamedTag {
             return false;
         }
     }
+
+    /**
+     * @return {ListTag}
+     * @param name
+     */
+    getListTag(name){
+        return this.getTag(name, ListTag);
+    }
 }
 
 module.exports = CompoundTag;

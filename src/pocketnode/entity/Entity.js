@@ -8,6 +8,7 @@ const Vector3 = pocketnode("math/Vector3");
 const EventManager = pocketnode("event/EventManager");
 
 const ListTag = pocketnode("nbt/tag/ListTag");
+const CompoundTag = pocketnode("nbt/tag/CompoundTag");
 
 const Level = pocketnode("level/Level");
 const Location = pocketnode("level/Location");
@@ -240,7 +241,7 @@ class Entity extends Location {
     static get DATA_PLAYER_FLAG_SLEEP() {return 1};
     static get DATA_PLAYER_FLAG_DEAD() {return 2}; //TODO: CHECK
 
-    initVars(){
+    static initVars(){
         this._entityCount = 1;
         this._knownEntities = [];
         this._saveNames = [];
@@ -291,7 +292,7 @@ class Entity extends Location {
         this.ticksLived = 0;
         this.lastUpdate = -1;
         this._fireTicks = 0;
-        this.namedtag = null;
+        this.namedtag = new CompoundTag();
         this.canCollide = true;
 
         this._isStatic = false;
@@ -330,26 +331,27 @@ class Entity extends Location {
      */
     constructor(level, nbt){
         super(); //mhh.. werid.. i cannot just call it later.. mhh..
-        this.initVars();
+        Entity.initVars();
 
-        this._constructed = true;
+        Entity._constructed = true;
         //TODO: this._timings = Timings.getEntityTimings(this);
 
-        this.temporalVector = new Vector3();
+        Entity.temporalVector = new Vector3();
 
-        if (this.eyeHeight === null){
-            this.eyeHeight = this.height / 2 + 0.1;
+        if (Entity.eyeHeight === null){
+            Entity.eyeHeight = Entity.height / 2 + 0.1;
         }
 
-        this._id = this._entityCount++;
-        this.namedtag = nbt;
+        Entity._id = Entity._entityCount++;
+        //Entity.namedtag = nbt;
+        //Entity.namedtag = new CompoundTag();
         //this._server = level.getServer();
 
-        /*let pos = this.namedtag.getListTag("Pos").getAllValues();
-        let rotation = this.namedtag.getListTag("Rotation").getAllValues();
-        super(pos[0], pos[1], pos[2], rotation[0], rotation[1], level);
-        assert(!Number.isNaN(this.x) && Number.isFinite(this.x) && !Number.isNaN(this.y) && Number.isFinite(this.y) && !Number.isNaN(this.z) && Number.isFinite(this.z));
-         */
+        //let pos = Entity.namedtag.getListTag("Pos").getAllValues();
+        //let rotation = Entity.namedtag.getListTag("Rotation").getAllValues();
+        //super(pos[0], pos[1], pos[2], rotation[0], rotation[1], level);
+        //assert(!Number.isNaN(this.x) && Number.isFinite(this.x) && !Number.isNaN(this.y) && Number.isFinite(this.y) && !Number.isNaN(this.z) && Number.isFinite(this.z));
+
 
         this.boundingBox = new AxisAlignedBB(0, 0, 0, 0, 0, 0);
         this.recalculateBoundingBox();
@@ -420,6 +422,20 @@ class Entity extends Location {
         }
 
         return true;
+    }
+
+    //TODO: finish and take a look
+    recalculateBoundingBox(){
+        let halfWidth = this.width / 2;
+
+        this.boundingBox.setBounds(
+            this.x - halfWidth,
+            this.y,
+            this.z -  halfWidth,
+            this.x +  halfWidth,
+            this.y +  this.height,
+            this.z +  halfWidth
+        )
     }
 
 }

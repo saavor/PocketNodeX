@@ -24,6 +24,7 @@ class Living extends Entity /*implements Damageable*/{
     getName(){}
 
     initEntity(){
+        super.initEntity();
         //this.initEntity().call(); //should be parent
 
         this._armorInventory = new ArmorInventory(this);

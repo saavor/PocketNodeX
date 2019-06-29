@@ -704,20 +704,6 @@ class Player extends Human{
         //this.processChunkRrquest();
     }
 
-    //TODO: finish and take a look
-    recalculateBoundingBox(){
-        let halfWidth = this._width / 2;
-
-        this._boundingBox.setBounds(
-             this.x - halfWidth,
-            this.y,
-             this.z -  halfWidth,
-             this.x +  halfWidth,
-             this.y +  this.height,
-             this.z +  halfWidth
-        )
-    }
-
     sendAttributes(sendAll = false){
         //let entries = sendAll ? this.attributeMap.getAll() : this.attributeMap.needSend(); todo
         let entries = this.attributeMap.getAll();

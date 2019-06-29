@@ -1,5 +1,11 @@
 const Inventory = pocketnode("inventory/Inventory");
 
-interface InventoryHolder{
-    getInventory() : Inventory;
+class InventoryHolder{
+
+    /**
+     * @return {Inventory}
+     */
+    getInventory(){};
 }
+
+module.exports = InventoryHolder;

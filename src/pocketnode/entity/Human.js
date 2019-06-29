@@ -1,13 +1,14 @@
-"use strict";
+const Many = require("extends-classes");
+
 const Creature = pocketnode("entity/Creature");
-//const ProjectileSource = pocketnode("entity/projectile/ProjectileSource");
-//const InventoryHolder = pocketnode("inventory/InventoryHolder");
+const ProjectileSource = pocketnode("entity/projectile/ProjectileSource");
+const InventoryHolder = pocketnode("inventory/InventoryHolder");
 const Skin = pocketnode("entity/Skin");
 const Player = pocketnode("player/Player");
 const PlayerSkinPacket = pocketnode("network/minecraft/protocol/PlayerSkinPacket");
 const CompoundTag = pocketnode("nbt/tag/CompoundTag");
 
-class Human extends Creature /*implements ProjectileSource, InventoryHolder*/{
+class Human extends Many(Creature, ProjectileSource, InventoryHolder)  /*implements ProjectileSource, InventoryHolder*/{
 
     initVars() {
         this._inventory = null;
@@ -32,6 +33,10 @@ class Human extends Creature /*implements ProjectileSource, InventoryHolder*/{
         this._baseOffset = 1.62;
     }
 
+    __call(method, args) {
+        //console.log(`'${method}()' is missing!`);
+    }
+
     constructor(level, nbt){
         super();
         //CheckTypes([CompoundTag, nbt]); //TODO: check Level, but not implemented atm
@@ -44,7 +49,6 @@ class Human extends Creature /*implements ProjectileSource, InventoryHolder*/{
             this._skin = self.deserializeSkinNBT(skinTag);
         }
 
-        //this.constructor.call(level, nbt);
     }
 
     /**
@@ -123,6 +127,7 @@ class Human extends Creature /*implements ProjectileSource, InventoryHolder*/{
 
     jump(){
         //this.jump(); parent?
+
 
     }
 

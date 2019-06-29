@@ -1,3 +1,5 @@
-interface ProjectileSource{
+class ProjectileSource{
 
 }
+
+module.exports = ProjectileSource;

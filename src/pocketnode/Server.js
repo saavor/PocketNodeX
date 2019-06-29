@@ -28,6 +28,7 @@ const FlatGenerator = pocketnode("level/generator/FlatGenerator");
 const SFS = pocketnode("utils/SimpleFileSystem");
 
 class Server {
+
     initVars(){
 
         this._instance = null;
@@ -40,25 +41,42 @@ class Server {
 
         this._banByIP = null;
 
-        this._pocketnode = {};
+        this._operators = null;
 
-        this._bannedIps = {};
-        this._bannedNames = {};
-        this._ops = {};
         this._whitelist = {};
 
-        this._running = true;
-        this._stopped = false;
+        this._isRunning = true;
+        this._hasStopped = false;
 
         this._pluginManager = {};
 
-        this._scheduler = {}; //todo
+        this._profilingTickRate = 20;
+
+        this._updater = null;
+
+        this._asyncPool = null;
 
         this._tickCounter = 0;
+        this._nextTick = 0;
         this._tickAverage = new Array(20).fill(20);
         this._useAverage = new Array(20).fill(0);
         this._currentTPS = 20;
         this._currentUse = 0;
+
+        this._doTitleTick = true;
+
+        this._sendUsageTicker = 0;
+
+        this._dispatchSignals = false;
+
+        this._pocketnode = {};
+
+        this._bannedIps = {};
+        this._bannedNames = {};
+
+        this._scheduler = {}; //todo
+
+
 
         this._logger = {};
         this._debuggingLevel = 0;
@@ -189,17 +207,17 @@ class Server {
      * @return {boolean}
      */
     isRunning(){
-        return this._running;
+        return this._isRunning;
     }
 
     shutdown(){
-        if(!this._running) return;
+        if(!this._isRunning) return;
 
         this.getLogger().info("Shutting down...");
         this._raknetAdapter.shutdown();
         this._pluginManager.disablePlugins();
 
-        this._running = false;
+        this._isRunning = false;
 
         process.exit(); // fix this later
     }
