@@ -1,10 +1,11 @@
 const NBT = pocketnode("nbt/NBT");
+const NamedTag = pocketnode("nbt/tag/NamedTag");
 
 class ListTag extends NamedTag{
 
     initVars() {
-        this._tagType = -1;
-        this._value = null;
+        this.tagType = -1;
+        this.value = null;
     }
 
     constructor(name = "", value = [], tagType = NBT.TAG_End){
@@ -13,17 +14,21 @@ class ListTag extends NamedTag{
 
         this.constructor.call();
 
-        this._tagType = tagType;
-        this._value = [];
+        this.tagType = tagType;
+        this.value = [];
         value.forEach(tag => {
             this.push(tag);
         });
     }
 
+    getType(){
+        return NBT.TAG_List;
+    }
+
     //TODO: test if works xD
-    getValue() : NamedTag{
+    getValue(){
         let value = [];
-        this._value.forEach(k => v => {
+        this.value.forEach(k => v => {
             value[k] = v;
         });
 
@@ -31,9 +36,9 @@ class ListTag extends NamedTag{
     }
 
     //TODO: test if works xD
-    getAllValues() : []{
+    getAllValues(){
         let result = [];
-        this._value.forEach(tag => {
+        this.value.forEach(tag => {
             if (tag instanceof Array){
                 result.push(tag);
             } else {
@@ -44,12 +49,12 @@ class ListTag extends NamedTag{
         return result;
     }
 
-    offsetExists(offset) : boolean{
-        return Isset(this._value[offset]);
+    offsetExists(offset){
+        return Isset(this.value[offset]);
     }
 
     offsetGet(offset){
-        let value = this._value[offset];
+        let value = this.value[offset];
 
         if (value instanceof Array){
             return value;
@@ -60,74 +65,74 @@ class ListTag extends NamedTag{
         return null;
     }
 
-    offsetSet(offset, value) : void{
+    offsetSet(offset, value){
         if (value instanceof NamedTag){
             this.checkTagType(value);
-            this._value[offset] = value;
+            this.value[offset] = value;
         }else {
             //TODO: better log :) (again lol)
-            console.log(`Value set by ArrayAccess must be an instance of " . NamedTag::class . ", got " . (is_object($value) ? " instance of " . get_class($value) : gettype($value))`);
+            console.log(`Value set by ArrayAccess must be an instance of " . NamedTag::class . ", got " . (isobject($value) ? " instance of " . getclass($value) : gettype($value))`);
         }
     }
 
-    offsetUnset(offset) : void{
-        this._value.delete(offset);
+    offsetUnset(offset){
+        this.value.delete(offset);
     }
 
-    count() : number{
-        return this._value.size;
+    count(){
+        return this.value.size;
     }
 
-    getCount() : number{
-        return this._value.size;
+    getCount() {
+        return this.value.size;
     }
 
     push(tag){
         CheckTypes([NamedTag, tag]);
         this.checkTagType(tag);
-        this._value.push(tag);
+        this.value.push(tag);
     }
 
-    pop() : NamedTag{
-        return this._value.pop();
+    pop() {
+        return this.value.pop();
     }
 
-    unshift(tag) : void{
+    unshift(tag){
         CheckTypes([NamedTag, tag]);
         this.checkTagType(tag);
-        this._value.unshift(tag);
+        this.value.unshift(tag);
     }
 
-    shift() : NamedTag{
-        this._value.shift();
+    shift(){
+        this.value.shift();
     }
 
     insert(offset, tag){
         CheckTypes([NamedTag, tag]);
         this.checkTagType(tag);
-        this._value.splice(offset, 0, tag); //HACK
+        this.value.splice(offset, 0, tag); //HACK
     }
 
     //TODO: test if works, offsetUnset too...
-    remove(offset) : void{
-        for (let tag in this._value){
-            if (this._value[offset]){
-                this._value.splice(tag, 1);
+    remove(offset){
+        for (let tag in this.value){
+            if (this.value[offset]){
+                this.value.splice(tag, 1);
             }
         }
     }
 
     //TODO: complete with all missing functions
 
-    checkTagType(tag) : void{
+    checkTagType(tag){
         CheckTypes([NamedTag, tag]);
         let type = tag.getType();
-        if (type !== this._tagType){
-            if (this._tagType === NBT.TAG_End){
-                this._tagType = type;
+        if (type !== this.tagType){
+            if (this.tagType === NBT.TAG_End){
+                this.tagType = type;
             } else {
                 //TODO: better debug :)
-                console.log(`Invalid tag of type " . get_class($tag) . " assigned to ListTag, expected " . get_class(NBT::createTag($this->tagType))`);
+                console.log(`Invalid tag of type " . getclass($tag) . " assigned to ListTag, expected " . getclass(NBT::createTag($this->tagType))`);
             }
         }
     }

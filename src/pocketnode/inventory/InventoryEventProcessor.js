@@ -2,7 +2,14 @@ const Item = pocketnode("item/Item");
 
 class InventoryEventProcessor {
 
-    onSlotChange(inventory, slot, oldItem, newItem) : ?Item;
+    /**
+     * @return {Item}
+     * @param inventory
+     * @param slot
+     * @param oldItem
+     * @param newItem
+     */
+    onSlotChange(inventory, slot, oldItem, newItem){};
         //CheckTypes([Inventory, inventory], [Item, oldItem], [Item, newItem]);
 }
 

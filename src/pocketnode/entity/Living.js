@@ -1,8 +1,9 @@
-const Damageable = pocketnode("entity/Damageable");
+//const Damageable = pocketnode("entity/Damageable");
 const ArmorInventory = pocketnode("inventory/ArmorInventory");
 const ArmorInventoryEventProcessor = pocketnode("inventory/ArmorInventoryEventProcessor");
+const Entity = pocketnode("entity/Entity");
 
-class Living extends Entity implements Damageable{
+class Living extends Entity /*implements Damageable*/{
 
     initVars() {
         this._gravity = 0.08;
@@ -23,10 +24,12 @@ class Living extends Entity implements Damageable{
     getName(){}
 
     initEntity(){
-        this.initEntity().call(); //should be parent
+        //this.initEntity().call(); //should be parent
 
         this._armorInventory = new ArmorInventory(this);
         this._armorInventory.setEventProcessor(new ArmorInventoryEventProcessor(this));
 
     }
 }
+
+module.exports = Living;

@@ -7,35 +7,39 @@ const Zlib = require("zlib");
 class NBTStream{
 
     initVars(){
-        this._buffer = "";
-        this._offset = 0;
+        this.buffer = "";
+        this.offset = 0;
+    }
+
+    constructor(){
+        this.initVars();
     }
 
     get(len) {
         if (len < 0) {
-            this._offset = this._buffer.length - 1;
+            this.offset = this.buffer.length - 1;
         } else if (len === true) {
-            return this._buffer.substr(this._offset); //should work
+            return this.buffer.substr(this.offset); //should work
         }
 
-        return len === 1 ? this._buffer[this._offset++] : this._buffer.substr((this._offset += len) - len, len);
+        return len === 1 ? this.buffer[this.offset++] : this.buffer.substr((this.offset += len) - len, len);
     }
 
     put(v) {
-        this._buffer.append(v); //should work same as .= or push()
+        this.buffer.append(v); //should work same as .= or push()
     }
 
     feof(){
-        return !Isset(this._buffer[this._offset]);
+        return !Isset(this.buffer[this.offset]);
     }
 
     read(buffer, doMultiple = false, offset = 0){
-        this._offset = offset;
-        this._buffer = buffer;
+        this.offset = offset;
+        this.buffer = buffer;
         let data = this.readTag();
 
         if (data === null){
-            console.log("Found TAG_End at the start of buffer");
+            console.log("Found TAGEnd at the start of buffer");
         }
 
         if (doMultiple && !this.feof()){
@@ -47,7 +51,7 @@ class NBTStream{
                 }
             }while (!this.feof());
         }
-        this._buffer = "";
+        this.buffer = "";
 
         return data;
     }
@@ -57,8 +61,8 @@ class NBTStream{
     }
 
     write(data){
-        this._offset = 0;
-        this._buffer = "";
+        this.offset = 0;
+        this.buffer = "";
         
         if (data instanceof CompoundTag) {
             this.writeTag()
@@ -73,7 +77,7 @@ class NBTStream{
     }
 
     putByte(v) : void{
-        this._buffer.append(Binary.writeByte(v));
+        this.buffer.append(Binary.writeByte(v));
     }
 
     putShort(v) : void;
@@ -86,6 +90,32 @@ class NBTStream{
         this.putShort(len);
         this.put(v);
     }
+
+    getString() : string{
+        return this.get(this.getShort());
+    }
+
+    readTag() : ?NamedTag{
+        let tagType = this.getByte();
+        if (tagType === NBT.TAG_End){
+            return null;
+        }
+        let tag = NBT.createTag(tagType);
+        tag.setName(this.getString());
+        tag.read(this);
+
+        return tag;
+    }
+
+    getByte() : number{
+        Binary.readByte(this.get(1));
+    }
+
+    getShort() : number;
+
+    getInt() : number;
+
+    putInt(v) : void;
 }
 
 module.exports = NBTStream;

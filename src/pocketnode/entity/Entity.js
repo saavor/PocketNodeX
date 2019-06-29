@@ -1,4 +1,16 @@
+const assert = require('assert');
+
 const Isset = pocketnode("utils/methods/Isset");
+
+const AxisAlignedBB = pocketnode("math/AxisAlignedBB");
+const Vector3 = pocketnode("math/Vector3");
+
+const EventManager = pocketnode("event/EventManager");
+
+const ListTag = pocketnode("nbt/tag/ListTag");
+
+const Level = pocketnode("level/Level");
+const Location = pocketnode("level/Location");
 
 const Attribute = pocketnode("entity/Attribute");
 
@@ -229,13 +241,129 @@ class Entity extends Location {
     static get DATA_PLAYER_FLAG_DEAD() {return 2}; //TODO: CHECK
 
     initVars(){
-        this.entityCount = 1;
-        this.knownEntities = [];
-        this.saveNames = [];
+        this._entityCount = 1;
+        this._knownEntities = [];
+        this._saveNames = [];
+
+        this._hasSpawned = [];
+
+        this._id = -1;
+
+        this._propertyManager = null;
+
+        this.chunk = null;
+
+        this._lastDamageCause = null;
+
+        this._blocksAround = [];
+
+        this.lastX = null;
+        this.lastY = null;
+        this.lastZ = null;
+
+        this._motion = null;
+        this._lastMotion = null;
+        this._forceMovementUpdate = false;
+
+        this.temporalVector = null;
+
+        this.lastYaw = 0.0;
+        this.lastPitch = 0.0;
+
+        this.boundingBox = null;
+        this.onGround = false;
+
+        this.eyeHeight = null;
+
+        this.height = 4.0;
+        this.width = 0.0;
+
+        this._baseOffset = 0.0;
+
+        this._health = 20.0;
+        this._maxHealth = 20;
+
+        this._ySize = 0.0;
+        this._stepHeight = 0.0;
+        this.keepMovement = false;
+
+        this.fallDistance = 0.0;
+        this.ticksLived = 0;
+        this.lastUpdate = -1;
+        this._fireTicks = 0;
+        this.namedtag = null;
+        this.canCollide = true;
+
+        this._isStatic = false;
+
+        this._savedWithChunks = true;
+
+        this.isCollided = false;
+        this.isCollidedHorizontally = false;
+        this.isCollidedVertically = false;
+
+        this.noDamageTicks = 0;
+        this._justCreated = true;
+        this._invulnerable = false;
+
+        this._attributeMap = null;
+
+        this._gravity = 0.0;
+        this._drag = null; //float
+
+        this._server = null;
+
+        this._closed = false;
+        this._needsDespawn = false;
+
+        this._timings = null;
+
+        this._constructed = false;
+
+        this._closeInFlight = false;
     }
 
-    constructor(){
-        super();
+    /**
+     *
+     * @param level {Level}
+     * @param nbt {CompoundTag}
+     */
+    constructor(level, nbt){
+        super(); //mhh.. werid.. i cannot just call it later.. mhh..
+        this.initVars();
+
+        this._constructed = true;
+        //TODO: this._timings = Timings.getEntityTimings(this);
+
+        this.temporalVector = new Vector3();
+
+        if (this.eyeHeight === null){
+            this.eyeHeight = this.height / 2 + 0.1;
+        }
+
+        this._id = this._entityCount++;
+        this.namedtag = nbt;
+        //this._server = level.getServer();
+
+        /*let pos = this.namedtag.getListTag("Pos").getAllValues();
+        let rotation = this.namedtag.getListTag("Rotation").getAllValues();
+        super(pos[0], pos[1], pos[2], rotation[0], rotation[1], level);
+        assert(!Number.isNaN(this.x) && Number.isFinite(this.x) && !Number.isNaN(this.y) && Number.isFinite(this.y) && !Number.isNaN(this.z) && Number.isFinite(this.z));
+         */
+
+        this.boundingBox = new AxisAlignedBB(0, 0, 0, 0, 0, 0);
+        this.recalculateBoundingBox();
+
+        /*this.chunk = this.level.getChunkAtPosition(this, false);
+        if (this.chunk === null){
+            console.log("Cannot create entities in unloaded chunks");
+        }*/
+        
+        /*this._motion = new Vector3(0, 0, 0);
+        if (this.namedtag.hasTag("Motion", ListTag)) {
+            let motion = this.namedtag.getListTag("Motion").getAllValues();
+            this.setMotion(this.temporalVector.setComponents(...motion)); //TODO: function setMotion()
+        }*/
     }
 
     init(){
@@ -245,9 +373,55 @@ class Entity extends Location {
     }
 
     createEntity(type, level, nbt, ...args){
-        if (Isset(this.knownEntities[type])){
+        if (Isset(this._knownEntities[type])){
 
         }
     }
 
+    isSprinting(){
+        return this.getGenericFlag(self.DATA_FLAG_SPRINTING);
+    }
+
+    /**
+     *
+     * @param flagId {number}
+     */
+    getGenericFlag(flagId){
+        this.getDataFlag(flagId >= 64 ? self.DATA_FLAGS2 : self.DATA_FLAGS, flagId % 64);
+    }
+
+    /**
+     *
+     * @param propertyId {number}
+     * @param flagId {number}
+     */
+    getDataFlag(propertyId, flagId){
+        //return Number(this.propertyManager)
+    }
+
+    /**
+     *
+     * @param motion {Vector3}
+     * @return boolean
+     */
+    setMotion(motion){
+        if (!this._justCreated){
+            let ev = EntityMotionEvent(this, motion);
+            EventManager.callEvent(ev.getName(), ev);
+            if (ev.isCancelled()){
+                return false;
+            }
+        }
+
+        this._motion = Object.assign({}, motion); //might not work, test purpose clone
+
+        if (this._justCreated){
+            //this.updateMovement();
+        }
+
+        return true;
+    }
+
 }
+
+module.exports = Entity;

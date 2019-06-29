@@ -28,6 +28,10 @@
         this.initVars();
     }
 
+    getChunkAtPosition(pos, create = false){
+        return this.getChunk(pos.getFloorX() >> 4, pos.getFloorZ() >> 4, create);
+    }
+
     getChunk(x, z, create = false){
         let index;
         if(this._chunks.has(index = Level.chunkHash(x, z))){
@@ -70,6 +74,10 @@
         this._chunks.set(chunkHash, this.getGenerator().generateChunk(x, z));
 
         return true;
+    }
+
+    getServer(){
+        return this._server;
     }
 
     getName(){

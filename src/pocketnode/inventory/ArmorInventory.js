@@ -23,20 +23,36 @@ class ArmorInventory extends BaseInventory{
         this.constructor.call(); // should be parent
     }
 
-    getHolder() : Living{
+    /**
+     *
+     * @return {Living}
+     */
+    getHolder(){
         return this._holder;
     }
 
-    getName() : String{
+    /**
+     *
+     * @return {string}
+     */
+    getName(){
         return "Armor";
     }
 
-    getDefaultSize() : Number{
+    /**
+     *
+     * @return {number}
+     */
+    getDefaultSize(){
         return 4;
     }
 
-    getHelmet() : Item{
-        return this.getItem()
+    /**
+     *
+     * @return {Item}
+     */
+    getHelmet(){
+        return this.getItem();
     }
 
 

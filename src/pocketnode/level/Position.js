@@ -12,6 +12,8 @@
 
 const Vector3 = pocketnode("math/Vector3");
 
+const Level = pocketnode("level/Level");
+
 class Position extends Vector3 {
 
     /**

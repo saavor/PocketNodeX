@@ -4,11 +4,11 @@ const CompoundTag = pocketnode("nbt/tag/CompoundTag");
 class ItemFactory{
 
     initVars(){
-        this._list = null;
+        this.list = null;
     }
 
     static init(){
-        self._list = new Array(65536);
+        self.list = new Array(65536);
 
         //self.registerItem(new Showel())
     }
@@ -24,14 +24,14 @@ class ItemFactory{
             console.log("Trying to overwrite an already registered item");
         }
 
-        self._list[self.getListOffset(id)] = Object.assign( Object.create( Object.getPrototypeOf(item)), item);
+        self.list[self.getListOffset(id)] = Object.assign( Object.create( Object.getPrototypeOf(item)), item);
     }
 
     static isRegistered(id) : boolean{
         if (id < 256){
             //return BlockFactory.isRegistered(id); TODO
         }
-        return self._list[self.getListOffset(id)] !== null;
+        return self.list[self.getListOffset(id)] !== null;
     }
 
     static getListOffset(id) : number{
@@ -48,7 +48,7 @@ class ItemFactory{
         }
 
         try {
-            let listed = self._list[self.getListOffset(id)];
+            let listed = self.list[self.getListOffset(id)];
             if (listed !== null){
                 let item = Object.assign( Object.create( Object.getPrototypeOf(listed)), listed); //might not work
             }else if (id >= 0 && id < 256){

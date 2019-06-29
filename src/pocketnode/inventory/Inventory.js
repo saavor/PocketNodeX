@@ -1,74 +1,88 @@
 const Item = pocketnode("item/Item");
-const InventoryEventProcessor = pocketnode("inventory/InventoryPlayerProcessor");
+const InventoryEventProcessor = pocketnode("inventory/InventoryEventProcessor");
 
 class Inventory {
     static get MAX_STACK() {
         return 64
     };
 
-    getSize(): number;
+    /**
+     * @return {number}
+     */
+    getSize(){};
 
-    getMaxStackSize(): number;
+    /**
+     * @return {number}
+     */
+    getMaxStackSize(){};
 
-    setMaxStackSize(size): void;
+    setMaxStackSize(size){};
 
-    getName(): string;
+    getName(){};
 
-    getTitle(): string;
+    getTitle(){};
 
-    getItem(index): Item;
+    /**
+     * 
+     * @param index {number}
+     * @return {Item}
+     */
+    getItem(index){};
 
-    setItem(item, index, send = true): boolean;
+    setItem(item, index, send = true){};
 
-    addItem(...slots): [];
+    addItem(...slots){};
 
-    canAddItem(item): boolean;
+    canAddItem(item){};
 
-    removeItem(...slots): [];
+    removeItem(...slots){};
 
-    getContents(includeEmpty): [];
+    getContents(includeEmpty){};
 
-    setContents(items, send = true): void;
+    setContents(items, send = true){};
 
-    dropContents(level, position): void;
+    dropContents(level, position){};
 
-    sendContents(target): void;
+    sendContents(target){};
 
-    sendSlot(index, target): void;
+    sendSlot(index, target){};
 
-    contains(item): boolean;
+    contains(item){};
 
-    all(item): [];
+    all(item){};
 
-    first(): number;
+    first(){};
 
-    firstEmpty(): number;
+    firstEmpty(){};
 
-    isSlotEmpty(index): boolean;
+    isSlotEmpty(index){};
 
-    remove(item): void;
+    remove(item){};
 
-    clear(index, send = true): boolean;
+    clear(index, send = true){};
 
-    clearAll(send = true): void;
+    clearAll(send = true){};
 
-    getViewers(): [];
+    getViewers(){};
 
-    onOpen(who): void;
+    onOpen(who){};
 
-    open(who): boolean;
+    open(who){};
 
-    close(who): void;
+    close(who){};
 
-    onClose(who): void;
+    onClose(who){};
 
-    onSlotChange(index, before, send): void;
+    onSlotChange(index, before, send){};
 
-    slotExists(slot): boolean;
+    slotExists(slot){};
 
-    getEventProcessor(): ?InventoryEventProcessor;
+    /**
+     * @return {InventoryEventProcessor|null}
+     */
+    getEventProcessor(){};
 
-    setEventProcessor(eventProcessor): void;
+    setEventProcessor(eventProcessor){};
 }
 
 module.exports = Inventory;

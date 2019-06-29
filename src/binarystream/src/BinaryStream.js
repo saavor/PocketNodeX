@@ -413,6 +413,15 @@ class BinaryStream {
         return this.buffer.readDoubleLE(this.increaseOffset(8));
     }
 
+    readUUID(){
+        let part1 = this.readLInt();
+        let part2 = this.readLInt();
+        let part3 = this.readLInt();
+        let part4 = this.readLInt();
+
+        return new UUID(part1, part2, part3, part4);
+    }
+
     /**
      * @param v {number}
      * @return {BinaryStream}

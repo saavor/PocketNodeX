@@ -1,4 +1,5 @@
 class Skin {
+
     initVars(){
         this._skinId = "";
         this._skinData = "";
@@ -31,21 +32,22 @@ class Skin {
         }
     }
 
+    static getAcceptedSkinSizes(){
+        return self.ACCEPTED_SKIN_SIZES;
+    }
+
     //todo: broadcast errors
     validate(){
         if (this._skinId === ""){
             // skin id must not be empty
         }
-
         let len = this._skinData.length;
         if (!this.ACCEPTED_SKIN_SIZES.includes(len)){
-            //Invalid skin data size len bytes
+            console.log("Invalid skin data size len bytes");
         }
-
         if (this._capeData !== null && this._capeData.length !== 8192) {
-            //Invalid cape data size
+            console.log("Invalid cape data size");
         }
-
         //TODO: validate geometry
     }
 
@@ -67,6 +69,12 @@ class Skin {
 
     getGeometryData(){
         return this._geometryData;
+    }
+
+    debloatGeometryData(){
+        if (this._geometryData !== ""){
+            this._geometryData = JSON.parse(JSON.stringify(this._geometryData));
+        }
     }
 }
 

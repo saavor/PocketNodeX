@@ -47,9 +47,7 @@ class LittleEndianNBTStream extends NBTStream{
         this.put(Binary.writeLDouble(v));
     }
 
+
     //TODO: finish array values.
-
-
-
 
 }

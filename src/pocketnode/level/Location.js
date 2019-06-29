@@ -79,3 +79,5 @@ class Location extends Position {
     }
 
 }
+
+module.exports = Location;

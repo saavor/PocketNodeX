@@ -59,6 +59,10 @@ class PlayerSessionAdapter{
         return this.player.handleLogin(packet);
     }
 
+    handlePlayerSkin(packet){
+        return this.player.changeSkin(packet.skin, packet.newSkinName, packet.oldSkinName);
+    }
+
     handleResourcePackClientResponse(packet){
 
         this.server.getLogger().debugExtensive("Got a new resource pack response");

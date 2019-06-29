@@ -28,15 +28,18 @@ const AxisAlignedBB = pocketnode("math/AxisAlignedBB");
 
 const Vector3 = pocketnode("math/Vector3");
 
+const Human = pocketnode("entity/Human");
 const Skin = pocketnode("entity/Skin");
 const Position = pocketnode("level/Position");
+
+const CompoundTag = pocketnode("nbt/tag/CompoundTag");
 
 const TextFormat = pocketnode("utils/TextFormat");
 const Base64 = pocketnode("utils/Base64");
 
 const Async = pocketnode("utils/Async");
 
-class Player extends CommandSender {
+class Player extends Human{
     static get SURVIVAL(){return 0}
     static get CREATIVE(){return 1}
     static get ADVENTURE(){return 2}
@@ -90,12 +93,17 @@ class Player extends CommandSender {
     constructor(server, clientId, ip, port){
         super(server);
         this.initVars();
+        this.server = server;
         this._clientId = clientId;
         this._ip = ip;
         this._port = port;
         this.creationTime = Date.now();
 
+        this.namedtag = new CompoundTag();
+
         this._sessionAdapter = new PlayerSessionAdapter(this);
+
+        //Entity.constructor.call(this.level, this.namedtag);
     }
 
     getLeaveMessage(){
@@ -418,6 +426,20 @@ class Player extends CommandSender {
         }
     }
 
+    /**
+     *
+     * @param skin {Skin}
+     * @param newSkinName {string}
+     * @param oldSkinName {string}
+     */
+    changeSkin(skin, newSkinName, oldSkinName){
+        if (!skin.isValid()){
+            return false;
+        }
+
+        //TODO: finish handle
+    }
+
     dataPacket(packet, needACK = false){
         return this.sendDataPacket(packet, needACK, false);
     }
@@ -435,7 +457,7 @@ class Player extends CommandSender {
         }
 
         let ev = new DataPacketSendEvent(this, packet);
-        this.getServer().getPluginManager().callEvent(ev);
+        this.server.getPluginManager().callEvent(ev);
         if(ev.isCancelled()){
             return false;
         }

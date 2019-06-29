@@ -2,7 +2,7 @@ class NamedTag{
 
     initVars(){
         this.__name = "";
-        this._cloning = false;
+        this.cloning = false;
     }
 
     constructor(name = ""){
@@ -14,45 +14,55 @@ class NamedTag{
         this.__name = name;
     }
 
-    getName() : string{
+    getName() {
         return this.__name;
     }
 
-    setName(name) : void{
+    setName(name) {
         this.__name = name;
     }
 
     getValue(){}
 
-    getType() : number;
+    getType() {};
 
-    write(nbt) : void;
+    write(nbt) {};
 
-    read(nbt) : void;
+    read(nbt) {};
 
-    __toString(){
-        return this.toString();
-    }
-
-    toString(identation = 0) : string{
+    /**
+     *
+     * @param identation
+     * @return {string}
+     */
+    toString(identation = 0){
         return "  ".repeat(identation) + this.constructor.name + ": " + (this.__name !== "" ? `name=${this.__name}, ` : "") + `value="${String(this.getValue())}"`;
     }
 
-    safeClone() : NamedTag{
-        if (this._cloning) {
+    /**
+     *
+     * @return {NamedTag}
+     */
+    safeClone(){
+        if (this.cloning) {
             console.log("Recursive NBT tag dependency detected");
         }
-        this._cloning = true;
+        this.cloning = true;
 
         let retval = Object.assign( Object.create( Object.getPrototypeOf(this)), this);
 
-        this._cloning = false;
-        retval._cloning = false;
+        this.cloning = false;
+        retval.cloning = false;
 
         return retval;
     }
 
-    equals(that) : boolean{
+    /**
+     *
+     * @param that
+     * @return {boolean|*}
+     */
+    equals(that){
         CheckTypes([NamedTag, that]);
         return this.__name === that.__name && this.equalsValue(that);
     }

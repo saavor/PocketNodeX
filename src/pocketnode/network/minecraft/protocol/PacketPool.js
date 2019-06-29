@@ -6,6 +6,7 @@ const MovePlayerPacket = pocketnode("network/minecraft/protocol/MovePlayerPacket
 const PlayerActionPacket = pocketnode("network/minecraft/protocol/PlayerActionPacket");
 const InteractPacket = pocketnode("network/minecraft/protocol/InteractPacket");
 const SubClientLoginPacket = pocketnode("network/minecraft/protocol/SubClientLoginPacket");
+const PlayerSkinPacket = pocketnode("network/minecraft/protocol/PlayerSkinPacket");
 const BlockEventPacket = pocketnode("network/minecraft/protocol/BlockEventPacket");
 const UpdateAttributesPacket = pocketnode("network/minecraft/protocol/UpdateAttributesPacket");
 const StructureBlockUpdatePacket = pocketnode("network/minecraft/protocol/StructureBlockUpdatePacket");
@@ -44,6 +45,7 @@ class PacketPool {
         this.registerPacket(PlayerActionPacket);
         this.registerPacket(UpdateAttributesPacket);
         this.registerPacket(InteractPacket);
+        this.registerPacket(PlayerSkinPacket);
         this.registerPacket(BlockEventPacket);
         this.registerPacket(StructureBlockUpdatePacket);
         this.registerPacket(ResourcePacksInfoPacket);

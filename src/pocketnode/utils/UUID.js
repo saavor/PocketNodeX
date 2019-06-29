@@ -32,7 +32,6 @@ class UUID {
             throw new TypeError("UUID buffer must be exactly 16 bytes");
         }
         let stream = new BinaryStream(buffer);
-
         return new UUID(stream.readInt(), stream.readInt(), stream.readInt(), stream.readInt(), version);
     }
 

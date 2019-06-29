@@ -1,7 +1,7 @@
 const Inventory = pocketnode("inventory/Inventory");
 const InventoryEventProcessor = pocketnode("inventory/InventoryEventProcessor");
 
-class BaseInventory implements Inventory{
+class BaseInventory extends Inventory{
 
     static get maxStackSize() {return Inventory.MAX_STACK};
 
@@ -14,6 +14,8 @@ class BaseInventory implements Inventory{
     }
 
     constructor(items = [], size = null, title = null) {
+
+        super();
 
         let sizeVal;
         if (size){
@@ -33,19 +35,19 @@ class BaseInventory implements Inventory{
         this.setContents(items, false);
     }
 
-    getName() : string;
+    getName(){};
 
-    getTitle() : string{
+    getTitle(){
         return this._title;
     }
 
-    getSize() : number{
+    getSize(){
         return this._slots.getSize();
     }
 
-    getDefaultSize() : number;
+    getDefaultSize(){};
 
-    setContents(items, send = true) : void{
+    setContents(items, send = true){
         if (items.length > this.getSize()){
             let items = items.slice(0, this.getSize()); //might not work... need to be tested
         }
@@ -71,7 +73,7 @@ class BaseInventory implements Inventory{
         return this._viewers;
     }
 
-    setItem(index, item, send = true) : boolean{
+    setItem(index, item, send = true){
         CheckTypes([Item, item]);
         if (item.isNull()){
 
