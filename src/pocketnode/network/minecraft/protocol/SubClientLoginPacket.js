@@ -16,9 +16,6 @@ class SubClientLoginPacket extends DataPacket {
     }
 
     _decodePayload() {
-
-        //console.log("SubClientLoginPacket got called!");
-
         this.connectionRequestData = this.readString();
     }
 

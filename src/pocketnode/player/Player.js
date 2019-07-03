@@ -1,15 +1,28 @@
-const CommandSender = pocketnode("command/CommandSender");
+//const CommandSender = pocketnode("command/CommandSender");
 
-const MinecraftInfo = pocketnode("network/minecraft/Info");
-const UUID = pocketnode("utils/UUID");
+//const MinecraftInfo = pocketnode("network/minecraft/Info");
+//const UUID = pocketnode("utils/UUID");
 const PlayerSessionAdapter = pocketnode("network/PlayerSessionAdapter");
 
-const EventManager = pocketnode("event/EventManager");
+//const PlayerPreLoginEvent = pocketnode("event/")
+const PlayerJoinEvent = pocketnode("event/player/PlayerJoinEvent");
+const PlayerJumpEvent = pocketnode("event/player/PlayerJumpEvent");
+const PlayerAnimationEvent = pocketnode("event/player/PlayerAnimationEvent");
+const PlayerInteractEvent = pocketnode("event/player/PlayerInteractEvent");
+
+//const EventManager = pocketnode("event/EventManager");
 const AttributeMap = pocketnode("entity/AttributeMap");
 
+const ResourcePackClientResponsePacket = pocketnode("network/minecraft/protocol/ResourcePackClientResponsePacket");
+const ResourcePackDataInfoPacket = pocketnode("network/minecraft/protocol/ResourcePackDataInfoPacket");
+const ResourcePackStackPacket = pocketnode("network/minecraft/protocol/ResourcePackStackPacket");
+//const ResourcePackChunkRequestPacket = pocketnode("network/minecraft/protocol/ResourcePackChunkRequestPacket");
+
 const DataPacket = pocketnode("network/minecraft/protocol/DataPacket");
+const AnimatePacket = pocketnode("network/minecraft/protocol/AnimatePacket");
 const InteractPacket = pocketnode("network/minecraft/protocol/InteractPacket");
-const LoginPacket = pocketnode("network/minecraft/protocol/LoginPacket");
+const PlayerActionPacket = pocketnode("network/minecraft/protocol/PlayerActionPacket");
+//const LoginPacket = pocketnode("network/minecraft/protocol/LoginPacket");
 const PlayStatusPacket = pocketnode("network/minecraft/protocol/PlayStatusPacket");
 const UpdateAttributesPacket = pocketnode("network/minecraft/protocol/UpdateAttributesPacket");
 //const PlayerPreLoginEvent = pocketnode("event/player/PlayerPreLoginEvent");
@@ -20,6 +33,7 @@ const StartGamePacket = pocketnode("network/minecraft/protocol/StartGamePacket")
 const ChunkRadiusUpdatedPacket = pocketnode("network/minecraft/protocol/ChunkRadiusUpdatedPacket");
 const TextPacket = pocketnode("network/minecraft/protocol/TextPacket");
 const FullChunkDataPacket =  pocketnode("network/minecraft/protocol/FullChunkDataPacket");
+const SetPlayerGameTypePacket =  pocketnode("network/minecraft/protocol/SetPlayerGameTypePacket");
 
 const DataPacketSendEvent = pocketnode("event/server/DataPacketSendEvent");
 
@@ -33,7 +47,7 @@ const Skin = pocketnode("entity/Skin");
 const Position = pocketnode("level/Position");
 
 const CompoundTag = pocketnode("nbt/tag/CompoundTag");
-
+const ResourcePack = pocketnode("resourcepacks/ResourcePack");
 const TextFormat = pocketnode("utils/TextFormat");
 const Base64 = pocketnode("utils/Base64");
 
@@ -56,7 +70,7 @@ class Player extends Human{
         this.loggedIn = false;
         this.joined = false;
         this.closed = false;
-        this.gamemode = null;
+        this.gamemode = 0;
 
         this.attributeMap = new AttributeMap();
 
@@ -88,6 +102,8 @@ class Player extends Human{
         this._skin = {};
 
         this._needACK = {};
+
+        this.onGround = false;
     }
     
     constructor(server, clientId, ip, port){
@@ -100,6 +116,8 @@ class Player extends Human{
         this.creationTime = Date.now();
 
         this.namedtag = new CompoundTag();
+
+        //TODO: this.onGround = this.namedtag.getByte("onGround", 0) !== 0;
 
         this._sessionAdapter = new PlayerSessionAdapter(this);
 
@@ -155,7 +173,7 @@ class Player extends Human{
     }
 
     handleLogin(packet) {
-        CheckTypes([LoginPacket, packet]);
+        //CheckTypes([LoginPacket, packet]);
 
         if (this.loggedIn) {
             return false;
@@ -212,7 +230,7 @@ class Player extends Human{
 
         this._skin = skin; //todo: function setSkin()
 
-        //let ev = new PlayerPreLoginEvent(); //TODO: event calling don't work... fuck it
+        //let ev = new PlayerPreLoginEvent();
         //EventManager.callEvent(ev.getName(), ev);
         
         // if (ev.isCancelled()) {
@@ -350,6 +368,23 @@ class Player extends Human{
         return true;
     }*/
 
+    doFirstSpawn(){
+        console.log("First spawn called!");
+
+        this.spawned = true;
+
+        this.sendPlayStatus(PlayStatusPacket.PLAYER_SPAWN);
+
+        let ev = new PlayerJoinEvent(this, "test");
+        this.server.getPluginManager().callEvent(ev);
+
+        if (ev.getJoinMessage().length > 0){
+            this.server.broadcastMessage(ev.getJoinMessage());
+        }
+
+        this.noDamageTicks = 60;
+    }
+
 
     onVerifyCompleted(packet, error, signedByMojang){
         if(this.closed) return;
@@ -405,7 +440,7 @@ class Player extends Human{
 
         this.loggedIn = true;
         this.server.onPlayerLogin(this);
-        this.server.getLogger().debug("Player logged in: "+this._username);
+        console.log("Player logged in: "+this._username);
 
         let pk = new ResourcePacksInfoPacket();
         let manager = this.server.getResourcePackManager();
@@ -556,6 +591,7 @@ class Player extends Human{
     }
 
     completeLoginSequence(){
+
         //create entity
         this.server.getLogger().info([
             TextFormat.AQUA + this.getName() + TextFormat.WHITE + " (" + this._ip + ":" + this._port + ")",
@@ -563,22 +599,23 @@ class Player extends Human{
         ].join(" "));
 
         let pk = new StartGamePacket();
-        pk.entityUniqueId = 1;
-        pk.entityRuntimeId = 1;
-        pk.pitch = 0;
-        pk.yaw = 0;
+        pk.entityUniqueId = this.id;
+        pk.entityRuntimeId = this.id;
+        pk.pitch = this._pitch;
+        pk.yaw = this._yaw;
         pk.difficulty = 1;
         pk.eduMode = false;
         pk.rainLevel = 0;
         pk.lightningLevel = 0;
         pk.commandsEnabled = true;
         pk.levelId = "";
-        pk.playerGamemode = this.server.getGamemode(); //todo?
-        pk.playerPosition = new Vector3(0, 20, 0);
+        //pk.playerGamemode = this.server.getGamemode(); //todo?
+        pk.playerGamemode = this.gamemode;
+        pk.playerPosition = new Vector3(0, 5, 0);
         pk.seed = 0xdeadbeef;
         pk.generator = 2;
         pk.levelGamemode = 1;
-        [pk.spawnX, pk.spawnY, pk.spawnZ] = [0, 5, 0];
+        [pk.spawnX, pk.spawnY, pk.spawnZ] = [0, 6, 0];
         pk.isMultiplayerGame = true;
         pk.hasXboxLiveBroadcast = false;
         pk.hasLANBroadcast = true;
@@ -621,7 +658,7 @@ class Player extends Human{
         this.server.addOnlinePlayer(this);
         this.server.onPlayerCompleteLoginSequence(this);
 
-        this.sendPlayStatus(PlayStatusPacket.PLAYER_SPAWN);
+        //this.sendPlayStatus(PlayStatusPacket.PLAYER_SPAWN);
     }
 
     chat(message){
@@ -654,15 +691,119 @@ class Player extends Human{
         return true;
     }
 
+    handleLevelSoundEvent(packet){
+        //this.server.getDefaultLevel().addChunkPacket  //TODO: send packet to all players in chunk radius
+        this.dataPacket(packet);
+        return true
+    }
+
     handleMovePlayer(packet){
-        let newPos = packet.position;
+        let newPos = packet.position.subtract(0, this._baseOffset, 0);
         
-        if (newPos.distanceSquared(this) > 1) {
+        /*if (newPos.distanceSquared(this) > 1) {
             this.sendPosition(this, null, null, MovePlayerPacket.MODE_RESET);
+        }*/ //TODO
+
+        packet.yaw = Math.fmod(packet.yaw, 360);
+        packet.pitch = Math.fmod(packet.pitch, 360);
+
+        if (packet.yaw < 0){
+            packet.yaw += 360;
         }
 
+        this.setRotation(packet.yaw, packet.pitch);
         this.newPosition = newPos;
-        this.processMovement(); // todo every time entity moves.
+        return true;
+    }
+
+    handleAnimate(packet){
+        if (this.spawned === false){
+            return true;
+        }
+
+        console.log("AnimatePacket handled!");
+
+        let ev = new PlayerAnimationEvent(this, packet.action);
+        this.server.getPluginManager().callEvent(ev);
+        if(ev.isCancelled()){
+            return true;
+        }
+
+        let pk = new AnimatePacket();
+        pk.entityRuntimeId = this.getId();
+        pk.action = ev.getAnimationType();
+        //TODO: edit method of all players and get just this.getViewers();
+        this.server.broadcastPackets(this.server.getOnlinePlayers(), pk);
+    }
+
+    handleResourcePackClientResponse(packet){
+
+        console.log("Got a new resource pack response");
+
+        let pk, manager;
+        console.log("Status:", ResourcePackClientResponsePacket.STATUS(packet.status));
+
+        switch(packet.status){
+            case ResourcePackClientResponsePacket.STATUS_REFUSED:
+                this.player.close("", "You must accept resource packs to join this server.", true);
+                break;
+
+            case ResourcePackClientResponsePacket.STATUS_SEND_PACKS:
+                manager = this.server.getResourcePackManager();
+
+                packet.packIds.forEach(uuid => {
+                    let pack = manager.getPackById(uuid);
+                    if (!(pack instanceof ResourcePack)){
+                        this.player.close("", "Resource Pack is not on this server", true);
+                        console.log("Got a resource pack request for unknown pack with UUID " + uuid + ", available packs: " + manager.getPackIdList().join(", "));
+                        return false;
+                    }
+
+                    let pk = new ResourcePackDataInfoPacket();
+                    pk.packId = pack.getPackId();
+                    pk.maxChunkSize = 1048576;
+                    pk.chunkCount = Math.ceil(pack.getPackSize() / pk.maxChunkSize);
+                    pk.compressedPackSize = pack.getPackSize();
+                    pk.sha256 = pack.getSha256();
+                    this.dataPacket(pk);
+                });
+
+
+                /*packet.packIds.shift();//todo figure out why the first id is 00000000-0000-0000-0000-000000000000
+                for(let i in packet.packIds){
+                    let uuid = packet.packIds[i];
+                    let pack = manager.getPackById(uuid);
+                    if(!(pack instanceof ResourcePack)){
+                        this.player.close("", "Resource Pack is not on this server", true);
+                        this.server.getLogger().debug("Got a resource pack request for unknown pack with UUID " + uuid + ", available packs: " + manager.getPackIdList().join(", "));
+                        return false;
+                    }
+
+                    let pk = new ResourcePackDataInfoPacket();
+                    pk.packId = pack.getPackId();
+                    pk.maxChunkSize = 1048576;
+                    pk.chunkCount = Math.ceil(pack.getPackSize() / pk.maxChunkSize);
+                    pk.compressedPackSize = pack.getPackSize();
+                    pk.sha256 = pack.getSha256();
+                    this.player.dataPacket(pk);
+                }*/
+                break;
+
+            case ResourcePackClientResponsePacket.STATUS_HAVE_ALL_PACKS:
+                pk = new ResourcePackStackPacket();
+                manager = this.server.getResourcePackManager();
+                pk.resourcePackStack = manager.getResourcePacks();
+                pk.mustAccept = manager.resourcePacksRequired();
+                this.dataPacket(pk);
+                break;
+
+            case ResourcePackClientResponsePacket.STATUS_COMPLETED:
+                this.completeLoginSequence();
+                break;
+
+            default:
+                return false;
+        }
         return true;
     }
 
@@ -680,43 +821,34 @@ class Player extends Human{
         this.setPosition(newPos);
     }
 
-    setPosition(newPos){
-
-        if (newPos instanceof Position){
-            this.x = newPos.getX();
-            this.y = newPos.getY();
-            this.z = newPos.getZ();
-            console.log("yep");
-        }
-
-
-        this.recalculateBoundingBox();
-
-        this.blocksAround = null;
-
-        //this.checkChunks();
-    }
-
     onUpdate(currentTick){
 
-        this.sendAttributes();
+        //this.sendAttributes();
         this.processMovement();
         //this.processChunkRrquest();
     }
 
     sendAttributes(sendAll = false){
-        //let entries = sendAll ? this.attributeMap.getAll() : this.attributeMap.needSend(); todo
-        let entries = this.attributeMap.getAll();
+        let entries = sendAll ? this.attributeMap.getAll() : this.attributeMap.needSend();
 
-        if (entries.length > 0){
+        /*if (entries.length > 0){
             let pk = new UpdateAttributesPacket();
-            pk.entityRuntimeId = this.getId();
+            pk.entityRuntimeId = this.id;
             pk.entries = entries;
             this.dataPacket(pk);
             entries.forEach(entry => {
                entry.markSynchronized();
             });
-        }
+        }*/
+
+        //TODO: fix Attribute class and call attribute.init to make it working
+        let pk = new UpdateAttributesPacket();
+        pk.entityRuntimeId = this.id;
+        pk.entries = entries;
+        this.dataPacket(pk);
+        entries.forEach(entry => {
+            entry.markSynchronized();
+        });
     }
 
     sendPosition(pos, yaw = null, pitch = null, mode = MovePlayerPacket.MODE_NORMAL, targets = null){
@@ -746,6 +878,110 @@ class Player extends Human{
 
     getId(){
         return this._randomClientId;
+    }
+
+    handleSetDefaultGameType(packet){
+        return false;
+    }
+
+    handleSetPlayerGameType(packet){
+        if (packet.gamemode !== this.gamemode) {
+            this.sendGameMode();
+            this.sendSettings();
+        }
+    }
+
+    sendGameMode(){
+        let pk = new SetPlayerGameTypePacket();
+        pk.gamemode = Player.getClientFriendlyGamemode(this.gamemode);
+        this.dataPacket(pk);
+    }
+
+    sendSettings(){
+
+    }
+
+    static getClientFriendlyGamemode(gamemode){
+        gamemode &= 0x03;
+        if (gamemode === Player.SPECTATOR) {
+            return Player.CREATIVE;
+        }
+
+        return gamemode;
+    }
+
+    handlePlayerAction(packet){
+        if (packet.action === PlayerActionPacket.ACTION_RESPAWN && packet.action === PlayerActionPacket.ACTION_DIMENSION_CHANGE_REQUEST){
+            return true;
+        }
+
+        packet.entityRuntimeId = this.id; //IDK
+        let pos = new Vector3(packet.x, packet.y, packet.z);
+
+        switch(packet.action){
+            case PlayerActionPacket.ACTION_START_BREAK:
+                if (pos.distanceSquared(this) > 10000) {
+                    break;
+                }
+
+                let target = this.server.getDefaultLevel().getBlock(pos);
+
+                let ev = new PlayerInteractEvent(this, null, target, packet.face, PlayerInteractEvent.LEFT_CLICK_BLOCK);
+                this.server.getPluginManager().callEvent(ev);
+
+            case PlayerActionPacket.ACTION_ABORT_BREAK:
+            case PlayerActionPacket.ACTION_STOP_BREAK:
+                //todo: broadcast level event
+                break;
+
+            case PlayerActionPacket.ACTION_CONTINUE_BREAK:
+                break;
+
+            case PlayerActionPacket.ACTION_START_SLEEPING:
+                //unused
+                break;
+            case  PlayerActionPacket.ACTION_STOP_SLEEPING:
+                // this.stopSleep();
+                break;
+            case PlayerActionPacket.ACTION_RESPAWN:
+                // todo if ()
+                //this.respawn()
+                break;
+            case PlayerActionPacket.ACTION_JUMP:
+                this.jump();
+                break;
+            case  PlayerActionPacket.ACTION_START_SPRINT:
+
+                console.log("PlayerActionHandler sprint toggled");
+                //todo this.toggleSprint(true);
+                break;
+            case PlayerActionPacket.ACTION_STOP_SPRINT:
+                //todo this.toggleSprint(false);
+                break;
+            case PlayerActionPacket.ACTION_START_SNEAK:
+                //todo this.toggleSneak(true)
+                break;
+            case PlayerActionPacket.ACTION_STOP_SNEAK:
+                //todo this.toggleSneak(false)
+                break;
+            case PlayerActionPacket.ACTION_START_GLIDE:
+            case PlayerActionPacket.ACTION_STOP_GLIDE:
+                break; //TODO
+            case PlayerActionPacket.ACTION_START_SWIMMING:
+                break; //TODO
+            case PlayerActionPacket.ACTION_STOP_SWIMMING:
+                break;
+            default:
+                console.log("Unhandled/unknown player action type " + packet.action + " from " + this.player.getName());
+                return false;
+        }
+
+        //todo setUsingItem(false);
+    }
+
+    jump() {
+        this.server.getPluginManager(new PlayerJumpEvent(this));
+        super.jump();
     }
 
     handleInteract(packet){
@@ -787,6 +1023,10 @@ class Player extends Human{
         pk.chunkZ = chunk.getZ();
         pk.data = chunk.toBinary();
         this.dataPacket(pk);
+        
+        if (this.spawned === false){
+            this.doFirstSpawn();
+        }
     }
     
     /**

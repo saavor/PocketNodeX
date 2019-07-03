@@ -39,6 +39,9 @@ class Human extends Many(Creature, ProjectileSource, InventoryHolder)  /*impleme
 
     constructor(level, nbt){
         super();
+
+        console.log("constructor got called");
+
         //CheckTypes([CompoundTag, nbt]); //TODO: check Level, but not implemented atm
 
         if (this._skin === null){
@@ -118,7 +121,7 @@ class Human extends Many(Creature, ProjectileSource, InventoryHolder)  /*impleme
      *
      * @param targets {Player[]|null}
      */
-    sendSkin(targets = null){
+    sendSkin(targets = null) {
         let pk = new PlayerSkinPacket();
         pk.uuid = this.getUniqueId();
         pk.skin = this._skin;
@@ -126,8 +129,11 @@ class Human extends Many(Creature, ProjectileSource, InventoryHolder)  /*impleme
     }
 
     jump(){
-        //this.jump(); parent?
-
+        //super.jump();
+        
+        if (this.isSprinting()) {
+            //TODO
+        }
 
     }
 

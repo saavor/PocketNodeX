@@ -18,6 +18,7 @@ const PluginsCommand = pocketnode("command/defaults/PluginsCommand");
 
 const Player = pocketnode("player/Player");
 const PlayerList = pocketnode("player/PlayerList");
+const Entity = pocketnode("entity/Entity");
 
 const ResourcePackManager = pocketnode("resourcepacks/ResourcePackManager");
 
@@ -69,6 +70,50 @@ class Server {
 
         this._dispatchSignals = false;
 
+        this._logger = {};
+
+        this._memoryManager = {};
+
+        this._console = null;
+
+        this._commandMap = null;
+
+        this._craftingManager = null;
+
+        this._resourceManager = null;
+
+        this._maxPlayers = -1;
+
+        this._onlineMode = true;
+
+        this._autoSave = false;
+
+        this._rcon = null;
+
+        this._entityMetadata = null;
+
+        this._playerMetadata = null;
+
+        this._levelMetadata = null;
+
+        this._network = null;
+
+        this._networkCompressionAsync = true;
+        this._networkCompressionLevel = 7;
+
+        this._autoSaveTicker = 0;
+        this._autoSaveTicks = 6000;
+
+        this._baseLang = null;
+        this._forceLanguage = false;
+
+        this._serverID = Math.floor((Math.random() * 99999999)+1);
+
+        this._queryRegenerateTask = null;
+
+        this._properties = null;
+        this._propertyCache = [];
+
         this._pocketnode = {};
 
         this._bannedIps = {};
@@ -77,8 +122,6 @@ class Server {
         this._scheduler = {}; //todo
 
 
-
-        this._logger = {};
         this._debuggingLevel = 0;
 
         this._consoleCommandReader = {};
@@ -87,16 +130,10 @@ class Server {
 
         this._resourcePackManager = {};
 
-        this._onlineMode = false;
-
         this._raknetAdapter = {};
-
-        this._serverId = Math.floor((Math.random() * 99999999)+1);
 
         this._paths = {};
         this._config = {};
-
-        this._maxPlayers = -1;
 
         this._players = new PlayerList();
         this._loggedInPlayers = new PlayerList();
@@ -179,6 +216,8 @@ class Server {
         if(this.getDefaultLevel() === null){
             this._defaultLevel = new Level();
         }
+
+        Entity.init();
 
         //enable plugins POSTWORLD
 

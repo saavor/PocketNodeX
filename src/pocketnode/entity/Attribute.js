@@ -30,7 +30,7 @@ class Attribute{
         this.shouldSend = false;
         this.desynchronized = true;
 
-        this.attributes = [];
+        this._attributes = [];
     }
 
     static init(){
@@ -52,20 +52,20 @@ class Attribute{
         self.addAttribute(self.ZOMBIE_SPAWN_REINFORCEMENTS, "minecraft:zombie.spawn_reinforcements", 0.0, 1.0, 0.0);
     }
 
-    addAttribute(id, name, minValue, maxValue, defaultValue, currentValue, shouldSend = true){
+    static addAttribute(id, name, minValue, maxValue, defaultValue, currentValue, shouldSend = true){
         if (minValue > maxValue || defaultValue > maxValue || defaultValue < minValue) {
             console.log(`Invalid ranges: min value: ${minValue}, max value: ${maxValue}, defaultValue: ${defaultValue}`);
         }
 
-        return this.attributes[id] = new Attribute(id, name, minValue, maxValue, defaultValue, currentValue, shouldSend);
+        return self._attributes[id] = new self(id, name, minValue, maxValue, defaultValue, currentValue, shouldSend);
     }
 
-    getAttribute(id){
-        return Isset(this.attributes[id] ? this.attributes[id].clone() : null);
+    static getAttribute(id){
+        return Isset(self._attributes[id] ? self._attributes[id].clone() : null);
     }
 
     static getAttributeByName(){
-        self.attributes.forEach(attribute => {
+        self._attributes.forEach(attribute => {
             if (attribute.getName() === name){
                 return attribute.clone();
             }
@@ -84,7 +84,6 @@ class Attribute{
         this.shouldSend = shouldSend;
 
         this.currentValue = this.defaultValue;
-        // this.init();
     }
 
     getMinValue(){

@@ -1,6 +1,7 @@
 const assert = require('assert');
 
 const Isset = pocketnode("utils/methods/Isset");
+const SetEntityDataPacket = pocketnode("network/minecraft/protocol/SetEntityDataPacket");
 
 const AxisAlignedBB = pocketnode("math/AxisAlignedBB");
 const Vector3 = pocketnode("math/Vector3");
@@ -241,7 +242,7 @@ class Entity extends Location {
     static get DATA_PLAYER_FLAG_SLEEP() {return 1};
     static get DATA_PLAYER_FLAG_DEAD() {return 2}; //TODO: CHECK
 
-    static initVars(){
+    initVars(){
         this._entityCount = 1;
         this._knownEntities = [];
         this._saveNames = [];
@@ -331,7 +332,7 @@ class Entity extends Location {
      */
     constructor(level, nbt){
         super(); //mhh.. werid.. i cannot just call it later.. mhh..
-        Entity.initVars();
+        this.initVars();
 
         Entity._constructed = true;
         //TODO: this._timings = Timings.getEntityTimings(this);
@@ -368,16 +369,89 @@ class Entity extends Location {
         }*/
     }
 
-    init(){
+    static init(){
 
-
-        Attribute.init();
+        //Entity.registerEntity();
+        //let attr = new Attribute();
+        //attr.init();
     }
 
-    createEntity(type, level, nbt, ...args){
-        if (Isset(this._knownEntities[type])){
+    setRotation(yaw, pitch){
+        this.yaw = yaw;
+        this.pitch = pitch;
+        this.scheduleUpdate();
+    }
 
+    scheduleUpdate(){
+        this.level.updateEntities[this.id] = this;
+    }
+
+    setPosition(newPos){
+
+        this.x = newPos.x;
+        this.y = newPos.y;
+        this.z = newPos.z;
+
+        this.recalculateBoundingBox();
+
+        this.blocksAround = null;
+
+        //this.checkChunks();
+
+        return true;
+    }
+
+    /**
+     * Creates an entity with the specified type, level and NBT, with optional additional arguments to pass to the
+     * entity's constructor
+     *
+     * @return {Entity|null}
+     * @param type
+     * @param level
+     * @param nbt
+     * @param args
+     */
+    static createEntity(type, level, nbt, ...args){
+        if (Isset(self._knownEntities[type])){
+            let cls = self._knownEntities[type];
+            return new cls(level, nbt, ...args);
         }
+
+        return null;
+    }
+
+    //cls = class... is strict word in js
+    static registerEntity(className, force = false, saveNames =[]){
+        if (self.is_a(className, new Entity())) {
+            if (className.getId() !== -1) {
+                self._knownEntities[className.getId()] = className;
+            } else if (!force) {
+                return false;
+            }
+
+            let shortName = className.getShortName();
+            if (saveNames.includes(saveNames)) {
+                saveNames.push(shortName);
+            }
+
+            saveNames.forEach(name => {
+                self._knownEntities[name] = className;
+            });
+
+            self._saveNames[className] = saveNames;
+
+            return true;
+        }
+        return false;
+    }
+
+    is_a(who, what) {
+        // only undefined and null
+        // return always false
+        return who == null ?
+            false :
+            Object(who) instanceof what
+            ;
     }
 
     isSprinting(){
@@ -422,6 +496,30 @@ class Entity extends Location {
         }
 
         return true;
+    }
+
+    sendData(player, data = null){
+        if (!player.isArray()){
+            player = [player];
+        }
+        let pk = new SetEntityDataPacket();
+        pk.entityRuntimeId = this._id;
+        pk.metadata = data ? this._propertyManager.getAll() : data;
+
+        player.forEach(p => {
+           if (p === this){
+               //continue; TODO: ok..
+           }
+           p.dataPacket(pk); // TODO: clone is needed?
+        });
+
+        if (this instanceof Player){
+            this.dataPacket(pk);
+        }
+    }
+
+    isSprinting(){
+        return false; //TODO
     }
 
     //TODO: finish and take a look

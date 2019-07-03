@@ -1,5 +1,7 @@
 const Round = require("./Round");
 const Attribute = pocketnode("entity/Attribute");
+const Entity = pocketnode("entity/Entity");
+
 class BinaryStream {
     /**
      * @param buffer {Buffer|null}
@@ -413,6 +415,13 @@ class BinaryStream {
         return this.buffer.readDoubleLE(this.increaseOffset(8));
     }
 
+    writeUUID(uuid){
+        this.writeLInt(uuid.getPart(1));
+        this.writeLInt(uuid.getPart(0));
+        this.writeLInt(uuid.getPart(3));
+        this.writeLInt(uuid.getPart(2));
+    }
+
     readUUID(){
         let part1 = this.readLInt();
         let part2 = this.readLInt();
@@ -498,7 +507,7 @@ class BinaryStream {
             let max = this.readLFloat();
             let current = this.readLFloat();
             let def = this.readLFloat(); //default
-            let name = this.readString(); //this.buffer.readString()
+            let name = this.buffer.readString(); //this.buffer.readString()
 
             let attr = Attribute.getAttributeByName(name);
             if (attr !== null){
@@ -516,6 +525,10 @@ class BinaryStream {
         return list;
     }
 
+    /**
+     *
+     * @param attributes
+     */
     writeAttributeList(...attributes){
         this.writeUnsignedVarInt(attributes.count);
         attributes.forEach(attribute => {

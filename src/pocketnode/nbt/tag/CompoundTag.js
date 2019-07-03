@@ -114,6 +114,11 @@ class CompoundTag extends NamedTag {
         return def;
     }
 
+    getByte(name, def = null, badTagDefault = false){
+        //TODO byrtetag class
+        //return this.getTagValue(name, ByteTag, def, badTagDefault);
+    }
+
     /**
      *
      * @param name

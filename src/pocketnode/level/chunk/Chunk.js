@@ -190,6 +190,10 @@ class Chunk {
         return this._subChunks;
     }
 
+    getFullBlock(x, y, z){
+        return this.getSubChunk(y >> 4).getFullBlock(x, y & 0x0f, z);
+    }
+
     getHeightMap(x, z){
         return this._heightMap[Chunk.getHeightMapIndex(x, z)];
     }

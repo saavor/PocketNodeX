@@ -20,7 +20,7 @@ class UpdateAttributesPacket extends DataPacket {
 
     _encodePayload() {
         this.writeEntityRuntimeId(this.entityRuntimeId);
-        this.writeAttributeList(...this.entries)
+        this.writeAttributeList(this.entries);
     }
 
     handle(session) {

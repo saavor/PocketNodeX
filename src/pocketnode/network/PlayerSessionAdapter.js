@@ -2,11 +2,6 @@ const DataPacket = pocketnode("network/minecraft/protocol/DataPacket");
 const Player = pocketnode("player/Player");
 const LoginPacket = pocketnode("network/minecraft/protocol/LoginPacket");
 const BatchPacket = pocketnode("network/minecraft/protocol/BatchPacket");
-const ResourcePackClientResponsePacket = pocketnode("network/minecraft/protocol/ResourcePackClientResponsePacket");
-const ResourcePackDataInfoPacket = pocketnode("network/minecraft/protocol/ResourcePackDataInfoPacket");
-const PlayerActionPacket = pocketnode("network/minecraft/protocol/PlayerActionPacket");
-const ResourcePackStackPacket = pocketnode("network/minecraft/protocol/ResourcePackStackPacket");
-const ResourcePackChunkRequestPacket = pocketnode("network/minecraft/protocol/ResourcePackChunkRequestPacket");
 const ResourcePackChunkDataPacket = pocketnode("network/minecraft/protocol/ResourcePackChunkDataPacket");
 const RequestChunkRadiusPacket = pocketnode("network/minecraft/protocol/RequestChunkRadiusPacket");
 const PlayStatusPacket = pocketnode("network/minecraft/protocol/PlayStatusPacket");
@@ -59,59 +54,17 @@ class PlayerSessionAdapter{
         return this.player.handleLogin(packet);
     }
 
+    handleSetLocalPlayerAsInitialized(packet){
+        this.player.doFirstSpawn();
+        return true;
+    }
+
     handlePlayerSkin(packet){
         return this.player.changeSkin(packet.skin, packet.newSkinName, packet.oldSkinName);
     }
 
     handleResourcePackClientResponse(packet){
-
-        this.server.getLogger().debugExtensive("Got a new resource pack response");
-
-        let pk, manager;
-        this.server.getLogger().debugExtensive("Status:", ResourcePackClientResponsePacket.STATUS(packet.status));
-        switch(packet.status){
-            case ResourcePackClientResponsePacket.STATUS_REFUSED:
-                this.player.close("", "You must accept resource packs to join this server.", true);
-                break;
-
-            case ResourcePackClientResponsePacket.STATUS_SEND_PACKS:
-                manager = this.server.getResourcePackManager();
-                packet.packIds.shift();//todo figure out why the first id is 00000000-0000-0000-0000-000000000000
-                for(let i in packet.packIds){
-                    let uuid = packet.packIds[i];
-                    let pack = manager.getPackById(uuid);
-                    if(!(pack instanceof ResourcePack)){
-                        this.player.close("", "Resource Pack is not on this server", true);
-                        this.server.getLogger().debug("Got a resource pack request for unknown pack with UUID " + uuid + ", available packs: " + manager.getPackIdList().join(", "));
-                        return false;
-                    }
-
-                    let pk = new ResourcePackDataInfoPacket();
-                    pk.packId = pack.getPackId();
-                    pk.maxChunkSize = 1048576;
-                    pk.chunkCount = Math.ceil(pack.getPackSize() / pk.maxChunkSize);
-                    pk.compressedPackSize = pack.getPackSize();
-                    pk.sha256 = pack.getSha256();
-                    this.player.dataPacket(pk);
-                }
-                break;
-
-            case ResourcePackClientResponsePacket.STATUS_HAVE_ALL_PACKS:
-                pk = new ResourcePackStackPacket();
-                manager = this.server.getResourcePackManager();
-                pk.resourcePackStack = manager.getResourcePacks();
-                pk.mustAccept = manager.resourcePacksRequired();
-                this.player.dataPacket(pk);
-                break;
-
-            case ResourcePackClientResponsePacket.STATUS_COMPLETED:
-                this.player.completeLoginSequence();
-                break;
-
-            default:
-                return false;
-        }
-        return true;
+        this.player.handleResourcePackClientResponse(packet);
     }
 
     handleResourcePackChunkRequest(packet){
@@ -165,9 +118,17 @@ class PlayerSessionAdapter{
         }.bind(this))
             .then(function(){
                 console.log("done sending chunks");
-                this.player.sendPlayStatus(PlayStatusPacket.PLAYER_SPAWN);
+                //this.player.sendPlayStatus(PlayStatusPacket.PLAYER_SPAWN);
             }.bind(this));
         return true;
+    }
+
+    handleLevelSoundEvent(packet){
+        return this.player.handleLevelSoundEvent(packet);
+    }
+
+    handleAddPlayer(packet){
+        return false;
     }
 
     handleMovePlayer(packet){
@@ -175,70 +136,7 @@ class PlayerSessionAdapter{
     }
 
     handlePlayerAction(packet){
-        if (packet.action === PlayerActionPacket.ACTION_RESPAWN && packet.action === PlayerActionPacket.ACTION_DIMENSION_CHANGE_REQUEST){
-            return true;
-        }
-
-        packet.entityRuntimeId = this.player.id;
-        let pos = new Vector3(packet.x, packet.y, packet.z);
-
-        switch(packet.action){
-            case PlayerActionPacket.ACTION_START_BREAK:
-                if (pos.distanceSquared(this) > 10000) {
-                    break;
-                }
-
-               //TODO: get level instance and call playerinteractevent
-               // let target =
-
-            case PlayerActionPacket.ACTION_ABORT_BREAK:
-            case PlayerActionPacket.ACTION_STOP_BREAK:
-                //todo: broadcast level event
-                break;
-
-            case PlayerActionPacket.ACTION_CONTINUE_BREAK:
-                break;
-
-            case PlayerActionPacket.ACTION_START_SLEEPING:
-                //unused
-                break;
-            case  PlayerActionPacket.ACTION_STOP_SLEEPING:
-                // this.stopSleep();
-                break;
-            case PlayerActionPacket.ACTION_RESPAWN:
-                // todo if ()
-                //this.respawn()
-                break;
-            case PlayerActionPacket.ACTION_JUMP:
-                // todo this.jump();
-                break;
-            case  PlayerActionPacket.ACTION_START_SPRINT:
-
-                console.log("PlayerActionHandler sprint toggled");
-                //todo this.toggleSprint(true);
-                break;
-            case PlayerActionPacket.ACTION_STOP_SPRINT:
-                //todo this.toggleSprint(false);
-                break;
-            case PlayerActionPacket.ACTION_START_SNEAK:
-                //todo this.toggleSneak(true)
-                break;
-            case PlayerActionPacket.ACTION_STOP_SNEAK:
-                //todo this.toggleSneak(false)
-                break;
-            case PlayerActionPacket.ACTION_START_GLIDE:
-            case PlayerActionPacket.ACTION_STOP_GLIDE:
-                break; //TODO
-            case PlayerActionPacket.ACTION_START_SWIMMING:
-                break; //TODO
-            case PlayerActionPacket.ACTION_STOP_SWIMMING:
-                break;
-            default:
-                console.log("Unhandled/unknown player action type " + packet.action + " from " + this.player.getName());
-                return false;
-        }
-
-        //todo setUsingItem(false);
+        return this.player.handlePlayerAction(packet);
     }
 
     handleSubClientLogin(packet){
@@ -261,8 +159,20 @@ class PlayerSessionAdapter{
         return false; //TODO
     }
 
+    handleAnimate(packet){
+        return this.player.handleAnimate(packet);
+    }
+
+    handleSetEntityData(packet){
+        return false;
+    }
+
     handleUpdateAttributes(packet){
         return false;
+    }
+
+    handleSetDefaultGameType(){
+        return this.player.handleSetDefaultGameType(packet);
     }
 
     handlePlayStatus(packet){

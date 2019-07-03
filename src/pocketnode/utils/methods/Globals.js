@@ -178,6 +178,8 @@ String.prototype.contains = function(str){
     return this.indexOf(str) !== -1;
 };
 
+Math.fmod = function (a,b) { return Number((a - (Math.floor(a / b) * b)).toPrecision(8)); };
+
 /**
  * @author Jonas Raoni Soares Silva
  * @link http://jsfromhell.com/string/wordwrap

@@ -31,6 +31,16 @@ class Living extends Entity /*implements Damageable*/{
         this._armorInventory.setEventProcessor(new ArmorInventoryEventProcessor(this));
 
     }
+
+    jump(){
+        if (this.onGround){
+            this.motionY = this.getJumpVelocity();
+        }
+    }
+
+    getJumpVelocity(){
+        return this._jumpVelocity; //TODO: finish with effects
+    }
 }
 
 module.exports = Living;

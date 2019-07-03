@@ -1,4 +1,4 @@
-const PlayerEvent = pocketnode("event/PlayerEvent");
+const PlayerEvent = pocketnode("event/player/PlayerEvent");
 const Player = pocketnode("player/Player");
 
 /**
