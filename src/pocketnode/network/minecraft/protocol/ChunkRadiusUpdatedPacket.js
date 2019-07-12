@@ -11,6 +11,7 @@ class ChunkRadiusUpdatedPacket extends DataPacket {
     }
 
     _decodePayload(){
+        console.log("ChunkRadiusUpdatedPacket called");
         this.radius = this.readVarInt();
     }
 

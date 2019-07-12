@@ -1,7 +1,7 @@
 const assert = require('assert');
 
 const Isset = pocketnode("utils/methods/Isset");
-const SetEntityDataPacket = pocketnode("network/minecraft/protocol/SetEntityDataPacket");
+//const SetEntityDataPacket = pocketnode("network/minecraft/protocol/SetEntityDataPacket");
 
 const AxisAlignedBB = pocketnode("math/AxisAlignedBB");
 const Vector3 = pocketnode("math/Vector3");
@@ -15,6 +15,7 @@ const Level = pocketnode("level/Level");
 const Location = pocketnode("level/Location");
 
 const Attribute = pocketnode("entity/Attribute");
+const DataPropertyManager = pocketnode("entity/DataPropertyManager");
 
 class Entity extends Location {
 
@@ -367,6 +368,9 @@ class Entity extends Location {
             let motion = this.namedtag.getListTag("Motion").getAllValues();
             this.setMotion(this.temporalVector.setComponents(...motion)); //TODO: function setMotion()
         }*/
+        this._propertyManager = new DataPropertyManager();
+        this.setGenericFlag(Entity.DATA_FLAG_AFFECTED_BY_GRAVITY, true);
+        this.setGenericFlag(Entity.DATA_FLAG_HAS_COLLISION, true);
     }
 
     static init(){
@@ -399,6 +403,22 @@ class Entity extends Location {
         //this.checkChunks();
 
         return true;
+    }
+
+    setGenericFlag(flagId, value = true){
+        this.setDataFlag(Entity.DATA_FLAGS, flagId, value, Entity.DATA_TYPE_LONG);
+    }
+
+    getDataFlag(propertyId, flagId){
+        return Number((this._propertyManager.getPropertyValue(propertyId, -1)) & (1 << flagId)) > 0;
+    }
+
+    setDataFlag(propertyId, flagId, value = true, propertyType = Entity.DATA_TYPE_LONG){
+        if (this.getDataFlag(propertyId, flagId) !== value){
+            let flags = Number(this._propertyManager.getPropertyValue(propertyId, propertyType));
+            flags ^= 1 << flagId;
+            this._propertyManager.setPropertyValue(propertyId, propertyType, flags);
+        }
     }
 
     /**
@@ -498,25 +518,41 @@ class Entity extends Location {
         return true;
     }
 
-    sendData(player, data = null){
+   /* sendData(player, data = null){
+
+        console.log("SendData step 1 done");
+
         if (!player.isArray()){
             player = [player];
         }
+
         let pk = new SetEntityDataPacket();
         pk.entityRuntimeId = this._id;
-        pk.metadata = data ? this._propertyManager.getAll() : data;
+
+        if (data){
+            pk.metadata = data
+        } else {
+            pk.metadata = this._propertyManager.getAll();
+        }
+
+        console.log("SendData step 2 done");
 
         player.forEach(p => {
            if (p === this){
                //continue; TODO: ok..
            }
            p.dataPacket(pk); // TODO: clone is needed?
+            console.log("SetEntityDataPacket sent (All)!");
         });
 
-        if (this instanceof Player){
+        /*if (this instanceof Player){
             this.dataPacket(pk);
+            console.log("")
         }
-    }
+        this.dataPacket(pk);
+        console.log("SetEntityDataPacket sent (Main)!");
+        console.log("SendData step 3 done");
+    }*/
 
     isSprinting(){
         return false; //TODO

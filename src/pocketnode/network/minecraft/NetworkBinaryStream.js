@@ -1,12 +1,13 @@
 const UUID = pocketnode("utils/UUID");
 const Vector3 = pocketnode("math/Vector3");
+const Entity = pocketnode("entity/Entity");
 
-class NetworkBinaryStream extends require("pocketnode-binarystream") {
+class NetworkBinaryStream extends binarystream("BinaryStream") {
     /**
      * @return {string}
      */
     readString(){
-        return this.read(this.readUnsignedVarInt()).toString();
+        return this.read(this.readUnsignedVarInt().toString());
     }
 
     /**
@@ -15,9 +16,7 @@ class NetworkBinaryStream extends require("pocketnode-binarystream") {
      */
     writeString(v){
         this.writeUnsignedVarInt(Buffer.byteLength(v));
-        if(v.length === 0) return this;
-        this.append(Buffer.from(v, "utf8"));
-        return this;
+        this.append(v);
     }
 
     /**

@@ -1,6 +1,6 @@
 const Session = require("./Session");
 
-const BinaryStream = require("pocketnode-binarystream");
+const BinaryStream = binarystream("BinaryStream");
 
 const OfflineMessage = require("../protocol/OfflineMessage");
 const OfflineMessageHandler = require("./OfflineMessageHandler");
@@ -75,8 +75,8 @@ class SessionManager {
 
             let packetId = stream.getBuffer()[0];
 
-            let logger = new Logger();
-            logger.debug("Received", packetId, "with length of", msg.length, "from", rinfo.address + ":" + rinfo.port);
+            //let logger = new Logger();
+            //console.log("Received", packetId, "with length of", msg.length, "from", rinfo.address + ":" + rinfo.port);
 
             this.handle(packetId, stream, rinfo.address, rinfo.port);
         });

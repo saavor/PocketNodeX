@@ -22,8 +22,8 @@ class ResourcePackChunkRequestPacket extends DataPacket {
     }
 
     _encodePayload(){
-        this.writeString(this.packId)
-            .writeLInt(this.chunkIndex);
+        this.writeString(this.packId);
+        this.writeLInt(this.chunkIndex);
     }
 
     handle(session){

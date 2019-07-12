@@ -14,8 +14,6 @@ class DataPacket extends BinaryStream {
         super();
 
         this.isEncoded = false;
-        this.extraByte1 = 0;
-        this.extraByte2 = 0;
     }
 
     getName(){
@@ -41,16 +39,9 @@ class DataPacket extends BinaryStream {
     }
 
     _decodeHeader(){
-        let packetId = this.readUnsignedVarInt();
-        if(packetId === this.getId()){
-            this.extraByte1 = this.readByte();
-            this.extraByte2 = this.readByte();
-
-            if(this.extraByte1 !== 0 && this.extraByte2 !== 0){
-                throw new Error("Got unexpected non-zero split-screen bytes (byte1: "+this.extraBytes[0]+", byte2: "+this.extraBytes[1]);
-            }
-        }else{
-            throw new Error("Packet id received is different from DataPacket id! "+JSON.stringify({recieved: packetId, datapacket: this.getId()}));
+        let pid = this.readUnsignedVarInt();
+        if (pid !== this.getId()){
+            console.log(`Expected " . ${this.getId()} . " for packet ID, got ${pid}`);
         }
     }
 
@@ -65,9 +56,6 @@ class DataPacket extends BinaryStream {
 
     _encodeHeader(){
         this.writeUnsignedVarInt(this.getId());
-
-        this.writeByte(this.extraByte1)
-            .writeByte(this.extraByte2);
     }
 
     _encodePayload(){}
@@ -106,6 +94,16 @@ class DataPacket extends BinaryStream {
         this.writeLFloat(vector.x);
         this.writeLFloat(vector.y);
         this.writeLFloat(vector.z);
+    }
+
+    writeVector3Nullable(vector){
+        if (vector) {
+            this.writeVector3Obj(vector);
+        }else {
+            this.writeLFloat(0.0);
+            this.writeLFloat(0.0);
+            this.writeLFloat(0.0);
+        }
     }
 
     getBlockPosition(){

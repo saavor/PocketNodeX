@@ -178,26 +178,26 @@ class LevelSoundEventPacket extends DataPacket {
         this.sound = -1;
         this.position = new Vector3();
         this.extraData = -1;
-        this.pitch = 1;
-        this.unknownBool = false;
+        this.entityType = ":"; //???
+        this.isBabyMob = false; //...
         this.disableRelativeVolume = false;
     }
 
     _decodePayload() {
-        this.sound = this.readByte();
+        this.sound = this.readUnsignedVarInt();
         this.position = this.getVector3Obj();
         this.extraData = this.readVarInt();
-        this.pitch = this.readVarInt();
-        this.unknownBool = this.readBool();
+        this.entityType = this.readString();
+        this.isBabyMob = this.readBool();
         this.disableRelativeVolume = this.readBool();
     }
 
     _encodePayload() {
-        this.writeByte(this.sound);
+        this.writeUnsignedVarInt(this.sound);
         this.writeVector3Obj(this.position);
         this.writeVarInt(this.extraData);
-        this.writeVarInt(this.pitch);
-        this.writeBool(this.unknownBool);
+        this.writeString(this.entityType);
+        this.writeBool(this.isBabyMob);
         this.writeBool(this.disableRelativeVolume);
     }
 

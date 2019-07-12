@@ -1,4 +1,4 @@
-const BinaryStream = require("pocketnode-binarystream");
+const BinaryStream = binarystream("BinaryStream");
 
 const PacketReliability = require("./PacketReliability");
 

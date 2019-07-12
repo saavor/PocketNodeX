@@ -3,10 +3,12 @@ const Attribute = pocketnode("entity/Attribute");
 const Entity = pocketnode("entity/Entity");
 
 class BinaryStream {
+
     /**
      * @param buffer {Buffer|null}
      */
     constructor(buffer = null){
+        
         /** @type {Buffer} */
         this.buffer = Buffer.alloc(0);
         /** @type {number} */

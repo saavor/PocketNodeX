@@ -1,11 +1,17 @@
 //const CommandSender = pocketnode("command/CommandSender");
 
 //const MinecraftInfo = pocketnode("network/minecraft/Info");
-//const UUID = pocketnode("utils/UUID");
+const UUID = pocketnode("utils/UUID");
 const PlayerSessionAdapter = pocketnode("network/PlayerSessionAdapter");
-
-//const PlayerPreLoginEvent = pocketnode("event/")
+const Level = pocketnode("level/Level");
+const PlayerPreLoginEvent = pocketnode("event/player/PlayerPreLoginEvent");
 const PlayerJoinEvent = pocketnode("event/player/PlayerJoinEvent");
+
+//const SetEntityDataPacket = pocketnode("network/minecraft/protocol/SetEntityDataPacket");
+
+const BiomeDefinitionListPacket = pocketnode("network/minecraft/protocol/BiomeDefinitionListPacket");
+const AvailableEntityIdentifiersPacket = pocketnode("network/minecraft/protocol/AvailableEntityIdentifiersPacket");
+
 const PlayerJumpEvent = pocketnode("event/player/PlayerJumpEvent");
 const PlayerAnimationEvent = pocketnode("event/player/PlayerAnimationEvent");
 const PlayerInteractEvent = pocketnode("event/player/PlayerInteractEvent");
@@ -19,10 +25,11 @@ const ResourcePackStackPacket = pocketnode("network/minecraft/protocol/ResourceP
 //const ResourcePackChunkRequestPacket = pocketnode("network/minecraft/protocol/ResourcePackChunkRequestPacket");
 
 const DataPacket = pocketnode("network/minecraft/protocol/DataPacket");
+const BatchPacket = pocketnode("network/minecraft/protocol/BatchPacket");
 const AnimatePacket = pocketnode("network/minecraft/protocol/AnimatePacket");
 const InteractPacket = pocketnode("network/minecraft/protocol/InteractPacket");
 const PlayerActionPacket = pocketnode("network/minecraft/protocol/PlayerActionPacket");
-//const LoginPacket = pocketnode("network/minecraft/protocol/LoginPacket");
+const LoginPacket = pocketnode("network/minecraft/protocol/LoginPacket");
 const PlayStatusPacket = pocketnode("network/minecraft/protocol/PlayStatusPacket");
 const UpdateAttributesPacket = pocketnode("network/minecraft/protocol/UpdateAttributesPacket");
 //const PlayerPreLoginEvent = pocketnode("event/player/PlayerPreLoginEvent");
@@ -63,8 +70,6 @@ class Player extends Human{
     initVars(){
         this._sessionAdapter = null;
 
-        this._protocol = -1;
-
         this.playedBefore = false;
         this.spawned = false;
         this.loggedIn = false;
@@ -104,10 +109,12 @@ class Player extends Human{
         this._needACK = {};
 
         this.onGround = false;
+
+        this.usedChunks = [];
     }
     
     constructor(server, clientId, ip, port){
-        super(server);
+        super(null, new CompoundTag());
         this.initVars();
         this.server = server;
         this._clientId = clientId;
@@ -116,10 +123,15 @@ class Player extends Human{
         this.creationTime = Date.now();
 
         this.namedtag = new CompoundTag();
+        this._boundingBox = new AxisAlignedBB(0, 0, 0, 0, 0, 0, 0);
+
+        this._uuid = null;
+        this._rawUUID = null;
 
         //TODO: this.onGround = this.namedtag.getByte("onGround", 0) !== 0;
 
         this._sessionAdapter = new PlayerSessionAdapter(this);
+        this.lastUpdate = this.server.getTick();
 
         //Entity.constructor.call(this.level, this.namedtag);
     }
@@ -173,13 +185,11 @@ class Player extends Human{
     }
 
     handleLogin(packet) {
-        //CheckTypes([LoginPacket, packet]);
+        CheckTypes([LoginPacket, packet]);
 
         if (this.loggedIn) {
             return false;
         }
-
-        this._protocol = packet.protocol;
 
         /*if(packet.protocol] !== MinecraftInfo.PROTOCOL){
             if(packet.protocol < MinecraftInfo.PROTOCOL){
@@ -191,7 +201,7 @@ class Player extends Human{
             this.close("", "Incompatible Protocol", false);
 
             return true;
-        }*/ //todo uncomment after testing
+        }*/
 
         /*if (Player.isValidUserName(packet.username)) {
             this.close("", "Invalid Username");
@@ -211,9 +221,9 @@ class Player extends Human{
         }
 
         this._randomClientId = packet.clientId;
-        //todo fix 16 bytes uuid
-        // this._uuid = UUID.fromString(packet.clientUUID, null);
-        // this._rawUUID = this._uuid.toBinary();
+
+        //this._uuid = UUID.fromString(packet.clientUUID);
+        //this._rawUUID = this._uuid.toBinary();
 
         let skin = new Skin(
             packet.clientData["SkinId"],
@@ -230,14 +240,13 @@ class Player extends Human{
 
         this._skin = skin; //todo: function setSkin()
 
-        //let ev = new PlayerPreLoginEvent();
-        //EventManager.callEvent(ev.getName(), ev);
+        let ev = new PlayerPreLoginEvent(this, "Test");
+        this.server.getPluginManager().callEvent(ev);
         
-        // if (ev.isCancelled()) {
-        //     this.close("", ev.getKickMessage());
-        //
-        //     return true;
-        // }
+        if (ev.isCancelled()) {
+             this.close("", ev.getKickMessage());
+             return true;
+         }
 
         //this.server._whitelist
         //todo: if whitelisted/banned kick
@@ -369,7 +378,7 @@ class Player extends Human{
     }*/
 
     doFirstSpawn(){
-        console.log("First spawn called!");
+        console.log("doFirstSpawn called!");
 
         this.spawned = true;
 
@@ -446,14 +455,13 @@ class Player extends Human{
         let manager = this.server.getResourcePackManager();
         pk.resourcePackEntries = manager.getResourcePacks();
         pk.mustAccept = manager.resourcePacksRequired();
-
         this.dataPacket(pk);
     }
 
     sendPlayStatus(status, immediate = false){
         let pk = new PlayStatusPacket();
         pk.status = status;
-        pk.protocol = this._protocol;
+        //pk.protocol = this._protocol;
         if(immediate){
             this.directDataPacket(pk);
         }else{
@@ -583,7 +591,7 @@ class Player extends Human{
         pk.radius = this._viewDistance;
         this.dataPacket(pk);
 
-        this.server.getLogger().debug("Setting view distance for " + this.getName() + " to " + distance);
+        console.log("Setting view distance for " + this.getName() + " to " + distance);
     }
 
     getViewDistance(){
@@ -591,6 +599,9 @@ class Player extends Human{
     }
 
     completeLoginSequence(){
+
+        //let pos = this.namedtag.getListTag("Pos").getAllValues();
+        //this.usedChunks[Level.chunkHash(pos[0] >> 4, pos[2]) >> 4] = false;
 
         //create entity
         this.server.getLogger().info([
@@ -601,21 +612,54 @@ class Player extends Human{
         let pk = new StartGamePacket();
         pk.entityUniqueId = this.id;
         pk.entityRuntimeId = this.id;
+        pk.playerGamemode = Player.getClientFriendlyGamemode(this.gamemode);
+
+        pk.playerPosition = new Vector3(0, 5.5, 0);
+
         pk.pitch = this._pitch;
         pk.yaw = this._yaw;
-        pk.difficulty = 1;
+        pk.seed = 0xdeadbeef;
+        pk.dimension = 0; //TODO
+        pk.levelGamemode = this.server.getGamemode();
+        pk.difficulty = 1; //TODO
+        [pk.spawnX, pk.spawnY, pk.spawnZ] = [0, 6.5, 0];
+        pk.hasAchievementsDisabled = true;
+        pk.time = 0;
         pk.eduMode = false;
         pk.rainLevel = 0;
         pk.lightningLevel = 0;
         pk.commandsEnabled = true;
         pk.levelId = "";
-        //pk.playerGamemode = this.server.getGamemode(); //todo?
-        pk.playerGamemode = this.gamemode;
-        pk.playerPosition = new Vector3(0, 5, 0);
-        pk.seed = 0xdeadbeef;
-        pk.generator = 2;
+        pk.levelName = this.server.getMotd();
+        pk.gameRules = [
+            new GameRule(GameRule.COMMAND_BLOCK_OUTPUT, true),
+            new GameRule(GameRule.DO_DAYLIGHT_CYCLE, true),
+            new GameRule(GameRule.DO_ENTITY_DROPS, true),
+            new GameRule(GameRule.DO_FIRE_TICK, true),
+            new GameRule(GameRule.DO_MOB_LOOT, true),
+            new GameRule(GameRule.DO_MOB_SPAWNING, true),
+            new GameRule(GameRule.DO_TILE_DROPS, true),
+            new GameRule(GameRule.DO_WEATHER_CYCLE, true),
+            new GameRule(GameRule.DROWNING_DAMAGE, true),
+            new GameRule(GameRule.FALL_DAMAGE, true),
+            new GameRule(GameRule.FIRE_DAMAGE, true),
+            new GameRule(GameRule.KEEP_INVENTORY, false),
+            new GameRule(GameRule.MOB_GRIEFING, true),
+            new GameRule(GameRule.NATURAL_REGENERATION, true),
+            new GameRule(GameRule.PVP, true),
+            new GameRule(GameRule.SEND_COMMAND_FEEDBACK, true),
+            new GameRule(GameRule.SHOW_COORDINATES, true),
+            new GameRule(GameRule.RANDOM_TICK_SPEED, 3),
+            new GameRule(GameRule.TNT_EXPLODES, true)
+        ];
+        this.dataPacket(pk);
+
+        this.sendDataPacket(new AvailableEntityIdentifiersPacket());
+        this.sendDataPacket(new BiomeDefinitionListPacket());
+
+        /*pk.generator = 2;
         pk.levelGamemode = 1;
-        [pk.spawnX, pk.spawnY, pk.spawnZ] = [0, 6, 0];
+
         pk.isMultiplayerGame = true;
         pk.hasXboxLiveBroadcast = false;
         pk.hasLANBroadcast = true;
@@ -625,7 +669,6 @@ class Player extends Human{
         pk.hasStartWithMapEnabled = false;
         pk.hasTrustPlayersEnabled = true;
         pk.xboxLiveBroadcastMode = 0;
-        pk.levelName = this.server.getMotd();
         pk.currentTick = this.server.getCurrentTick();
         pk.enchantmentSeed = 123456;
         pk.time = 0;
@@ -652,13 +695,14 @@ class Player extends Human{
             new GameRule(GameRule.RANDOM_TICK_SPEED, 3),
             new GameRule(GameRule.TNT_EXPLODES, true)
         ];
+        this.dataPacket(pk);*/
 
-        this.dataPacket(pk);
+        //this.sendData(this);
+
+        //this.sendAttributes(true);
 
         this.server.addOnlinePlayer(this);
         this.server.onPlayerCompleteLoginSequence(this);
-
-        //this.sendPlayStatus(PlayStatusPacket.PLAYER_SPAWN);
     }
 
     chat(message){
@@ -738,7 +782,7 @@ class Player extends Human{
 
     handleResourcePackClientResponse(packet){
 
-        console.log("Got a new resource pack response");
+        console.log("Got a new resource pack response with status: " + packet.status);
 
         let pk, manager;
         console.log("Status:", ResourcePackClientResponsePacket.STATUS(packet.status));
@@ -752,7 +796,14 @@ class Player extends Human{
                 manager = this.server.getResourcePackManager();
 
                 packet.packIds.forEach(uuid => {
+                    //dirty hack for mojang's dirty hack for versions
+                    let slitPos = uuid.indexOf("_");
+                    if (slitPos !== false){
+                        uuid = uuid.slice(uuid, 0, slitPos);
+                    }
+
                     let pack = manager.getPackById(uuid);
+
                     if (!(pack instanceof ResourcePack)){
                         this.player.close("", "Resource Pack is not on this server", true);
                         console.log("Got a resource pack request for unknown pack with UUID " + uuid + ", available packs: " + manager.getPackIdList().join(", "));
@@ -768,25 +819,6 @@ class Player extends Human{
                     this.dataPacket(pk);
                 });
 
-
-                /*packet.packIds.shift();//todo figure out why the first id is 00000000-0000-0000-0000-000000000000
-                for(let i in packet.packIds){
-                    let uuid = packet.packIds[i];
-                    let pack = manager.getPackById(uuid);
-                    if(!(pack instanceof ResourcePack)){
-                        this.player.close("", "Resource Pack is not on this server", true);
-                        this.server.getLogger().debug("Got a resource pack request for unknown pack with UUID " + uuid + ", available packs: " + manager.getPackIdList().join(", "));
-                        return false;
-                    }
-
-                    let pk = new ResourcePackDataInfoPacket();
-                    pk.packId = pack.getPackId();
-                    pk.maxChunkSize = 1048576;
-                    pk.chunkCount = Math.ceil(pack.getPackSize() / pk.maxChunkSize);
-                    pk.compressedPackSize = pack.getPackSize();
-                    pk.sha256 = pack.getSha256();
-                    this.player.dataPacket(pk);
-                }*/
                 break;
 
             case ResourcePackClientResponsePacket.STATUS_HAVE_ALL_PACKS:
@@ -822,6 +854,15 @@ class Player extends Human{
     }
 
     onUpdate(currentTick){
+
+        let tickDiff = currentTick - this.lastUpdate;
+
+        if (tickDiff <= 0){
+            return true;
+        }
+
+        this.messageCounter = 2;
+        this.lastUpdate = currentTick;
 
         //this.sendAttributes();
         this.processMovement();

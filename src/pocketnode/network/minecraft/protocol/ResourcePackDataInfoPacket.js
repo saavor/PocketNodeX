@@ -23,11 +23,11 @@ class ResourcePackDataInfoPacket extends DataPacket {
     }
 
     _encodePayload(){
-        this.writeString(this.packId)
-            .writeLInt(this.maxChunkSize)
-            .writeLInt(this.chunkCount)
-            .writeLLong(this.compressedPackSize)
-            .writeString(this.sha256);
+        this.writeString(this.packId);
+        this.writeLInt(this.maxChunkSize);
+        this.writeLInt(this.chunkCount);
+        this.writeLLong(this.compressedPackSize);
+        this.writeString(this.sha256);
     }
 }
 

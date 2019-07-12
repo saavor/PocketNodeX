@@ -1,7 +1,7 @@
 const Packet = require("../protocol/Packet");
 
 const RakNet = require("../RakNet");
-const BinaryStream = require("pocketnode-binarystream");
+const BinaryStream = binarystream("BinaryStream");
 
 const Datagram = require("../protocol/Datagram");
 const EncapsulatedPacket = require("../protocol/EncapsulatedPacket");
@@ -10,6 +10,10 @@ const ConnectionRequestAccepted = require("../protocol/ConnectionRequestAccepted
 const NewIncomingConnection = require("../protocol/NewIncomingConnection");
 const ConnectedPing = require("../protocol/ConnectedPing");
 const ConnectedPong = require("../protocol/ConnectedPong");
+const OpenConnectionRequest_1 = require("../protocol/OpenConnectionRequest1");
+const OpenConnectionRequest_2 = require("../protocol/OpenConnectionRequest2");
+const OpenConnectionReply_1 = require("../protocol/OpenConnectionReply1");
+const OpenConnectionReply_2 = require("../protocol/OpenConnectionReply2");
 const DisconnectionNotification = require("../protocol/DisconnectionNotification");
 
 const PacketReliability = require("../protocol/PacketReliability");
@@ -31,6 +35,9 @@ class Session {
     static get STATE_DISCONNECTING(){return 2}
     static get STATE_DISCONNECTED(){return 3}
 
+    static get MAX_MTU_SIZE() {return 1492};
+    static get MIN_MTU_SIZE() {return 400};
+
     get MAX_SPLIT_SIZE(){
         return 128;
     }
@@ -45,7 +52,7 @@ class Session {
         this.address = "";
         this.port = -1;
         this.state = Session.STATE_CONNECTING;
-        this.mtuSize = -1;
+        this.mtuSize = Session.MIN_MTU_SIZE;
         this.clientId = -1;
 
         this.lastSequenceNumber = -1;
@@ -185,23 +192,23 @@ class Session {
         this.sessionManager.removeSession(this, reason);
     }
 
-    handlePacket(packet){
+    handlePacket(packet) {
         this.isActive = true;
         this.lastUpdate = Date.now();
 
-        if(packet instanceof Datagram || packet instanceof ACK || packet instanceof NACK){
+        if (packet instanceof Datagram || packet instanceof ACK || packet instanceof NACK) {
             //this.sessionManager.getLogger().debug("Got " + protocol.constructor.name + "(" + protocol.stream.buffer.toString("hex") + ") from " + this);
         }
 
-        if(packet instanceof Datagram){
+        if (packet instanceof Datagram) {
             packet.decode();
 
             let diff = packet.sequenceNumber - this.lastSequenceNumber;
 
-            if(!this.NACKQueue.isEmpty()){
+            if (!this.NACKQueue.isEmpty()) {
                 this.NACKQueue.remove(packet.sequenceNumber);
-                if(diff !== 1){
-                    for(let i = this.lastSequenceNumber + 1; i < packet.sequenceNumber; i++){
+                if (diff !== 1) {
+                    for (let i = this.lastSequenceNumber + 1; i < packet.sequenceNumber; i++) {
                         this.NACKQueue.add(i);
                     }
                 }
@@ -209,23 +216,47 @@ class Session {
 
             this.ACKQueue.add(packet.sequenceNumber);
 
-            if(diff >= 1){
+            if (diff >= 1) {
                 this.lastSequenceNumber = packet.sequenceNumber;
             }
 
             packet.packets.forEach(pk => this.handleEncapsulatedPacket(pk));
-        }else{
-            if(packet instanceof ACK){
+        } else {
+            if (packet instanceof ACK) {
                 packet.decode();
                 this.recoveryQueue.recover(packet.packets).forEach(datagram => {
                     this.recoveryQueue.remove(datagram.sequenceNumber);
                 });
-            }else if(packet instanceof NACK){
+            } else if (packet instanceof NACK) {
                 packet.decode();
                 this.recoveryQueue.recover(packet.packets).forEach(datagram => {
                     this.packetsToSend.push(datagram);
                     this.recoveryQueue.remove(datagram.sequenceNumber);
                 });
+            } else if ((packet.buffer[0] & 0xff) > 0x00 || (packet.buffer[0] & 0xff) < 0x80) { //Not Data packet :)
+                console.log("Not datapacket");
+                packet.decode();
+                if (packet instanceof OpenConnectionRequest_1) {
+                    //TODO: check protocol number and refuse connections
+                    let pk = new OpenConnectionRequest_1();
+                    pk.mtuSize = packet.mtuSize;
+                    pk.serverID = this.sessionManager.getId();
+                    this.sendPacket(pk);
+                    this.state = Session.STATE_CONNECTING;
+                } else if (this.state === Session.STATE_CONNECTING && packet instanceof OpenConnectionRequest_2) {
+                    this.id = packet._clientId;
+                    if (packet.serverPort === this.sessionManager.getPort() || !this.sessionManager.portChecking) {
+                        //this.mtuSize = NukkitMath.clamp(Math.abs(packet.mtuSize), Session.MIN_MTU_SIZE, Session.MAX_MTU_SIZE);
+                        this.mtuSize = Math.abs(packet.mtuSize);
+                        let pk = new OpenConnectionReply_2();
+                        pk.mtuSize = this.mtuSize;
+                        pk.serverID = this.sessionManager.getId();
+                        pk.clientAddress = this.address;
+                        pk.clientPort = this.port;
+                        this.sendPacket(pk);
+                        this.state = Session.STATE_CONNECTING;
+                    }
+                }
             }
         }
     }

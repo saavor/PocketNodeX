@@ -24,7 +24,7 @@ class PacketPool extends Map {
 
     registerPackets(){
         this.registerPacket(UnconnectedPing);
-        //this.registerPacket(UnconnectedPingOpenConnections);
+        this.registerPacket(UnconnectedPingOpenConnections);
         this.registerPacket(OpenConnectionRequest1);
         //this.registerPacket(OpenConnectionReply1);
         this.registerPacket(OpenConnectionRequest2);

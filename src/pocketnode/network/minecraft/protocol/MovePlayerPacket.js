@@ -59,7 +59,8 @@ class MovePlayerPacket extends DataPacket {
         this.writeVector3Obj(this.position);
         this.writeLFloat(this.pitch);
         this.writeLFloat(this.yaw);
-        this.writeLFloat(this.headYaw);
+        this.writeLFloat(this.headYaw); //TODO
+        this.writeByte(this.mode);
         this.writeBool(this.onGround);
         this.writeEntityRuntimeId(this.ridingEid);
         if (this.mode === MovePlayerPacket.MODE_TELEPORT) {

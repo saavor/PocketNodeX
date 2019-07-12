@@ -8,7 +8,7 @@ class AddPlayerPacket extends DataPacket {
     }
 
     initVars(){
-        this.uuid = new UUID();
+        this.uuid = null;
         this.username = "";
         this.entityUniqueId = null; //TODO
         this.entityRuntimeId = -1;

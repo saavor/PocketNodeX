@@ -26,11 +26,11 @@ class ResourcePackChunkDataPacket extends DataPacket {
     }
 
     _encodePayload(){
-        this.writeString(this.packId)
-            .writeLInt(this.chunkIndex)
-            .writeLLong(this.progress)
-            .writeLInt(this.data.length)
-            .append(this.data);
+        this.writeString(this.packId);
+        this.writeLInt(this.chunkIndex);
+        this.writeLLong(this.progress);
+        this.writeLInt(this.data.length);
+        this.append(this.data);
     }
 }
 

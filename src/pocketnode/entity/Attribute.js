@@ -33,7 +33,7 @@ class Attribute{
         this._attributes = [];
     }
 
-    static init(){
+     static init(){
         self.addAttribute(self.ABSORPTION, "minecraft:absorption", 0.00, 340282346638528859811704183484516925440.00, 0.00);
         self.addAttribute(self.SATURATION, "minecraft:player.saturation", 0.00, 20.00, 20.00);
         self.addAttribute(self.EXHAUSTION, "minecraft:player.exhaustion", 0.00, 5.00, 0.0, false);

@@ -43,7 +43,7 @@ class ResourcePackClientResponsePacket extends DataPacket {
 
     _encodePayload(){
         this.writeByte(this.status);
-        this.writeLShort(this.packIds.count());
+        this.writeLShort(this.packIds.length);
         this.packIds.forEach(id => {
             this.writeString(id);
         });

@@ -6,6 +6,18 @@ class SetEntityDataPacket extends DataPacket {
         return MinecraftInfo.SET_ENTITY_DATA_PACKET;
     }
 
+    initVars(){
+        this.entityRuntimeId = -1;
+        this.metadata = null;
+    }
+
+    constructor(){
+        super();
+        this.initVars();
+        //this.entityRuntimeId = entityRuntimeId;
+        //this.metadata = metadata;
+    }
+
     _decodePayload() {
         this.entityRuntimeId = this.getEntityRuntimeId();
         this.metadata = this.readEntityMetadata();

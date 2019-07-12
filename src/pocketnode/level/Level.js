@@ -3,24 +3,25 @@ const INT32_MAX = 0x7fffffff;
 
 const Isset = pocketnode("utils/methods/Isset");
 
-
  class Level {
-     /**
-      * @param x {Number}
-      * @param z {Number}
-      * @return {Number}
-      */
-    static chunkHash(x, z){
-        return ((x & 0xFFFFFFFF) << 32) | (z & 0xFFFFFFFF);
-    }
 
-     static chunkBlockHash(x, y, z){
-        return (y << 8) | ((z & 0xf) << 4) | (x & 0xf);
-     }
+     static get Y_MAX(){return 0x100};
+     static get Y_MASK(){return 0xFF};
 
+     static get DIFFICULTY_PEACEFUL() {return 0};
+     static get DIFFICULTY_EASY() {return 1};
+     static get DIFFICULTY_NORMAL() {return 2};
+     static get DIFFICULTY_HARD() {return 3};
+     
     initVars(){
+        this._levelIdCounter = 1;
+        this._chunkLoaderCounter = 1;
+
         this.tickRateTime = 0;
         this._server = null;
+
+        this._levelId = -1;
+
         this._name = "";
         this._id = -1;
         /** @type {Map<Number, Dimension>} */
@@ -36,12 +37,94 @@ const Isset = pocketnode("utils/methods/Isset");
         this._worldHeight = 256;
         this._blockStates = [];
 
+        this._blockMetadata = null;
+
         this.updateEntities = [];
     }
 
-    constructor(server, name, id, chunks){
-        this.initVars();
-    }
+     /**
+      * @param x {Number}
+      * @param z {Number}
+      * @return {Number}
+      */
+     static chunkHash(x, z){
+         return ((x & 0xFFFFFFFF) << 32) | (z & 0xFFFFFFFF);
+     }
+     
+     static blockHash(x, y, z){
+         if (y < 0 || y >= Level.Y_MAX){
+             console.log(`Y coordinate ${y} is out of range!`);
+         }
+         return ((x  & 0xFFFFFFF) << 36) | ((y & Level.Y_MASK) << 28) | (z & 0xFFFFFFF);
+     }
+
+     /**
+      *
+      * @param x
+      * @param y
+      * @param z
+      * @return {number}
+      */
+     static chunkBlockHash(x, y, z){
+         return (y << 8) | ((z & 0xf) << 4) | (x & 0xf);
+     }
+
+     getBlockXYZ(hash, x, y, z){
+         x = hash >> 36;
+         y = (hash >> 28) & Level.Y_MASK;
+         z = (hash & 0xFFFFFFF) << 36 >> 36;
+     }
+
+     getXZ(hash, x, z){
+         x = hash >> 32;
+         z = (hash & 0xFFFFFFFF) << 32 >> 32;
+     }
+
+     generateChunkLoaderId(loader){
+         if (loader.getLoaderId() === 0){
+             return this._chunkLoaderCounter++;
+         } else {
+             console.log(`ChunkLoader has a loader id already assigned: " . ${loader.getLoaderId()}`)
+         }
+     }
+
+     getDifficultyFromString(str){
+         switch (str.toLowerCase().trim()) {
+             case "0":
+             case "peaceful":
+             case "p":
+                 return Level.DIFFICULTY_PEACEFUL;
+
+             case "1":
+             case "easy":
+             case "e":
+                 return Level.DIFFICULTY_EASY;
+
+             case "2":
+             case "normal":
+             case "n":
+                 return Level.DIFFICULTY_NORMAL;
+
+             case "3":
+             case "hard":
+             case "h":
+                 return Level.DIFFICULTY_HARD;
+         }
+
+         return -1;
+     }
+
+
+
+     constructor(server, name, provider){
+         this.initVars();
+
+         //this._blockStates = BlockFactory; //TODO
+         this._levelId = this._levelIdCounter++;
+         //this._blockMetadata = new BlockMetadataStore(this);
+         this._server = server;
+
+     }
 
     getChunkAtPosition(pos, create = false){
         return this.getChunk(pos.getFloorX() >> 4, pos.getFloorZ() >> 4, create);
@@ -56,6 +139,10 @@ const Isset = pocketnode("utils/methods/Isset");
         }
 
         return null;
+    }
+
+    actuallyDoTick(currentTick){
+        //this.getServer().getSessionAdapter().test();
     }
 
     /*doTick(currentTick){

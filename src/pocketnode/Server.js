@@ -9,6 +9,7 @@ const Isset = pocketnode("utils/methods/Isset");
 
 const RakNetAdapter = pocketnode("network/RakNetAdapter");
 const BatchPacket = pocketnode("network/minecraft/protocol/BatchPacket");
+const RuntimeBlockMapping = pocketnode("network/minecraft/protocol/types/RuntimeBlockMapping");
 
 const CommandMap = pocketnode("command/CommandMap");
 const ConsoleCommandReader = pocketnode("command/ConsoleCommandReader");
@@ -233,6 +234,7 @@ class Server {
         this.getLogger().info("Done ("+(Date.now() - this._pocketnode.START_TIME)+"ms)!");
 
         this.tickProcessor();
+        RuntimeBlockMapping.init();
         //this.forceShutdown();
     }
 
@@ -633,6 +635,10 @@ class Server {
         this._raknetAdapter.tick();
     }
 
+    getTick(){
+        return this._tickCounter;
+    }
+
     checkTickUpdates(currentTick, tickTime){
         this.getOnlinePlayers().forEach(player => {
             if (!player.loggedIn && (tickTime - player.creationTime) >= 10) {
@@ -644,7 +650,7 @@ class Server {
             player.onUpdate(currentTick);
         });
 
-       // this._defaultLevel.doTick(currentTick);
+       this._defaultLevel.actuallyDoTick(currentTick);
 
 
         //Do level ticks

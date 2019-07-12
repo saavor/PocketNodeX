@@ -38,15 +38,15 @@ class PlayerSessionAdapter{
 
         if(!packet.feof() && !packet.mayHaveUnreadBytes()){
             let remains = packet.buffer.slice(packet.offset);
-            this.server.getLogger().debugExtensive("Still "+ remains.length + " bytes unread in " + packet.getName() + ": 0x" + remains.toString("hex"));
+            console.log("Still "+ remains.length + " bytes unread in " + packet.getName() + ": 0x" + remains.toString("hex"));
         }
 
-        this.server.getLogger().debugExtensive("Got "+packet.getName()+" from "+this);
+        console.log("Got "+packet.getName()+" from "+this);
 
         let ev = new DataPacketReceiveEvent(this.player, packet);
         this.server.getPluginManager().callEvent(ev);
         if(!ev.isCancelled() && !packet.handle(this)){
-            this.server.getLogger().debugExtensive("Unhandled " + packet.getName() + " received from " + this.player.getName() + ": 0x" + packet.buffer.toString("hex"));
+            console.log("Unhandled " + packet.getName() + " received from " + this.player.getName() + ": 0x" + packet.buffer.toString("hex"));
         }
     }
 
@@ -55,6 +55,7 @@ class PlayerSessionAdapter{
     }
 
     handleSetLocalPlayerAsInitialized(packet){
+        console.log("PlayerInitialized handled!");
         this.player.doFirstSpawn();
         return true;
     }
@@ -70,6 +71,8 @@ class PlayerSessionAdapter{
     handleResourcePackChunkRequest(packet){
         let manager = this.server.getResourcePackManager();
         let pack = manager.getPackById(packet.packId);
+        //let pack = manager.getPackById(uuid.substr(0), (uuid + "").indexOf("_"));
+
         if(!(pack instanceof ResourcePack)){
             this.player.close("", "Resource pack was not found on this server!", true);
             this.server.getLogger().debug("Got a resource pack chunk request for unknown pack with UUID " + packet.packId + ", available packs: " + manager.getPackIdList().join(", "));
@@ -82,12 +85,14 @@ class PlayerSessionAdapter{
         pk.chunkIndex = packet.chunkIndex;
         pk.data = pack.getPackChunk(1048576 * packet.chunkIndex, 1048576);
         pk.progress = (1048576 * packet.chunkIndex);
-
         this.player.dataPacket(pk);
         return true;
     }
 
     handleRequestChunkRadius(packet){
+
+        console.log("new chunk radius request");
+
         this.player.setViewDistance(packet.radius);
 
         Async(function() {
@@ -125,6 +130,10 @@ class PlayerSessionAdapter{
 
     handleLevelSoundEvent(packet){
         return this.player.handleLevelSoundEvent(packet);
+    }
+
+    handleSetTime(packet){
+        return false;
     }
 
     handleAddPlayer(packet){

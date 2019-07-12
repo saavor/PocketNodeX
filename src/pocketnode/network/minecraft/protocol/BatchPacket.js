@@ -26,10 +26,8 @@ class BatchPacket extends DataPacket {
     }
 
     _decodeHeader(){
-        let packetId = this.readByte();
-        if(packetId !== this.getId()){
-            throw new Error("Received "+packetId+" as the id, expected "+this.getId());
-        }
+        let pid = this.readByte();
+        assert(pid === this.getId());
     }
 
     _decodePayload(){

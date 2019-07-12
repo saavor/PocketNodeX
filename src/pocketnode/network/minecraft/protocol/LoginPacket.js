@@ -47,6 +47,7 @@ class LoginPacket extends DataPacket {
         this.protocol = this.readInt();
 
         console.log("LoginPacket => decode payload");
+        console.log("Protocol => " + this.protocol);
 
         this.decodeConnectionRequest();
 
@@ -71,7 +72,7 @@ class LoginPacket extends DataPacket {
         let buffer = new BinaryStream(this.read(this.readUnsignedVarInt()));
         this.chainData = JSON.parse(buffer.read(buffer.readLInt()).toString());
 
-        console.log("LoginPacket => chain data: " + this.chainData);
+        console.log("LoginPacket => chain data found");
 
         let hasExtraData = false;
         this.chainData["chain"].forEach(chain => {
@@ -95,6 +96,8 @@ class LoginPacket extends DataPacket {
                 if(Isset(webtoken["extraData"]["XUID"])){
                     this.xuid = webtoken["extraData"]["XUID"];
                 }
+
+                console.log(JSON.stringify(webtoken["extraData"]));
             }
 
             if(Isset(webtoken["identityPublicKey"])){

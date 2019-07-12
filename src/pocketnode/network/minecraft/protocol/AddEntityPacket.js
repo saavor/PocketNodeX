@@ -3,6 +3,7 @@ const EntityIds = pocketnode("entity/EntityIds");
 const MinecraftInfo = pocketnode("network/minecraft/Info");
 const Vector3 = pocketnode("math/Vector3");
 const Attribute = pocketnode("entity/Attribute");
+const Isset = pocketnode("utils/methods/Isset");
 
 const LEGACY_ID_MAP_BC = [
 
@@ -170,4 +171,30 @@ class AddEntityPacket extends DataPacket{
             }
         }
     }
+
+    _encodePayload() {
+        this.writeEntityUniqueId(this.entityUniqueId || this.entityRuntimeId);
+        this.writeEntityRuntimeId(this.entityRuntimeId);
+        if (!Isset(self.LEGACY_ID_MAP_BC[this.type])){
+            console.log(`Unknown entity numeric ID ${this.type}`)
+        }
+        this.writeString(self.LEGACY_ID_MAP_BC[this.type]);
+        this.writeVector3Obj(this.position);
+        this.writeVector3Nullable(this.motion);
+        this.writeLFloat(this.pitch);
+        this.writeLFloat(this.yaw);
+        this.writeLFloat(this.headYaw);
+
+        this.writeUnsignedVarInt(this.attributes.length);
+        this.attributes.forEach(attribute => {
+            this.writeString(attribute.getName());
+            this.writeLFloat(attribute.getMinValue());
+            this.writeLFloat(attribute.getValue());
+            this.writeLFloat(attribute.getMaxValue());
+        });
+
+        //TODO
+    }
 }
+
+module.exports = AddEntityPacket;

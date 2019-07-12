@@ -23,7 +23,7 @@ class UUID {
         return false;
     }
 
-    static fromString(uuid, version){
+    static fromString(uuid, version = null){
         return UUID.fromBinary(Buffer.from(uuid.trim().replace(/-/g, "")), version);
     }
 
@@ -39,3 +39,5 @@ class UUID {
         return this._parts[i] ? this._parts[i] : null;
     }
 }
+
+module.exports = UUID;

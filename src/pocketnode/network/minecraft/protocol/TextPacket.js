@@ -23,6 +23,7 @@ class TextPacket extends DataPacket {
         this.message = "";
         this.parameters = [];
         this.xuid = "";
+        this.pcId = "";
     }
 
     constructor(){
@@ -31,6 +32,9 @@ class TextPacket extends DataPacket {
     }
 
     _decodePayload(){
+
+        console.log("TextPacket decode");
+
         this.type = this.readByte();
         this.needsTranslation = this.readBool();
         switch(this.type){
@@ -56,9 +60,13 @@ class TextPacket extends DataPacket {
         }
 
         this.xuid = this.readString();
+        this.pcId = this.readString();
     }
 
     _encodePayload(){
+
+        console.log("TextPacket encode");
+
         this.writeByte(this.type);
         this.writeBool(this.needsTranslation);
         switch(this.type){
@@ -83,6 +91,7 @@ class TextPacket extends DataPacket {
         }
 
         this.writeString(this.xuid);
+        this.writeString(this.pcId);
     }
 
     handle(session){

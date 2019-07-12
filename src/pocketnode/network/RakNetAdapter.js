@@ -55,7 +55,8 @@ class RakNetAdapter {
 
             session.packetBatches.getAllAndClear().forEach(packet => {
                 let batch = new BatchPacket();
-                batch.setBuffer(packet.getStream().getBuffer());
+                //batch.setBuffer(packet.getStream().getBuffer());
+                batch.setBuffer(packet.getStream().getBuffer(), 1);
                 batch.decode();
                 batch.handle(player.getSessionAdapter(), this.logger);
             });
