@@ -259,6 +259,10 @@ class Chunk {
         return y;
     }
 
+    getSubChunkSendCount(){
+        return this.getHighestSubChunkIndex() + 1;
+    }
+
     getFilledSubChunks(){
         //this.pruneEmptySubChunks();
         //return this._subChunks.size;
@@ -308,12 +312,12 @@ class Chunk {
 
         let subChunkCount = this.getFilledSubChunks();
 
-        stream.writeByte(subChunkCount);
+        //stream.writeByte(subChunkCount);
         for(let y = 0; y < subChunkCount; ++y){
             stream.append(this._subChunks.get(y).toBinary());
         }
 
-        this._heightMap.forEach(v => stream.writeLShort(v));
+        //this._heightMap.forEach(v => stream.writeLShort(v));
         this._biomes.forEach(v => stream.writeByte(v));
         stream.writeByte(0);
 

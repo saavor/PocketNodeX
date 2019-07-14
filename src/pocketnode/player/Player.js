@@ -39,7 +39,7 @@ const ResourcePacksInfoPacket = pocketnode("network/minecraft/protocol/ResourceP
 const StartGamePacket = pocketnode("network/minecraft/protocol/StartGamePacket");
 const ChunkRadiusUpdatedPacket = pocketnode("network/minecraft/protocol/ChunkRadiusUpdatedPacket");
 const TextPacket = pocketnode("network/minecraft/protocol/TextPacket");
-const FullChunkDataPacket =  pocketnode("network/minecraft/protocol/FullChunkDataPacket");
+const LevelChunkPacket =  pocketnode("network/minecraft/protocol/LevelChunkPacket");
 const SetPlayerGameTypePacket =  pocketnode("network/minecraft/protocol/SetPlayerGameTypePacket");
 
 const DataPacketSendEvent = pocketnode("event/server/DataPacketSendEvent");
@@ -1059,10 +1059,12 @@ class Player extends Human{
     }
 
     sendChunk(chunk){
-        let pk = new FullChunkDataPacket();
+        let pk = new LevelChunkPacket();
         pk.chunkX = chunk.getX();
         pk.chunkZ = chunk.getZ();
-        pk.data = chunk.toBinary();
+        pk.subChunkCount = chunk.getSubChunkSendCount();
+        pk.cacheEnabled = false;
+        pk.extraPayload = chunk.toBinary();
         this.dataPacket(pk);
         
         if (this.spawned === false){

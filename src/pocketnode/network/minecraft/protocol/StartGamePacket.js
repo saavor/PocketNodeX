@@ -193,7 +193,7 @@ class StartGamePacket extends DataPacket {
 
         this.writeVarInt(this.enchantmentSeed);
 
-        /*if (this.runtimeIdTable === null) {
+        if (this.runtimeIdTable === null) {
 
             if (this._runtimeIdTableCache === null){
                 this._runtimeIdTableCache = this.serializeBlockTable(RuntimeBlockMapping.getBedrockKnownStates());
@@ -202,8 +202,7 @@ class StartGamePacket extends DataPacket {
             this.append(this._runtimeIdTableCache);
         }else {
             this.append(this.serializeBlockTable(this.runtimeIdTable));
-        }*/
-        this.append(RuntimeBlockMapping.getCompiledTable());
+        }
 
         this.writeString(this.multiplayerCorrelationId);
         this.writeBool(this.onlySpawnV1Villagers);
@@ -213,10 +212,12 @@ class StartGamePacket extends DataPacket {
         let stream = new NetworkBinaryStream();
         stream.writeUnsignedVarInt(table.length);
         table.forEach(v => {
-            stream.writeString(v.name);
-            stream.writeLShort(v.data);
+            if (v.name && v.data){
+                stream.writeString(v.name);
+                stream.writeLShort(v.data);
+                //stream.writeLShort(v.legacy_id);
+            }
         });
-        console.log(1);
         return stream.getBuffer();
     }
 }

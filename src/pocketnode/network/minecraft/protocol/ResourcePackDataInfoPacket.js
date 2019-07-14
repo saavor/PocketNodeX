@@ -12,6 +12,8 @@ class ResourcePackDataInfoPacket extends DataPacket {
         this.chunkCount = 0;
         this.compressedPackSize = 0;
         this.sha256 = "";
+        this.isPremium = false;
+        this.packType = 1;
     }
 
     _decodePayload(){
@@ -20,6 +22,8 @@ class ResourcePackDataInfoPacket extends DataPacket {
         this.chunkCount = this.readLInt();
         this.compressedPackSize = this.readLLong();
         this.sha256 = this.readString();
+        this.isPremium = this.readBool();
+        this.packType = this.readByte();
     }
 
     _encodePayload(){
@@ -28,6 +32,8 @@ class ResourcePackDataInfoPacket extends DataPacket {
         this.writeLInt(this.chunkCount);
         this.writeLLong(this.compressedPackSize);
         this.writeString(this.sha256);
+        this.writeBool(this.isPremium);
+        this.writeByte(this.packType);
     }
 }
 
