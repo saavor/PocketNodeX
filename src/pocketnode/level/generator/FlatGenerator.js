@@ -1,5 +1,5 @@
 const Generator = pocketnode("level/generator/Generator");
-const Chunk = pocketnode("level/chunk/Chunk");
+const Chunk = pocketnode("level/format/Chunk");
 
 class FlatGenerator extends Generator {
     constructor(){

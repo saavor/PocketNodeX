@@ -1,4 +1,4 @@
-const Chunk = pocketnode("level/chunk/Chunk");
+const Chunk = pocketnode("level/format/Chunk");
 
 class Generator {
     /**

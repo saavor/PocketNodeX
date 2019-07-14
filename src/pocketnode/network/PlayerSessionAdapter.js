@@ -9,7 +9,7 @@ const Vector3 = pocketnode("math/Vector3");
 
 const DataPacketReceiveEvent = pocketnode("event/server/DataPacketReceiveEvent");
 
-const Chunk = pocketnode("level/chunk/Chunk");
+const Chunk = pocketnode("level/format/Chunk");
 
 const TextPacket = pocketnode("network/minecraft/protocol/TextPacket");
 

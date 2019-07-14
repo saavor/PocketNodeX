@@ -1,6 +1,6 @@
 const BinaryStream = pocketnode("network/minecraft/NetworkBinaryStream");
-const SubChunk = pocketnode("level/chunk/SubChunk");
-const EmptySubChunk = pocketnode("level/chunk/EmptySubChunk");
+const SubChunk = pocketnode("level/format/SubChunk");
+const EmptySubChunk = pocketnode("level/format/EmptySubChunk");
 
 class Chunk {
     initVars(){
@@ -138,7 +138,9 @@ class Chunk {
     }
 
     setBlockId(x, y, z, blockId){
-        return this.getSubChunk(y >> 4, true).setBlockId(x, y & 0x0f, z, blockId);
+        if(this.getSubChunk(y >> 4, true).setBlockId(x, y & 0x0f, z, blockId)){
+            this._hasChanged = true;
+        }
     }
 
     getBlockData(x, y, z){
@@ -211,16 +213,23 @@ class Chunk {
     }
 
     getHighestSubChunk(){
-        for(let y = 15; y >= 0; y--){
-            if(!this._subChunks.has(y)){
+        for(let y = this.subChunks.length; y >= 0; --y){
+
+            if(this.subChunks[y] instanceof EmptySubChunk){
+                continue;
+            }
+
+            break;
+            /*if(!this._subChunks.has(y)){
                 continue;
             }
             if(this._subChunks.get(y).isEmpty()){
                 continue;
             }
-            return this._subChunks.get(y);
+            return this._subChunks.get(y);*/
         }
-        return new EmptySubChunk();
+        //return new EmptySubChunk();
+        return y;
     }
 
     getHighestBlockId(x, z){
@@ -321,7 +330,7 @@ class Chunk {
         this._biomes.forEach(v => stream.writeByte(v));
         stream.writeByte(0);
 
-        stream.writeVarInt(0);
+        //stream.writeVarInt(0);
 
         return stream.getBuffer();
     }

@@ -1,4 +1,4 @@
-const SubChunkInterface = pocketnode("level/chunk/SubChunkInterface");
+const SubChunkInterface = pocketnode("level/format/SubChunkInterface");
 
 class EmptySubChunk extends SubChunkInterface {
     constructor(){
