@@ -148,6 +148,147 @@ class Server {
         this._entityCount = 0;
     }
 
+    /**
+     * @return {string}
+     */
+    getName(){
+        return this._pocketnode.NAME;
+    }
+
+    /**
+     *
+     * @return {boolean}
+     */
+    isRunning(){
+        return this._isRunning;
+    }
+
+    /**
+     * @return {string}
+     */
+    getPocketNodeVersion(){
+        return this._pocketnode.VERSION;
+    }
+
+    /**
+     * @return {string}
+     */
+    getVersion(){
+        return MinecraftInfo.VERSION;
+    }
+
+    /**
+     * @return {string}
+     */
+    getApiVersion(){
+        return this._pocketnode.API_VERSION;
+    }
+
+    /**
+     *
+     * @return {string}
+     */
+    getFilePath(){
+        return this._paths.file; //TODO
+    }
+
+    /**
+     *
+     * @return {string}
+     */
+    getResourcePath(){
+        return this._pocketnode.RESOURCE_PATH; //TODO
+    }
+
+    /**
+     * @return {string}
+     */
+    getDataPath(){
+        return this._paths.data; //TODO
+    }
+
+    /**
+     *
+     * @return {string}
+     */
+    getPluginPath(){
+        return this._paths.plugins; //TODO
+    }
+
+    /**
+     *
+     * @return {number}
+     */
+    getMaxPlayers(){
+        return this._maxPlayers;
+    }
+
+    /**
+     * Returns whether the server requires that players be authenticated to Xbox Live. If true, connecting players who
+     * are not logged into Xbox Live will be disconnected.
+     *
+     * @return {boolean}
+     */
+    getOnlineMode(){
+        return this._onlineMode;
+    }
+
+    /**
+     * Alias of {@link {getOnlineMode}}
+     * @return {boolean}
+     */
+    requiresAuthentication(){
+        return this.getOnlineMode();
+    }
+
+    /**
+     * @return {number}
+     */
+    getPort(){
+        return this._config.getNested("server.port", 19132);
+    }
+
+    /**
+     *
+     * @return {number}
+     */
+    getViewDistance(){
+        return Math.max(2, this._config.getNested("view.distance", 8));
+    }
+
+    /**
+     * Returns a view distance up to the currently-allowed limit.
+     *
+     * @param distance {number}
+     *
+     * @return {number}
+     */
+    getAllowedViewDistance(distance){
+        return Math.max(2, Math.min(distance, this._memoryManager.getViewDistance(this.getViewDistance())));
+    }
+
+    /**
+     * @return {string}
+     */
+    getIp(){
+        return this._config.getNested("server.ip", "0.0.0.0");
+    }
+
+    /**
+     * @return {number}
+     */
+    getServerUniqueId(){
+        return this._serverID;
+    }
+
+    /**
+     *
+     * @return {boolean}
+     */
+    getAutoSave(){
+        return this._autoSave;
+    }
+
     constructor(pocketnode, logger, paths){
         this.initVars();
 
@@ -215,7 +356,7 @@ class Server {
         this._generatorManager = new GeneratorManager();
         this._generatorManager.addGenerator("flat", FlatGenerator);
         if(this.getDefaultLevel() === null){
-            this._defaultLevel = new Level();
+            this._defaultLevel = new Level(this);
         }
 
         Entity.init();
@@ -244,12 +385,6 @@ class Server {
         this.getCommandMap().registerCommand(new PluginsCommand());
     }
 
-    /**
-     * @return {boolean}
-     */
-    isRunning(){
-        return this._isRunning;
-    }
 
     shutdown(){
         if(!this._isRunning) return;
@@ -263,12 +398,17 @@ class Server {
         process.exit(); // fix this later
     }
 
-    /**
-     * @return {string}
-     */
-    getName(){
-        return this._pocketnode.NAME;
-    }
+
+
+
+
+
+
+
+
+
+
+
 
     /**
      * @return {string}
@@ -277,19 +417,11 @@ class Server {
         return this._pocketnode.CODENAME;
     }
 
-    /**
-     * @return {string}
-     */
-    getPocketNodeVersion(){
-        return this._pocketnode.VERSION;
-    }
 
-    /**
-     * @return {string}
-     */
-    getVersion(){
-        return MinecraftInfo.VERSION;
-    }
+
+
+
+
 
     /**
      * @return {number}
@@ -298,12 +430,7 @@ class Server {
         return MinecraftInfo.PROTOCOL;
     }
 
-    /**
-     * @return {string}
-     */
-    getApiVersion(){
-        return this._pocketnode.API_VERSION;
-    }
+
 
     /**
      * @return {CommandMap}
@@ -316,18 +443,8 @@ class Server {
         return this._pluginManager;
     }
 
-    /**
-     * @return {string}
-     */
-    getDataPath(){
-        return this._paths.data;
-    }
-    getFilePath(){
-        return this._paths.file;
-    }
-    getPluginPath(){
-        return this._paths.plugins;
-    }
+
+
 
     /**
      * @return {number}
@@ -336,44 +453,11 @@ class Server {
         return this._maxPlayers;
     }
 
-    /**
-     * Returns whether the server requires players to be authenticated to Xbox Live.
-     *
-     * @return {boolean}
-     */
-    getOnlineMode(){
-        return this._onlineMode;
-    }
 
-    /**
-     * Alias of this.getOnlineMode()
-     *
-     * @return {boolean}
-     */
-    requiresAuthentication(){
-        return this.getOnlineMode();
-    }
 
-    /**
-     * @return {string}
-     */
-    getIp(){
-        return this._config.getNested("server.ip", "0.0.0.0");
-    }
 
-    /**
-     * @return {number}
-     */
-    getPort(){
-        return this._config.getNested("server.port", 19132);
-    }
 
-    /**
-     * @return {number}
-     */
-    getServerId(){
-        return this._serverId;
-    }
+
 
     getGamemode(){
         return this._config.getNested("server.gamemode", 1);
@@ -451,7 +535,20 @@ class Server {
         let found = null;
         let delta = 20; // estimate nametag length
 
-        for(let [username, player] of this._playerList){
+        this.getOnlinePlayers().forEach(player => {
+            if(player.getName().indexOf(name) === 0) {
+                let curDelta = player.getName().length - name.length;
+                if (curDelta < delta) {
+                    found = player;
+                    delta = curDelta;
+                }
+                if (curDelta === 0) {
+                    break;
+                }
+            }
+        });
+
+        /*for(let [username, player] of this._playerList){
             if(username.indexOf(name) === 0){
                 let curDelta = username.length - name.length;
                 if(curDelta < delta){
@@ -462,7 +559,7 @@ class Server {
                     break;
                 }
             }
-        }
+        }*/
 
         return found;
     }
@@ -474,9 +571,11 @@ class Server {
     getPlayerExact(name){
         name = name.toLowerCase();
 
-        if(this._playerList.has(name)){
-            return this._playerList.get(name);
-        }
+        this.getOnlinePlayers().forEach(player =>{
+            if (player.getLowerCaseName() === name){
+                return player;
+            }
+        });
 
         return null;
     }
@@ -651,6 +750,26 @@ class Server {
         });
 
        this._defaultLevel.actuallyDoTick(currentTick);
+
+       this._levels.forEach(k => {
+           for (let level in k) {
+               if (k.hasOwnProperty(level)) {
+                   if (!Isset(this._levels[k])) {
+                       //Level unloaded during the tick of a level earlier in this loop, perhaps by plugin
+                       continue;
+                   }
+
+                   let levelTime = (Date.now() % 1000) / 1000;
+                   level.doTick(currentTick);
+                   let ticksMs = (Date.now() % 1000) / 1000 - levelTime;
+                   level.tickRateTime = ticksMs;
+                   if (ticksMs >= 50) {
+                       //console.log(`World \"%s\" took too long to tick: %gms (%g ticks)", ${level.getName()}, ${tickMs}, round($tickMs / 50, 2`);
+                       console.log(`World \"%s\" took too long to tick THIS LOG IS NOT COMPLETE YET.`);
+                   }
+               }
+           }
+       });
 
 
         //Do level ticks
