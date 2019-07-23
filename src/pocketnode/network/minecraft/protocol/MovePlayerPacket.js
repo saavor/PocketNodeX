@@ -38,7 +38,7 @@ class MovePlayerPacket extends DataPacket {
 
     _decodePayload() {
 
-        //console.log("MovePlayerPacket got called!");
+        console.log("MovePlayerPacket got called!");
 
         this.entityRuntimeId = this.getEntityRuntimeId();
         this.position = this.getVector3Obj();
