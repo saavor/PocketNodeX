@@ -5,7 +5,7 @@ PocketNodeX is a server software for Minecraft: Bedrock written in node.js, basi
 
 ## We need contributors
 ** The software will remain in a old Minecraft version with working basic chunks to help features implementation **
-The software is 1.12 joinable with this commit: [1.12 JOINABLE](https://github.com/HerryYT/PocketNodeX/commit/3e96c6f54cea42a8f27de53b549f6606fb8c3979)
+The software is 1.12 joinable with this commit: [1.12 JOINABLE](https://github.com/HerryYT/PocketNodeX/tree/3e96c6f54cea42a8f27de53b549f6606fb8c3979)
 
 ##Missing features
 - [ ] Latest minecraft basic support (at the moment is just joinable with empty chunks).
