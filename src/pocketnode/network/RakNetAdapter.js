@@ -13,7 +13,7 @@ class RakNetAdapter {
         this.server = server;
         this.raknet = new RakNetServer(server.getPort(), new Logger("RakNet").setDebugging(server._debuggingLevel));
         this.raknet.getServerName()
-            .setServerId(server.getServerUniqueId())
+            .setServerId(server.getServerId())
             .setMotd(server.getMotd())
             .setName(server.getName())
             .setProtocol(server.getProtocol())

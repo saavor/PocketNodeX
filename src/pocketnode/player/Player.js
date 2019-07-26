@@ -1064,8 +1064,7 @@ class Player extends Human{
         pk.chunkZ = chunk.getZ();
         pk.subChunkCount = chunk.getSubChunkSendCount();
         pk.cacheEnabled = false;
-        //pk.extraPayload = chunk.toBinary();
-        pk.extraPayload = "";
+        pk.extraPayload = chunk.toBinary();
         this.dataPacket(pk);
         
         if (this.spawned === false){

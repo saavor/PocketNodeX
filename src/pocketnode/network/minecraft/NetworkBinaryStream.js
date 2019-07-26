@@ -3,7 +3,6 @@ const Vector3 = pocketnode("math/Vector3");
 const Entity = pocketnode("entity/Entity");
 
 class NetworkBinaryStream extends binarystream("BinaryStream") {
-
     /**
      * @return {string}
      */
