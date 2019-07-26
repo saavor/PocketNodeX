@@ -10,9 +10,9 @@
  *  @link https://pocketnode.me
 */
 
-const Vector3 = pocketnode("math/Vector3");
+const Vector3 = require("../math/Vector3");
 
-const Level = pocketnode("level/Level");
+const Level = require("../level/Level");
 
 class Position extends Vector3 {
 

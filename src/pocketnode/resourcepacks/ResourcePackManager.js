@@ -1,8 +1,8 @@
-const Config = pocketnode("utils/Config");
-const SFS = pocketnode("utils/SimpleFileSystem");
+const Config = require("../utils/Config");
+const SFS = require("../utils/SimpleFileSystem");
 
-const ResourcePack = pocketnode("resourcepacks/ResourcePack");
-const ZippedResourcePack = pocketnode("resourcepacks/ZippedResourcePack");
+const ResourcePack = require("../resourcepacks/ResourcePack");
+const ZippedResourcePack = require("../resourcepacks/ZippedResourcePack");
 
 class ResourcePackManager {
     initVars(){

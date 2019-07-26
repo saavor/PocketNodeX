@@ -1,7 +1,8 @@
-const DataPacket = pocketnode("network/minecraft/protocol/DataPacket");
-const MinecraftInfo = pocketnode("network/minecraft/Info");
+const DataPacket = require("../protocol/DataPacket");
+const MinecraftInfo = require("../Info");
 
 class MovePlayerPacket extends DataPacket {
+
     static getId() {
         return MinecraftInfo.MOVE_PLAYER_PACKET;
     }
@@ -37,9 +38,6 @@ class MovePlayerPacket extends DataPacket {
     }
 
     _decodePayload() {
-
-        console.log("MovePlayerPacket got called!");
-
         this.entityRuntimeId = this.getEntityRuntimeId();
         this.position = this.getVector3Obj();
         this.pitch = this.readLFloat();
@@ -69,7 +67,6 @@ class MovePlayerPacket extends DataPacket {
     }
 
     handle(session) {
-
         return session.handleMovePlayer(this);
     }
 

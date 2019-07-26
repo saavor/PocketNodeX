@@ -1,4 +1,4 @@
-const Chunk = pocketnode("level/chunk/Chunk");
+const Chunk = require("../../level/chunk/Chunk");
 
 class Generator {
     /**

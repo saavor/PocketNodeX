@@ -1,5 +1,5 @@
-const ItemIds = pocketnode("item/ItemIds");
-const CompoundTag = pocketnode("nbt/tag/CompoundTag");
+const ItemIds = require("../item/ItemIds");
+const CompoundTag = require("../nbt/tag/CompoundTag");
 
 class Item extends ItemIds{
     static get TAG_ENCH() {return "ench"};

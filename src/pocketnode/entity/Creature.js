@@ -1,4 +1,4 @@
-const Living = pocketnode("entity/Living");
+const Living = require("../entity/Living");
 
 class Creature extends Living{
 

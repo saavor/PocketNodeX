@@ -1,5 +1,5 @@
-const DataPacket = pocketnode("network/minecraft/protocol/DataPacket");
-const BinaryStream = pocketnode("network/minecraft/NetworkBinaryStream");
+const DataPacket = require("./DataPacket");
+const BinaryStream = require("../NetworkBinaryStream");
 const Zlib = require("zlib");
 
 class BatchPacket extends DataPacket {

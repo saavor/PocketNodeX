@@ -1,5 +1,5 @@
-const DataPacket = pocketnode("network/minecraft/protocol/DataPacket");
-const MinecraftInfo = pocketnode("network/minecraft/Info");
+const DataPacket = require("../protocol/DataPacket");
+const MinecraftInfo = require("../Info");
 
 const Logger = pocketnode("logger/Logger");
 
@@ -14,19 +14,37 @@ class LoginPacket extends DataPacket {
     }
 
     initVars(){
+        /** @type {string} */
         this.username = "";
+        /** @type {number} */
         this.protocol = 0;
+        /** @type {string} */
         this.clientUUID = "";
+        /** @type {number} */
         this.clientId = 0;
+        /** @type {string} */
         this.xuid = "";
+        /** @type {string} */
         this.identityPublicKey = "";
+        /** @type {string} */
         this.serverAddress = "";
+        /** @type {string} */
         this.locale = "";
-        this.skipVerification = false;
 
+        /** @type {Array} (the "chain" index contains one or more JWTs) */
         this.chainData = [];
+        /** @type {string} */
         this.clientDataJwt = "";
+        /** @type {string} decoded payload of the clientData JWT */
         this.clientData = [];
+
+        /**
+         * This field may be used by plugins to bypass keychain verification. It should only be used for plugins such as
+         * Specter where passing verification would take too much time and not be worth it.
+         *
+         * @type {boolean}
+         */
+        this.skipVerification = false;
     }
 
     constructor(){
@@ -46,32 +64,22 @@ class LoginPacket extends DataPacket {
 
         this.protocol = this.readInt();
 
-        console.log("LoginPacket => decode payload");
-
-        this.decodeConnectionRequest();
-
-        /*try{
+        try{
             this.decodeConnectionRequest();
-            console.log("LoginPacket => decodeConnectionRequest()");
         }catch (e) {
-
-            console.log("LoginPacket => catch exception");
             
             if (this.protocol === MinecraftInfo.PROTOCOL) {
-                //throw e;
                 console.log("LoginPacket => same protocol: [CLIENT: => " + this.protocol + " / SERVER => " + MinecraftInfo.PROTOCOL + " ]");
+                throw e;
             }
 
-            console.log(this.constructor.name + " was thrown while decoding connection request in login (protocol version " + (this.protocol) + "): "/*print stack trace);
-        }*/
-
+            console.log(this.constructor.name + " was thrown while decoding connection request in login (protocol version " + (this.protocol) + "): ");
+        }
     }
 
     decodeConnectionRequest(){
         let buffer = new BinaryStream(this.read(this.readUnsignedVarInt()));
         this.chainData = JSON.parse(buffer.read(buffer.readLInt()).toString());
-
-        console.log("LoginPacket => chain data: " + this.chainData);
 
         let hasExtraData = false;
         this.chainData["chain"].forEach(chain => {
@@ -81,7 +89,7 @@ class LoginPacket extends DataPacket {
 
                 if (hasExtraData){
                     // error to handle
-                    this.console.info("Found 'extraData' multiple times in key chain");
+                    console.log("Found 'extraData' multiple times in key chain");
                 }
 
                 hasExtraData = true;
@@ -106,10 +114,10 @@ class LoginPacket extends DataPacket {
         this.clientDataJwt = buffer.read(buffer.readLInt()).toString();
         this.clientData = Utils.decodeJWT(this.clientDataJwt);
 
-        this.clientId = Isset(this.clientData["ClientRandomId"]) ? this.clientData["ClientRandomId"] : null;
-        this.serverAddress = Isset(this.clientData["ServerAddress"]) ? this.clientData["ServerAddress"] : null;
+        this.clientId = Isset(this.clientData["ClientRandomId"]) || null;
+        this.serverAddress = Isset(this.clientData["ServerAddress"]) || null;
 
-        this.locale = Isset(this.clientData["LanguageCode"] ? this.clientData["LanguageCode"] : null);
+        this.locale = Isset(this.clientData["LanguageCode"] | null);
     }
 
     _encodePayload() {

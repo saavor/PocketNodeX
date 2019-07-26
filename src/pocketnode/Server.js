@@ -1,32 +1,32 @@
-const MinecraftInfo = pocketnode("network/minecraft/Info");
-const Config = pocketnode("utils/Config");
+const MinecraftInfo = require("./network/minecraft/Info");
 
-const PluginManager = pocketnode("plugin/PluginManager");
-const SourcePluginLoader = pocketnode("plugin/SourcePluginLoader");
-const ScriptPluginLoader = pocketnode("plugin/ScriptPluginLoader");
+const Config = require("./utils/Config");
+const Isset = require("./utils/methods/Isset");
 
-const Isset = pocketnode("utils/methods/Isset");
+const PluginManager = require("./plugin/PluginManager");
+const SourcePluginLoader = require("./plugin/SourcePluginLoader");
+const ScriptPluginLoader = require("./plugin/ScriptPluginLoader");
 
-const RakNetAdapter = pocketnode("network/RakNetAdapter");
-const BatchPacket = pocketnode("network/minecraft/protocol/BatchPacket");
+const RakNetAdapter = require("./network/RakNetAdapter");
+const BatchPacket = require("./network/minecraft/protocol/BatchPacket");
 
-const CommandMap = pocketnode("command/CommandMap");
-const ConsoleCommandReader = pocketnode("command/ConsoleCommandReader");
-const HelpCommand = pocketnode("command/defaults/HelpCommand");
-const StopCommand = pocketnode("command/defaults/StopCommand");
-const PluginsCommand = pocketnode("command/defaults/PluginsCommand");
+const CommandMap = require("./command/CommandMap");
+const ConsoleCommandReader = require("./command/ConsoleCommandReader");
+const HelpCommand = require("./command/defaults/HelpCommand");
+const StopCommand = require("./command/defaults/StopCommand");
+const PluginsCommand = require("./command/defaults/PluginsCommand");
 
-const Player = pocketnode("player/Player");
-const PlayerList = pocketnode("player/PlayerList");
-const Entity = pocketnode("entity/Entity");
+const Player = require("./player/Player");
+const PlayerList = require("./player/PlayerList");
+const Entity = require("./entity/Entity");
 
-const ResourcePackManager = pocketnode("resourcepacks/ResourcePackManager");
+const ResourcePackManager = require("./resourcepacks/ResourcePackManager");
 
-const Level = pocketnode("level/Level");
-const GeneratorManager = pocketnode("level/generator/GeneratorManager");
-const FlatGenerator = pocketnode("level/generator/FlatGenerator");
+const Level = require("./level/Level");
+const GeneratorManager = require("./level/generator/GeneratorManager");
+const FlatGenerator = require("./level/generator/FlatGenerator");
 
-const SFS = pocketnode("utils/SimpleFileSystem");
+const SFS = require("./utils/SimpleFileSystem");
 
 class Server {
 
@@ -114,7 +114,7 @@ class Server {
         this._properties = null;
         this._propertyCache = [];
 
-        this._pocketnode = {};
+        this._require = {};
 
         this._bannedIps = {};
         this._bannedNames = {};
@@ -147,10 +147,12 @@ class Server {
         this._entityCount = 0;
     }
 
-    constructor(pocketnode, logger, paths){
+    constructor(require, logger, paths){
         this.initVars();
 
-        this._pocketnode = pocketnode;
+        this.instance = this;
+
+        this._require = require;
 
         this._logger = logger;
         this._paths = paths;
@@ -170,10 +172,10 @@ class Server {
         this.getLogger().info("Loading " + this.getName() + " a Minecraft: Bedrock Edition server for version " + this.getVersion());
 
         this.getLogger().info("Loading server configuration...");
-        if(!SFS.fileExists(this._paths.data + "pocketnode.json")){
-            SFS.copy(this._paths.file + "pocketnode/resources/pocketnode.json", this._paths.data + "pocketnode.json");
-        }
-        this._config = new Config(this.getDataPath() + "pocketnode.json", Config.JSON, {});
+        /*if(!SFS.fileExists(this._paths.data + "require.json")){
+            SFS.copy(this._paths.file + "require/resources/require.json", this._paths.data + "require.json");
+        }*/
+        this._config = new Config(this.getDataPath() + "require.json", Config.JSON, {});
         this._debuggingLevel = this._config.getNested("debugging.level", 0);
 
         this.getLogger().setDebugging(this._debuggingLevel);
@@ -187,16 +189,16 @@ class Server {
         this._maxPlayers = this._config.getNested("server.max-players", 20);
         this._onlineMode = this._config.getNested("server.online-mode", true);
 
-        if(!TRAVIS_BUILD) process.stdout.write("\x1b]0;" + this.getName() + " " + this.getPocketNodeVersion() + "\x07");
+        if(!TRAVIS_BUILD) process.stdout.write("\x1b]0;" + this.getName() + " " + this.getrequireVersion() + "\x07");
 
-        this.getLogger().debug("Server Id:", this._serverId);
+        this.getLogger().info("Server Id:", this._serverID);
 
         this.getLogger().info("Starting server on " + this.getIp() + ":" + this.getPort());
 
         this._raknetAdapter = new RakNetAdapter(this);
 
-        this.getLogger().info("This server is running " + this.getName() + " version " + this.getPocketNodeVersion() + " \"" + this.getCodeName() + "\" (API " + this.getApiVersion() + ")");
-        this.getLogger().info("PocketNode is distributed under the GPLv3 License.");
+        this.getLogger().info("This server is running " + this.getName() + " version " + this.getrequireVersion() + " \"" + this.getCodeName() + "\" (API " + this.getApiVersion() + ")");
+        this.getLogger().info("require is distributed under the GPLv3 License.");
 
         this._commandMap = new CommandMap(this);
         this.registerDefaultCommands();
@@ -214,10 +216,10 @@ class Server {
         this._generatorManager = new GeneratorManager();
         this._generatorManager.addGenerator("flat", FlatGenerator);
         if(this.getDefaultLevel() === null){
-            this._defaultLevel = new Level();
+            this._defaultLevel = new Level(this);
         }
 
-        Entity.init();
+        //Entity.init();
 
         //enable plugins POSTWORLD
 
@@ -230,7 +232,7 @@ class Server {
 
         this._tickCounter = 0;
 
-        this.getLogger().info("Done ("+(Date.now() - this._pocketnode.START_TIME)+"ms)!");
+        this.getLogger().info("Done ("+(Date.now() - this._require.START_TIME)+"ms)!");
 
         this.tickProcessor();
         //this.forceShutdown();
@@ -261,25 +263,30 @@ class Server {
         process.exit(); // fix this later
     }
 
+    //Not working
+    static getInstance(){
+        return self.instance;
+    }
+
     /**
      * @return {string}
      */
     getName(){
-        return this._pocketnode.NAME;
+        return this._require.NAME;
     }
 
     /**
      * @return {string}
      */
     getCodeName(){
-        return this._pocketnode.CODENAME;
+        return this._require.CODENAME;
     }
 
     /**
      * @return {string}
      */
-    getPocketNodeVersion(){
-        return this._pocketnode.VERSION;
+    getrequireVersion(){
+        return this._require.VERSION;
     }
 
     /**
@@ -300,7 +307,7 @@ class Server {
      * @return {string}
      */
     getApiVersion(){
-        return this._pocketnode.API_VERSION;
+        return this._require.API_VERSION;
     }
 
     /**
@@ -370,11 +377,11 @@ class Server {
      * @return {number}
      */
     getServerId(){
-        return this._serverId;
+        return this._serverID;
     }
 
     getGamemode(){
-        return this._config.getNested("server.gamemode", 1);
+        return this._config.getNested("server.gamemode", 0);
     }
 
     /**
@@ -388,7 +395,7 @@ class Server {
      * @return {string}
      */
     getMotd(){
-        return this._config.getNested("server.motd", this._pocketnode.NAME + " Server");
+        return this._config.getNested("server.motd", this._require.NAME + " Server");
     }
 
     /**
@@ -707,7 +714,7 @@ class Server {
     titleTick(){
         process.stdout.write("\x1b]0;"+
             this.getName() + " " +
-            this.getPocketNodeVersion() + " | " +
+            this.getrequireVersion() + " | " +
             "Online " + this.getOnlinePlayerCount() + "/" + this.getMaxPlayers() + " | " +
             "TPS " + this.getTicksPerSecondAverage() + " | " +
             "Load " + this.getTickUsageAverage() + "%"
@@ -715,6 +722,12 @@ class Server {
     }
 
     batchPackets(players, packets, forceSync = false, immediate = false){
+
+        if (packets.length > 0){
+            //todo
+            //console.log("Cannot send empty batch");
+        }
+
         let targets = [];
         players.forEach(player => {
             if(player.isConnected()) targets.push(this._players.getPlayerIdentifier(player));

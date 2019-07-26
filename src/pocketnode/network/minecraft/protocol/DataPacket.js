@@ -1,5 +1,6 @@
-const BinaryStream = pocketnode("network/minecraft/NetworkBinaryStream");
-const Vector3 = pocketnode("math/Vector3");
+const BinaryStream = require("../NetworkBinaryStream");
+const Vector3 = require("../../../math/Vector3");
+//const Entity = require("../../../entity/Entity");
 
 class DataPacket extends BinaryStream {
     static getId(){
@@ -47,7 +48,7 @@ class DataPacket extends BinaryStream {
             this.extraByte2 = this.readByte();
 
             if(this.extraByte1 !== 0 && this.extraByte2 !== 0){
-                throw new Error("Got unexpected non-zero split-screen bytes (byte1: "+this.extraBytes[0]+", byte2: "+this.extraBytes[1]);
+                throw new Error("Got unexpected non-zero split-screen bytes (byte1: "+ this.extraBytes[0] +", byte2: "+this.extraBytes[1]);
             }
         }else{
             throw new Error("Packet id received is different from DataPacket id! "+JSON.stringify({recieved: packetId, datapacket: this.getId()}));
@@ -93,6 +94,8 @@ class DataPacket extends BinaryStream {
         this.writeUnsignedVarLong(eid);
         return this;
     }
+
+
 
     getVector3Obj(){
         return new Vector3(

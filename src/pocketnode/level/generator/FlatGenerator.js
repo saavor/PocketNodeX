@@ -1,5 +1,5 @@
-const Generator = pocketnode("level/generator/Generator");
-const Chunk = pocketnode("level/chunk/Chunk");
+const Generator = require("../../level/generator/Generator");
+const Chunk = require("../../level/chunk/Chunk");
 
 class FlatGenerator extends Generator {
     constructor(){

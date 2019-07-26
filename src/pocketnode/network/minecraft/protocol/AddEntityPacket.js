@@ -1,8 +1,8 @@
-const DataPacket = pocketnode("network/minecraft/protocol/DataPacket");
-const EntityIds = pocketnode("entity/EntityIds");
-const MinecraftInfo = pocketnode("network/minecraft/Info");
-const Vector3 = pocketnode("math/Vector3");
-const Attribute = pocketnode("entity/Attribute");
+const DataPacket = require("./DataPacket");
+const EntityIds = require("../../../entity/EntityIds");
+const MinecraftInfo = require("../Info");
+const Vector3 = require("../../../math/Vector3");
+const Attribute = require("../../../entity/Attribute");
 
 const LEGACY_ID_MAP_BC = [
 
@@ -135,11 +135,12 @@ class AddEntityPacket extends DataPacket{
     _decodePayload() {
         this.entityRuntimeId = this.getEntityUniqueId();
         this.entityRuntimeId = this.getEntityRuntimeId();
-        let t;
+        this.type = this.readUnsignedVarInt();
+        /*let t;
         this.type = self.LEGACY_ID_MAP_BC.includes(t = this.getString());
         if (this.type){
             console.log(`Can't map ID ${t} to legacy ID`);
-        }
+        }*/
         this.position = this.getVector3Obj();
         this.motion = this.getVector3Obj();
         this.pitch = this.readLFloat();
@@ -147,7 +148,7 @@ class AddEntityPacket extends DataPacket{
         this.headYaw = this.readLFloat();
 
         let attrCount = this.readUnsignedVarInt();
-        for (let i = 0; i < attrCount; ++i ){
+        for (let i = 0; i < attrCount; ++i){
             let name = this.readString();
             let min = this.readLFloat();
             let current = this.readLFloat();
@@ -170,4 +171,30 @@ class AddEntityPacket extends DataPacket{
             }
         }
     }
+
+    _encodePayload() {
+        this.writeEntityUniqueId(this.entityUniqueId || this.entityRuntimeId);
+        this.writeEntityRuntimeId(this.entityRuntimeId);
+        this.writeUnsignedVarInt(this.type);
+        this.writeVector3Obj(this.position);
+        this.writeVector3Obj(this.motion);
+        this.writeLFloat(this.pitch);
+        this.writeLFloat(this.yaw);
+        this.writeLFloat(this.headYaw);
+
+        this.writeUnsignedVarInt(this.attributes.length);
+        this.attributes.forEach(attribute => {
+           this.writeString(attribute.getName());
+           this.writeLFloat(attribute.getMinValue());
+           this.writeLFloat(attribute.getValue());
+           this.writeLFloat(attribute.getMaxValue());
+        });
+
+        this.writeEntityMetadata(this.metadata);
+        this.writeUnsignedVarInt(this.links.length);
+        this.links.forEach(link => {
+           //TODO: this.writeEntityLink(link);
+        });
+    }
 }
+module.exports = AddEntityPacket;

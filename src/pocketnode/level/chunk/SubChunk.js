@@ -1,4 +1,4 @@
-const SubChunkInterface = pocketnode("level/chunk/SubChunkInterface");
+const SubChunkInterface = require("../../level/chunk/SubChunkInterface");
 
 class SubChunk extends SubChunkInterface {
     initVars(){

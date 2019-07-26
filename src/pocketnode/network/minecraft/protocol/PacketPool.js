@@ -1,30 +1,33 @@
-const LoginPacket = pocketnode("network/minecraft/protocol/LoginPacket");
-const AnimatePacket = pocketnode("network/minecraft/protocol/AnimatePacket");
-const SetEntityDataPacket = pocketnode("network/minecraft/protocol/SetEntityDataPacket");
-const PlayStatusPacket = pocketnode("network/minecraft/protocol/PlayStatusPacket");
-const DisconnectPacket = pocketnode("network/minecraft/protocol/DisconnectPacket");
-const ResourcePacksInfoPacket = pocketnode("network/minecraft/protocol/ResourcePacksInfoPacket");
-const MovePlayerPacket = pocketnode("network/minecraft/protocol/MovePlayerPacket");
-const PlayerActionPacket = pocketnode("network/minecraft/protocol/PlayerActionPacket");
-const InteractPacket = pocketnode("network/minecraft/protocol/InteractPacket");
-const LevelSoundEventPacket = pocketnode("network/minecraft/protocol/LevelSoundEventPacket");
-const SubClientLoginPacket = pocketnode("network/minecraft/protocol/SubClientLoginPacket");
-const PlayerSkinPacket = pocketnode("network/minecraft/protocol/PlayerSkinPacket");
-const BlockEventPacket = pocketnode("network/minecraft/protocol/BlockEventPacket");
-const UpdateAttributesPacket = pocketnode("network/minecraft/protocol/UpdateAttributesPacket");
-const StructureBlockUpdatePacket = pocketnode("network/minecraft/protocol/StructureBlockUpdatePacket");
-const ResourcePackClientResponsePacket = pocketnode("network/minecraft/protocol/ResourcePackClientResponsePacket");
-const ResourcePackChunkRequestPacket = pocketnode("network/minecraft/protocol/ResourcePackChunkRequestPacket");
-const ServerToClientHandshakePacket = pocketnode("network/minecraft/protocol/ServerToClientHandshakePacket");
-const ClientToServerHandshakePacket = pocketnode("network/minecraft/protocol/ClientToServerHandshakePacket");
-const RequestChunkRadiusPacket = pocketnode("network/minecraft/protocol/RequestChunkRadiusPacket");
-const SetLocalPlayerAsInitializedPacket = pocketnode("network/minecraft/protocol/SetLocalPlayerAsInitializedPacket");
-const TextPacket = pocketnode("network/minecraft/protocol/TextPacket");
-const SetDefaultGameTypePacket = pocketnode("network/minecraft/protocol/SetDefaultGameTypePacket");
-const SetPlayerGameTypePacket = pocketnode("network/minecraft/protocol/SetPlayerGameTypePacket");
-const AddPlayerPacket = pocketnode("network/minecraft/protocol/AddPlayerPacket");
+const LoginPacket = require("../protocol/LoginPacket");
+const AnimatePacket = require("../protocol/AnimatePacket");
+// const SetEntityDataPacket = require("../protocol/SetEntityDataPacket");
+const PlayStatusPacket = require("../protocol/PlayStatusPacket");
+const DisconnectPacket = require("../protocol/DisconnectPacket");
+const ResourcePacksInfoPacket = require("../protocol/ResourcePackDataInfoPacket");
+const MovePlayerPacket = require("../protocol/MovePlayerPacket");
+const PlayerActionPacket = require("../protocol/PlayerActionPacket");
+const InteractPacket = require("../protocol/InteractPacket");
+const LevelSoundEventPacket = require("../protocol/LevelSoundEventPacket");
+const SubClientLoginPacket = require("../protocol/SubClientLoginPacket");
+const PlayerSkinPacket = require("../protocol/PlayerSkinPacket");
+const BlockEventPacket = require("../protocol/BlockEventPacket");
+const UpdateAttributesPacket = require("../protocol/UpdateAttributesPacket");
+const StructureBlockUpdatePacket = require("../protocol/StructureBlockUpdatePacket");
+const ResourcePackClientResponsePacket = require("../protocol/ResourcePackClientResponsePacket");
+const ResourcePackChunkRequestPacket = require("../protocol/ResourcePackChunkRequestPacket");
+const ServerToClientHandshakePacket = require("../protocol/ServerToClientHandshakePacket");
+const ClientToServerHandshakePacket = require("../protocol/ClientToServerHandshakePacket");
+const RequestChunkRadiusPacket = require("../protocol/RequestChunkRadiusPacket");
+const SetLocalPlayerAsInitializedPacket = require("../protocol/SetLocalPlayerAsInitializedPacket");
+const TextPacket = require("../protocol/TextPacket");
+const SetDefaultGameTypePacket = require("../protocol/SetDefaultGameTypePacket");
+const SetPlayerGameTypePacket = require("../protocol/SetPlayerGameTypePacket");
+const AddPlayerPacket = require("../protocol/AddPlayerPacket");
+const AddEntityPacket = require("../protocol/AddEntityPacket");
+const AdventureSettingsPacket = require("../protocol/AdventureSettingsPacket");
 
 class PacketPool {
+
     constructor(){
         this.packetPool = new Map();
         this.registerPackets();
@@ -55,7 +58,8 @@ class PacketPool {
         this.registerPacket(AnimatePacket);
         this.registerPacket(PlayerSkinPacket);
         this.registerPacket(AddPlayerPacket);
-        this.registerPacket(SetEntityDataPacket);
+        this.registerPacket(AddEntityPacket);
+        //this.registerPacket(SetEntityDataPacket);
         this.registerPacket(BlockEventPacket);
         this.registerPacket(LevelSoundEventPacket);
         this.registerPacket(SetLocalPlayerAsInitializedPacket);
@@ -67,6 +71,7 @@ class PacketPool {
         this.registerPacket(ResourcePackClientResponsePacket);
         this.registerPacket(ResourcePackChunkRequestPacket);
         this.registerPacket(RequestChunkRadiusPacket);
+        this.registerPacket(AdventureSettingsPacket);
         this.registerPacket(TextPacket);
     }
 }

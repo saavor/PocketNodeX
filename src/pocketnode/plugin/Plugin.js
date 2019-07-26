@@ -1,4 +1,4 @@
-const ClassHasMethod = pocketnode("utils/methods/ClassHasMethod");
+const ClassHasMethod = require("../utils/methods/ClassHasMethod");
 
 class Plugin {
     constructor(){

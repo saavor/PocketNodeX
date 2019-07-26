@@ -1,5 +1,8 @@
-const BaseInventory = pocketnode("inventory/BaseInventory");
-const Item = pocketnode("item/Item");
+const BaseInventory = require("../inventory/BaseInventory");
+
+const Item = require("../item/Item");
+
+const Living = require("../entity/Living");
 
 class ArmorInventory extends BaseInventory{
     static get SLOT_HEAD() {return 0};

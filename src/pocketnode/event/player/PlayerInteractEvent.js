@@ -1,6 +1,6 @@
-const PlayerEvent = pocketnode("event/player/PlayerEvent");
-const Vector3 = pocketnode("math/Vector3");
-const Item = pocketnode("item/Item");
+const PlayerEvent = require("../../event/player/PlayerEvent");
+const Vector3 = require("../../math/Vector3");
+const Item = require("../../item/Item");
 
 class PlayerInteractEvent extends PlayerEvent{
 

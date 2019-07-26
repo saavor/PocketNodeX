@@ -1,59 +1,61 @@
-//const CommandSender = pocketnode("command/CommandSender");
+const PlayerSessionAdapter = require("../network/PlayerSessionAdapter");
 
-//const MinecraftInfo = pocketnode("network/minecraft/Info");
-//const UUID = pocketnode("utils/UUID");
-const PlayerSessionAdapter = pocketnode("network/PlayerSessionAdapter");
+const DataPacket =  require("../network/minecraft/protocol/DataPacket");
+const LoginPacket = require("../network/minecraft/protocol/LoginPacket");
+const AnimatePacket = require("../network/minecraft/protocol/AnimatePacket");
+const InteractPacket = require("../network/minecraft/protocol/InteractPacket");
+const PlayerActionPacket = require("../network/minecraft/protocol/PlayerActionPacket");
 
-//const PlayerPreLoginEvent = pocketnode("event/")
-const PlayerJoinEvent = pocketnode("event/player/PlayerJoinEvent");
-const PlayerJumpEvent = pocketnode("event/player/PlayerJumpEvent");
-const PlayerAnimationEvent = pocketnode("event/player/PlayerAnimationEvent");
-const PlayerInteractEvent = pocketnode("event/player/PlayerInteractEvent");
+//const EventManager = require("event/EventManager");
+const PlayerJoinEvent = require("../event/player/PlayerJoinEvent");
+const PlayerJumpEvent = require("../event/player/PlayerJumpEvent");
+const PlayerAnimationEvent = require("../event/player/PlayerAnimationEvent");
+const PlayerInteractEvent = require("../event/player/PlayerInteractEvent");
 
-//const EventManager = pocketnode("event/EventManager");
-const AttributeMap = pocketnode("entity/AttributeMap");
+const ResourcePackClientResponsePacket = require("../network/minecraft/protocol/ResourcePackClientResponsePacket");
+const ResourcePackDataInfoPacket = require("../network/minecraft/protocol/ResourcePackDataInfoPacket");
+const ResourcePackStackPacket = require("../network/minecraft/protocol/ResourcePackStackPacket");
+const AddEntityPacket = require("../network/minecraft/protocol/AddEntityPacket");
+//const ResourcePackChunkRequestPacket = require("../network/minecraft/protocol/ResourcePackChunkRequestPacket");
 
-const ResourcePackClientResponsePacket = pocketnode("network/minecraft/protocol/ResourcePackClientResponsePacket");
-const ResourcePackDataInfoPacket = pocketnode("network/minecraft/protocol/ResourcePackDataInfoPacket");
-const ResourcePackStackPacket = pocketnode("network/minecraft/protocol/ResourcePackStackPacket");
-//const ResourcePackChunkRequestPacket = pocketnode("network/minecraft/protocol/ResourcePackChunkRequestPacket");
+const PlayStatusPacket = require("../network/minecraft/protocol/PlayStatusPacket");
+const UpdateAttributesPacket = require("../network/minecraft/protocol/UpdateAttributesPacket");
+const PlayerPreLoginEvent = require("../event/player/PlayerPreLoginEvent");
+const DisconnectPacket = require("../network/minecraft/protocol/DisconnectPacket");
+const MovePlayerPacket = require("../network/minecraft/protocol/MovePlayerPacket");
+const ResourcePacksInfoPacket = require("../network/minecraft/protocol/ResourcePacksInfoPacket");
+const StartGamePacket = require("../network/minecraft/protocol/StartGamePacket");
+const ChunkRadiusUpdatedPacket = require("../network/minecraft/protocol/ChunkRadiusUpdatedPacket");
+const TextPacket = require("../network/minecraft/protocol/TextPacket");
+const FullChunkDataPacket =  require("../network/minecraft/protocol/FullChunkDataPacket");
+const SetPlayerGameTypePacket =  require("../network/minecraft/protocol/SetPlayerGameTypePacket");
 
-const DataPacket = pocketnode("network/minecraft/protocol/DataPacket");
-const AnimatePacket = pocketnode("network/minecraft/protocol/AnimatePacket");
-const InteractPacket = pocketnode("network/minecraft/protocol/InteractPacket");
-const PlayerActionPacket = pocketnode("network/minecraft/protocol/PlayerActionPacket");
-//const LoginPacket = pocketnode("network/minecraft/protocol/LoginPacket");
-const PlayStatusPacket = pocketnode("network/minecraft/protocol/PlayStatusPacket");
-const UpdateAttributesPacket = pocketnode("network/minecraft/protocol/UpdateAttributesPacket");
-//const PlayerPreLoginEvent = pocketnode("event/player/PlayerPreLoginEvent");
-const DisconnectPacket = pocketnode("network/minecraft/protocol/DisconnectPacket");
-const MovePlayerPacket = pocketnode("network/minecraft/protocol/MovePlayerPacket");
-const ResourcePacksInfoPacket = pocketnode("network/minecraft/protocol/ResourcePacksInfoPacket");
-const StartGamePacket = pocketnode("network/minecraft/protocol/StartGamePacket");
-const ChunkRadiusUpdatedPacket = pocketnode("network/minecraft/protocol/ChunkRadiusUpdatedPacket");
-const TextPacket = pocketnode("network/minecraft/protocol/TextPacket");
-const FullChunkDataPacket =  pocketnode("network/minecraft/protocol/FullChunkDataPacket");
-const SetPlayerGameTypePacket =  pocketnode("network/minecraft/protocol/SetPlayerGameTypePacket");
+const AdventureSettingsPacket =  require("../network/minecraft/protocol/AdventureSettingsPacket");
 
-const DataPacketSendEvent = pocketnode("event/server/DataPacketSendEvent");
+const DataPacketSendEvent = require("../event/server/DataPacketSendEvent");
 
-const GameRule = pocketnode("level/GameRule");
-const AxisAlignedBB = pocketnode("math/AxisAlignedBB");
+const GameRule = require("../level/GameRule");
+const AxisAlignedBB = require("../math/AxisAlignedBB");
 
-const Vector3 = pocketnode("math/Vector3");
+const Vector3 = require("../math/Vector3");
 
-const Human = pocketnode("entity/Human");
-const Skin = pocketnode("entity/Skin");
-const Position = pocketnode("level/Position");
+const Human = require("../entity/Human");
+const Skin = require("../entity/Skin");
+const AttributeMap = require("../entity/AttributeMap");
+const Position = require("../level/Position");
 
-const CompoundTag = pocketnode("nbt/tag/CompoundTag");
-const ResourcePack = pocketnode("resourcepacks/ResourcePack");
-const TextFormat = pocketnode("utils/TextFormat");
-const Base64 = pocketnode("utils/Base64");
+const CompoundTag = require("../nbt/tag/CompoundTag");
+const ResourcePack = require("../resourcepacks/ResourcePack");
+const TextFormat = require("../utils/TextFormat");
+const Base64 = require("../utils/Base64");
 
-const Async = pocketnode("utils/Async");
+const MinecraftInfo = require("../network/minecraft/Info");
 
+const Async = require("../utils/Async");
+
+'use strict';
 class Player extends Human{
+    
     static get SURVIVAL(){return 0}
     static get CREATIVE(){return 1}
     static get ADVENTURE(){return 2}
@@ -104,6 +106,9 @@ class Player extends Human{
         this._needACK = {};
 
         this.onGround = false;
+        this._autoJump = true;
+        this._allowFlight = false;
+        this._flying = false;
     }
     
     constructor(server, clientId, ip, port){
@@ -114,10 +119,11 @@ class Player extends Human{
         this._ip = ip;
         this._port = port;
         this.creationTime = Date.now();
+        this.gamemode = this.server.getGamemode();
 
         this.namedtag = new CompoundTag();
 
-        //TODO: this.onGround = this.namedtag.getByte("onGround", 0) !== 0;
+        this.onGround = this.namedtag.getByte("onGround", 0) !== 0;
 
         this._sessionAdapter = new PlayerSessionAdapter(this);
 
@@ -129,6 +135,24 @@ class Player extends Human{
             return TextFormat.YELLOW + this.getName() + " has left the game";
         }
         return "";
+    }
+
+    getClientId(){
+        return this._randomClientId;
+    }
+
+    //Todo: missing whitelist, ban functions
+
+    getFirstPlayed(){
+        if (this.namedtag instanceof CompoundTag) return this.namedtag.getLong("firstPlayed", 0, true);
+    }
+
+    getLastPlayed(){
+        if (this.namedtag instanceof CompoundTag) return this.namedtag.getLong("lastPlayed", 0, true);
+    }
+
+    hasPlayedBefore(){
+        return this._playedBefore;
     }
 
     isConnected(){
@@ -172,8 +196,14 @@ class Player extends Human{
         return this._port;
     }
 
+    /**
+     * Called when a player join the server.
+     *
+     * @param packet {LoginPacket}
+     * @return {boolean}
+     */
     handleLogin(packet) {
-        //CheckTypes([LoginPacket, packet]);
+        CheckTypes([LoginPacket, packet]);
 
         if (this.loggedIn) {
             return false;
@@ -181,7 +211,7 @@ class Player extends Human{
 
         this._protocol = packet.protocol;
 
-        /*if(packet.protocol] !== MinecraftInfo.PROTOCOL){
+        if(packet.protocol !== MinecraftInfo.PROTOCOL){
             if(packet.protocol < MinecraftInfo.PROTOCOL){
                 this.sendPlayStatus(PlayStatusPacket.LOGIN_FAILED_CLIENT, true);
             }else{
@@ -191,12 +221,12 @@ class Player extends Human{
             this.close("", "Incompatible Protocol", false);
 
             return true;
-        }*/ //todo uncomment after testing
+        }
 
-        /*if (Player.isValidUserName(packet.username)) {
+        if (Player.isValidUserName(packet.username)) {
             this.close("", "Invalid Username");
             return true;
-        }*/
+        }
 
         this._username = TextFormat.clean(packet.username);
         this._displayName = this._username;
@@ -210,7 +240,10 @@ class Player extends Human{
             return true;
         }
 
-        this._randomClientId = packet.clientId;
+        //todo: fix this._randomClientId = packet.clientId;
+        this._randomClientId = 11;
+
+        console.log(this._randomClientId);
         //todo fix 16 bytes uuid
         // this._uuid = UUID.fromString(packet.clientUUID, null);
         // this._rawUUID = this._uuid.toBinary();
@@ -230,14 +263,13 @@ class Player extends Human{
 
         this._skin = skin; //todo: function setSkin()
 
-        //let ev = new PlayerPreLoginEvent();
-        //EventManager.callEvent(ev.getName(), ev);
-        
-        // if (ev.isCancelled()) {
-        //     this.close("", ev.getKickMessage());
-        //
-        //     return true;
-        // }
+        let ev = new PlayerPreLoginEvent(this, "Plugin reason");
+        this.server.getPluginManager().callEvent(ev);
+        if(ev.isCancelled()) {
+            this.close("", ev.getKickMessage());
+
+            return true;
+        }
 
         //this.server._whitelist
         //todo: if whitelisted/banned kick
@@ -369,8 +401,6 @@ class Player extends Human{
     }*/
 
     doFirstSpawn(){
-        console.log("First spawn called!");
-
         this.spawned = true;
 
         this.sendPlayStatus(PlayStatusPacket.PLAYER_SPAWN);
@@ -383,6 +413,26 @@ class Player extends Human{
         }
 
         this.noDamageTicks = 60;
+
+        //this.sendSpawnPacket(this);
+
+        //this.spawnToAll();
+    }
+
+    sendSpawnPacket(player){
+        let pk = new AddEntityPacket();
+        pk.entityRuntimeId = this.id;
+        pk.type = -1; //todo: maybe?
+        pk.position = new Vector3(0, 5, 0);
+        pk.motion = 0; //todo
+        pk.yaw = new Vector3(0, 0, 0);
+        pk.pitch = new Vector3(0, 0, 0);
+        //pk.yaw = this.yaw;
+        //pk.pitch = this.pitch;
+        pk.attributes = [];
+        pk.metadata = this._propertyManager.getAll();
+
+        player.dataPacket(pk);
     }
 
 
@@ -611,11 +661,11 @@ class Player extends Human{
         pk.levelId = "";
         //pk.playerGamemode = this.server.getGamemode(); //todo?
         pk.playerGamemode = this.gamemode;
-        pk.playerPosition = new Vector3(0, 5, 0);
+        pk.playerPosition = new Vector3(0,6.5,0); //this.getOffsetPosition(this);
         pk.seed = 0xdeadbeef;
         pk.generator = 2;
-        pk.levelGamemode = 1;
-        [pk.spawnX, pk.spawnY, pk.spawnZ] = [0, 6, 0];
+        pk.levelGamemode = 0;
+        [pk.spawnX, pk.spawnY, pk.spawnZ] = [0,6,0];
         pk.isMultiplayerGame = true;
         pk.hasXboxLiveBroadcast = false;
         pk.hasLANBroadcast = true;
@@ -655,10 +705,17 @@ class Player extends Human{
 
         this.dataPacket(pk);
 
+        this.sendSettings();
         this.server.addOnlinePlayer(this);
         this.server.onPlayerCompleteLoginSequence(this);
 
         //this.sendPlayStatus(PlayStatusPacket.PLAYER_SPAWN);
+    }
+
+    getOffsetPosition(Vector3){
+        let result = super.getOffsetPosition();
+        result.y += 0.001;
+        return result;
     }
 
     chat(message){
@@ -720,8 +777,6 @@ class Player extends Human{
         if (this.spawned === false){
             return true;
         }
-
-        console.log("AnimatePacket handled!");
 
         let ev = new PlayerAnimationEvent(this, packet.action);
         this.server.getPluginManager().callEvent(ev);
@@ -852,10 +907,8 @@ class Player extends Human{
     }
 
     sendPosition(pos, yaw = null, pitch = null, mode = MovePlayerPacket.MODE_NORMAL, targets = null){
-      // let playerYaw = (yaw ?? this._yaw);
-       let playerYaw = this._yaw;
-      // let playerPitch = (pitch ?? this._pitch);
-      let playerPitch = this._pitch;
+      let playerYaw = (yaw || this._yaw);
+      let playerPitch = (pitch || this._pitch);
 
        let fixedpos = pos + 0.001;
 
@@ -897,8 +950,37 @@ class Player extends Human{
         this.dataPacket(pk);
     }
 
+    /**
+     * Sends all the option flags
+     */
     sendSettings(){
+        let pk = new AdventureSettingsPacket();
 
+        pk.setFlag(AdventureSettingsPacket.WORLD_IMMUTABLE, this.isSpectator());
+        pk.setFlag(AdventureSettingsPacket.NO_PVP, this.isSpectator());
+        pk.setFlag(AdventureSettingsPacket.AUTO_JUMP, this._autoJump);
+        pk.setFlag(AdventureSettingsPacket.ALLOW_FLIGHT, this._allowFlight);
+        pk.setFlag(AdventureSettingsPacket.NO_CLIP, this.isSpectator());
+        pk.setFlag(AdventureSettingsPacket.FLYING, this._flying);
+
+        pk.commandPermission = AdventureSettingsPacket.PERMISSION_OPERATOR; //todo
+        pk.playerPermission = AdventureSettingsPacket.PERMISSION_OPERATOR;
+        pk.entityUniqueId = this.getId();
+
+        this.dataPacket(pk);
+    }
+
+    handleAdventureSettings(packet){
+        if (packet.entityUniqueId !== this.getId()){
+            return false; //TODO
+        }
+
+        let handled = false;
+
+        let isFlying = packet.getFlag(AdventureSettingsPacket.FLYING);
+        //Todo: if (isFlying && ){}
+
+        return handled;
     }
 
     static getClientFriendlyGamemode(gamemode){
@@ -1034,6 +1116,10 @@ class Player extends Human{
      */
     getSessionAdapter(){
         return this._sessionAdapter;
+    }
+
+    isSpectator(){
+        return this.gamemode === Player.SPECTATOR;
     }
 }
 

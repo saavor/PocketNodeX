@@ -1,5 +1,5 @@
-const NBTStream = pocketnode("nbt/NBTStream");
-const Binary = pocketnode("../src/binarystream/BinaryStream");
+const NBTStream = require("../nbt/NBTStream");
+const Binary = require("../../../src/binarystream/src/BinaryStream");
 
 class LittleEndianNBTStream extends NBTStream{
 

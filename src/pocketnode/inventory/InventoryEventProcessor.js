@@ -1,4 +1,4 @@
-const Item = pocketnode("item/Item");
+const Item = require("../item/Item");
 
 class InventoryEventProcessor {
 

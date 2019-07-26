@@ -1,5 +1,5 @@
-const NamedTag = pocketnode("nbt/tag/NamedTag");
-const ListTag = pocketnode("nbt/tag/ListTag");
+const NamedTag = require("../../nbt/tag/NamedTag");
+const ListTag = require("../../nbt/tag/ListTag");
 
 class CompoundTag extends NamedTag {
 

@@ -1,4 +1,4 @@
-const Base64 = pocketnode("utils/Base64");
+const Base64 = require("../utils/Base64");
 
 class Utils {
     static decodeJWT(token){

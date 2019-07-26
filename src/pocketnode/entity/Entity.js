@@ -1,20 +1,21 @@
-const assert = require('assert');
+const Isset = require("../utils/methods/Isset");
 
-const Isset = pocketnode("utils/methods/Isset");
-const SetEntityDataPacket = pocketnode("network/minecraft/protocol/SetEntityDataPacket");
+//const SetEntityDataPacket = pocketnode("network/minecraft/protocol/SetEntityDataPacket");
 
-const AxisAlignedBB = pocketnode("math/AxisAlignedBB");
-const Vector3 = pocketnode("math/Vector3");
 
-const EventManager = pocketnode("event/EventManager");
+const AxisAlignedBB = require("../math/AxisAlignedBB");
+const Vector3 = require("../math/Vector3");
 
-const ListTag = pocketnode("nbt/tag/ListTag");
-const CompoundTag = pocketnode("nbt/tag/CompoundTag");
+const EventManager = require("../event/EventManager");
 
-const Level = pocketnode("level/Level");
-const Location = pocketnode("level/Location");
+const CompoundTag = require("../nbt/tag/CompoundTag");
 
-const Attribute = pocketnode("entity/Attribute");
+const Level = require("../level/Level");
+const Location = require("../level/Location");
+
+const DataPropertyManager = require("../entity/DataPropertyManager");
+
+//const Server = require("../Server");
 
 class Entity extends Location {
 
@@ -344,9 +345,8 @@ class Entity extends Location {
         }
 
         Entity._id = Entity._entityCount++;
-        //Entity.namedtag = nbt;
-        //Entity.namedtag = new CompoundTag();
-        //this._server = level.getServer();
+        Entity.namedtag = nbt;
+        //this._server = Server.getInstance();
 
         //let pos = Entity.namedtag.getListTag("Pos").getAllValues();
         //let rotation = Entity.namedtag.getListTag("Rotation").getAllValues();
@@ -367,13 +367,32 @@ class Entity extends Location {
             let motion = this.namedtag.getListTag("Motion").getAllValues();
             this.setMotion(this.temporalVector.setComponents(...motion)); //TODO: function setMotion()
         }*/
+
+        this._propertyManager = new DataPropertyManager();
+
+        this._propertyManager.setLong(Entity.DATA_FLAGS, 0);
+        this._propertyManager.setShort(Entity.DATA_MAX_AIR, 400);
+        this._propertyManager.setString(Entity.DATA_NAMETAG, "");
+        this._propertyManager.setLong(Entity.DATA_LEAD_HOLDER_EID, -1);
+        //this._propertyManager.setFloat()
+
+
+        this.setGenericFlag(Entity.DATA_FLAG_AFFECTED_BY_GRAVITY, true);
+        this.setGenericFlag(Entity.DATA_FLAG_HAS_COLLISION, true);
+
+        this._propertyManager.clearDirtyProperties();
+
+        //this.lastUpdate = this._server.getTick();
     }
 
     static init(){
 
         //Entity.registerEntity();
-        //let attr = new Attribute();
-        //attr.init();
+        //Attribute.init();
+    }
+
+    getOffsetPosition(vector3){
+        return new Vector3(vector3.x, vector3.y + this._baseOffset, vector3.z);
     }
 
     setRotation(yaw, pitch){
@@ -399,6 +418,35 @@ class Entity extends Location {
         //this.checkChunks();
 
         return true;
+    }
+
+    setGenericFlag(flagId, value = true){
+        this.setDataFlag(Entity.DATA_FLAGS, flagId, value, Entity.DATA_TYPE_LONG);
+    }
+
+    /**
+     *
+     * @param propertyId {number}
+     * @param flagId {number}
+     * @param value {boolean}
+     * @param propertyType {number}
+     */
+    setDataFlag(propertyId, flagId, value = true, propertyType = Entity.DATA_TYPE_LONG){
+        if (this.getDataFlag(propertyId, flagId) !== value){
+            let flags = this._propertyManager.getPropertyValue(propertyId, propertyType);
+            flags ^= 1 << flagId;
+            this._propertyManager.setPropertyValue(propertyId, propertyType, flags);
+        }
+    }
+
+    /**
+     *
+     * @param propertyId {number}
+     * @param flagId {number}
+     * @return {boolean}
+     */
+    getDataFlag(propertyId, flagId){
+        return Number((this._propertyManager.getPropertyValue(propertyId, -1)) & (1 << flagId)) > 0;
     }
 
     /**
@@ -468,15 +516,6 @@ class Entity extends Location {
 
     /**
      *
-     * @param propertyId {number}
-     * @param flagId {number}
-     */
-    getDataFlag(propertyId, flagId){
-        //return Number(this.propertyManager)
-    }
-
-    /**
-     *
      * @param motion {Vector3}
      * @return boolean
      */
@@ -498,7 +537,21 @@ class Entity extends Location {
         return true;
     }
 
-    sendData(player, data = null){
+    spawnTo(player){
+        //if (Isset(this._hasSpawned[player])) todo
+        this.sendSpawnPacket(player);
+    }
+
+    //todo
+    spawnToAll(){
+        this._server.getOnlinePlayers().forEach(player => {
+           this.spawnTo(player);
+        });
+    }
+
+
+
+    /*sendData(player, data = null){
         if (!player.isArray()){
             player = [player];
         }
@@ -516,7 +569,7 @@ class Entity extends Location {
         if (this instanceof Player){
             this.dataPacket(pk);
         }
-    }
+    }*/
 
     isSprinting(){
         return false; //TODO
@@ -535,7 +588,6 @@ class Entity extends Location {
             this.z +  halfWidth
         )
     }
-
 }
 
 module.exports = Entity;

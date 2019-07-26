@@ -1,9 +1,9 @@
 const FileSystem = require("fs");
 const Path = require("path");
 
-const PluginBase = pocketnode("plugin/PluginBase");
-const PluginLoader = pocketnode("plugin/PluginLoader");
-const PluginManifest = pocketnode("plugin/PluginManifest");
+const PluginBase = require("../plugin/PluginBase");
+const PluginLoader = require("../plugin/PluginLoader");
+const PluginManifest = require("../plugin/PluginManifest");
 
 class ScriptPluginLoader extends PluginLoader {
     constructor(server){

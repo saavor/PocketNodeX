@@ -1,5 +1,5 @@
-const Inventory = pocketnode("inventory/Inventory");
-const InventoryEventProcessor = pocketnode("inventory/InventoryEventProcessor");
+const Inventory = require("../inventory/Inventory");
+const InventoryEventProcessor = require("../inventory/InventoryEventProcessor");
 
 class BaseInventory extends Inventory{
 

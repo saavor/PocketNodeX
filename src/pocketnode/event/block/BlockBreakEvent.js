@@ -1,5 +1,5 @@
-const BlockEvent = pocketnode("event/block/BlockEvent");
-const Player = pocketnode("player/Player");
+const BlockEvent = require("../../event/block/BlockEvent");
+const Player = require("../../player/Player");
 
 /**
  * Called when a player joins the server, after sending all the spawn packets

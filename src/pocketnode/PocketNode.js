@@ -2,16 +2,16 @@ const Path = require("path");
 
 require("./utils/methods/Globals");
 
-const Logger = pocketnode("logger/Logger");
-const Server = pocketnode("Server");
+const Logger = require("./logger/Logger");
+const Server = require("./Server");
 const INT32_MIN = -0x80000000;
 const INT32_MAX = 0x7fffffff;
 
 function PocketNode(paths){
     this.START_TIME = Date.now();
-    this.NAME = "PocketNode";
-    this.CODENAME = "[BEGINNINGS]";
-    this.VERSION = "0.0.5";
+    this.NAME = "PocketNodeX";
+    this.CODENAME = "[ALPHA]";
+    this.VERSION = "0.0.1";
     this.API_VERSION = "1.0.0";
 
     let logger = new Logger("Server");

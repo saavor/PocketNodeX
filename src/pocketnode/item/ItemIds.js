@@ -1,4 +1,4 @@
-const BlockIds = pocketnode("block/BlockIds");
+const BlockIds = require("../block/BlockIds");
 
 class ItemIds extends BlockIds{
 

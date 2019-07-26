@@ -1,7 +1,8 @@
-const UUID = pocketnode("utils/UUID");
-const Vector3 = pocketnode("math/Vector3");
+const UUID = require("../../utils/UUID");
+const Vector3 = require("../../math/Vector3");
+const Entity = require("../../entity/Entity");
 
-class NetworkBinaryStream extends require("pocketnode-binarystream") {
+class NetworkBinaryStream extends require("../../../binarystream/src/BinaryStream") {
     /**
      * @return {string}
      */
@@ -51,7 +52,7 @@ class NetworkBinaryStream extends require("pocketnode-binarystream") {
             let value = null;
             switch (type) {
                 case Entity.DATA_TYPE_BYTE:
-                    let value = this.readByte();
+                    value = this.readByte();
                     break;
                 case Entity.DATA_TYPE_SHORT:
                     value = this.readSignedLShort();
@@ -92,7 +93,55 @@ class NetworkBinaryStream extends require("pocketnode-binarystream") {
         return data;
     }
 
-    //TODO: idk if works
+    writeEntityMetadata(...metadata){
+        this.writeUnsignedVarInt(metadata.length);
+        metadata.forEach(key => {
+            for (let d in key){
+                if (key.hasOwnProperty(d)){
+                    this.writeUnsignedVarInt(key);
+                    this.writeUnsignedVarInt(d[0]);
+                    switch (d[0]) {
+                        case Entity.DATA_TYPE_BYTE:
+                            this.writeByte(d[1]);
+                            break;
+                        case Entity.DATA_TYPE_SHORT:
+                            this.writeLShort(d[1]);
+                            break;
+                        case Entity.DATA_TYPE_INT:
+                            this.writeVarInt(d[1]);
+                            break;
+                        case Entity.DATA_TYPE_FLOAT:
+                            this.writeLFloat(d[1]);
+                            break;
+                        case Entity.DATA_TYPE_STRING:
+                            this.writeString(d[1]);
+                            break;
+                        case Entity.DATA_TYPE_SLOT:
+                            //TODO: this.writeSlot(d[1])
+                            break;
+                        case Entity.DATA_TYPE_POS:
+                            let v = d[1];
+                            if (v !== null){
+                                this.writeBlockPosition(v.x, v.y, v.z);
+                            }else {
+                                this.writeBlockPosition(0, 0, 0);
+                            }
+                            break;
+                        case Entity.DATA_TYPE_LONG:
+                            this.writeVarLong(d[1]);
+                            break;
+                        case Entity.DATA_TYPE_VECTOR3F:
+                            this.writeVector3Obj(d[1]);
+                            break;
+                        default:
+                            console.log(`Invalid data type ${d[0]}`);
+                    }
+                }
+            }
+        });
+    }
+
+    /*TODO: idk if works
     writeEntityMetadata(metadata){
         this.writeUnsignedVarInt(metadata.length);
         metadata.forEach(key => {
@@ -133,7 +182,7 @@ class NetworkBinaryStream extends require("pocketnode-binarystream") {
                 }
             });
         });
-    }
+    }*/
 
     readEntityLink(){
         //TODO

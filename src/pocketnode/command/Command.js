@@ -1,4 +1,4 @@
-const TextFormat = pocketnode("utils/TextFormat");
+const TextFormat = require("../utils/TextFormat");
 
 class Command {
     initVars(){

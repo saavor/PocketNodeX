@@ -1,4 +1,4 @@
-const Generator = pocketnode("level/generator/Generator");
+const Generator = require("../../level/generator/Generator");
 
 class GeneratorManager {
     constructor(){

@@ -1,5 +1,5 @@
-const Item = pocketnode("item/Item");
-const CompoundTag = pocketnode("nbt/tag/CompoundTag");
+const Item = require("../item/Item");
+const CompoundTag = require("../nbt/tag/CompoundTag");
 
 class ItemFactory{
 

@@ -1,9 +1,10 @@
 const TimeStamp = require("time-stamp");
 
-const TextFormat = pocketnode("utils/TextFormat");
-const TerminalTextFormat = pocketnode("utils/TerminalTextFormat");
+const TextFormat = require("../utils/TextFormat");
+const TerminalTextFormat = require("../utils/TerminalTextFormat");
 
 class Logger {
+
     constructor(caller, subcaller = ""){
         this.debuggingLevel = 0;
         this.caller = caller;

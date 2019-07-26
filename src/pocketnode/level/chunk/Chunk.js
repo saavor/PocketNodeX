@@ -1,6 +1,6 @@
-const BinaryStream = pocketnode("network/minecraft/NetworkBinaryStream");
-const SubChunk = pocketnode("level/chunk/SubChunk");
-const EmptySubChunk = pocketnode("level/chunk/EmptySubChunk");
+const BinaryStream = require("../../network/minecraft/NetworkBinaryStream");
+const SubChunk = require("../../level/chunk/SubChunk");
+const EmptySubChunk = require("../../level/chunk/EmptySubChunk");
 
 class Chunk {
     initVars(){

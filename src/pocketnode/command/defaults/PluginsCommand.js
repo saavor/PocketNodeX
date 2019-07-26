@@ -1,5 +1,5 @@
-const Command = pocketnode("command/Command");
-const TextFormat = pocketnode("utils/TextFormat");
+const Command = require("../../command/Command");
+const TextFormat = require("../../utils/TextFormat");
 
 class PluginsCommand extends Command {
     constructor(){

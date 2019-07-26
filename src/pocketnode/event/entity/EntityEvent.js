@@ -1,5 +1,5 @@
-const Event = pocketnode("event/Event");
-const Entity = pocketnode("entity/Entity");
+const Event = require("../../event/Event");
+const Entity = require("../../entity/Entity");
 
 class EntityEvent extends Event{
 

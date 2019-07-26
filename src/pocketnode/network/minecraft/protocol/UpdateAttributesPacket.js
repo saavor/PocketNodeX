@@ -1,5 +1,5 @@
-const DataPacket = pocketnode("network/minecraft/protocol/DataPacket");
-const MinecraftInfo = pocketnode("network/minecraft/Info");
+const DataPacket = require("./DataPacket");
+const MinecraftInfo = require("../Info");
 
 class UpdateAttributesPacket extends DataPacket {
     static getId() {
@@ -12,8 +12,6 @@ class UpdateAttributesPacket extends DataPacket {
     }
 
     _decodePayload() {
-        console.log("UpdateAttributesPacket called!");
-
         this.entityRuntimeId = this.getEntityRuntimeId();
         this.entries = this.readAttributeList();
     }

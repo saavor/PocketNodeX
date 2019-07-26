@@ -1,4 +1,4 @@
-const Isset = pocketnode("utils/methods/Isset");
+const Isset = require("../utils/methods/Isset");
 
 class AttributeMap extends Map {
 
@@ -16,12 +16,7 @@ class AttributeMap extends Map {
     }
 
     getAttribute(id){
-        //return this.attributes[id] ?? null; token error because of ??
-        if (this.attributes[id] !== null){
-            return this.attributes[id];
-        } else {
-            return null;
-        }
+        return this.attributes[id] || null;
     }
 
     getAll(){

@@ -1,5 +1,5 @@
-const DataPacket = pocketnode("network/minecraft/protocol/DataPacket");
-const MinecraftInfo = pocketnode("network/minecraft/Info");
+const DataPacket = require("./DataPacket");
+const MinecraftInfo = require("../Info");
 
 class AdventureSettingsPacket extends DataPacket {
     static getId() {
@@ -55,6 +55,54 @@ class AdventureSettingsPacket extends DataPacket {
     _decodePayload() {
         this.flags = this.readUnsignedVarInt();
         this.commandPermission = this.readUnsignedVarInt();
+        this.flags2 = this.readUnsignedVarInt();
+        this.playerPermission = this.readUnsignedVarInt();
+        this.customFlags = this.readUnsignedVarInt();
+        this.entityUniqueId = this.readLLong();
+    }
+
+    _encodePayload() {
+        this.writeUnsignedVarInt(this.flags);
+        this.writeUnsignedVarInt(this.commandPermission);
+        this.writeUnsignedVarInt(this.flags2);
+        this.writeUnsignedVarInt(this.playerPermission);
+        this.writeUnsignedVarInt(this.customFlags);
+        this.writeLLong(this.entityUniqueId);
+    }
+
+    /**
+     *
+     * @param flag {number}
+     */
+    getFlag(flag){
+        if (flag & self.BITFLAG_SECOND_SET) {
+            return (this.flags2 & flag) !== 0;
+        }
+        return (this.flags & flag) !== 0;
+    }
+
+    /**
+     *
+     * @param flag {number}
+     * @param value {boolean}
+     */
+    setFlag(flag, value){
+        let flagSet;
+        if (flag & AdventureSettingsPacket.BITFLAG_SECOND_SET) {
+            flagSet = flagSet & this.flags2;
+        } else {
+            flagSet = flagSet & this.flags;
+        }
+
+        if (value){
+            flagSet |= flag;
+        } else {
+            flagSet = flagSet & ~flag;
+        }
+    }
+
+    handle(session) {
+        session.handleAdventureSettings(this);
     }
 
 }

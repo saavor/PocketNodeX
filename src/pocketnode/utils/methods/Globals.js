@@ -1,15 +1,10 @@
 const Path = require("path");
 
-/**
- * Require files from PocketNode
- * @param path {string}
- * @return {*}
- */
+const SFS = require("../../utils/SimpleFileSystem");
+
 global.pocketnode = function(path){
     return require(Path.normalize(__dirname + "/../../" + path));
 };
-
-const SFS = pocketnode("utils/SimpleFileSystem");
 
 void function(){
     function walk(dir){
@@ -36,7 +31,7 @@ void function(){
         path = path.split(Path.sep);
         path = path.slice(path.lastIndexOf("pocketnode")+1);
 
-        let parent = global.pocketnode;
+        let parent = pocketnode;
 
         path.forEach(part => {
             if(part === "") return;

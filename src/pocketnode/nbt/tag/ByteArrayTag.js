@@ -1,4 +1,5 @@
-const NBT = pocketnode("nbt/NBT");
+const NBT = require("../../nbt/NBT");
+const NamedTag = require("../../nbt/tag/NamedTag");
 
 class ByteArrayTag extends NamedTag{
 

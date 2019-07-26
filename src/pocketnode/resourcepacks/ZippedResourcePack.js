@@ -1,6 +1,6 @@
-const ResourcePack = pocketnode("resourcepacks/ResourcePack");
-const SFS = pocketnode("utils/SimpleFileSystem");
-const HashFile = pocketnode("utils/methods/HashFile");
+const ResourcePack = require("../resourcepacks/ResourcePack");
+const SFS = require("../utils/SimpleFileSystem");
+const HashFile = require("../utils/methods/HashFile");
 const AdmZip = require("adm-zip");
 
 class ZippedResourcePack extends ResourcePack {

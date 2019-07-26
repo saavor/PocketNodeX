@@ -1,6 +1,6 @@
-const Listener = pocketnode("event/Listener");
-const Plugin = pocketnode("plugin/Plugin");
-const RegisteredListener = pocketnode("plugin/RegisteredListener");
+const Listener = require("../event/Listener");
+const Plugin = require("../plugin/Plugin");
+const RegisteredListener = require("../plugin/RegisteredListener");
 
 class EventManager {
     initVars(){

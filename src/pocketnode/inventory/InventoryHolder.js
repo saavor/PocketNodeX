@@ -1,4 +1,4 @@
-const Inventory = pocketnode("inventory/Inventory");
+const Inventory = require("../inventory/Inventory");
 
 class InventoryHolder{
 

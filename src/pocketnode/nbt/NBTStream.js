@@ -1,7 +1,7 @@
-const Isset = pocketnode("utils/methods/Isset");
-const Binary = pocketnode("../src/binarystream/BinaryStream");
-const NamedTag = pocketnode("nbt/tag/NamedTag");
-const CompoundTag = pocketnode("nbt/tag/CompoundTag");
+const Isset = require("../utils/methods/Isset");
+const Binary = require("../../../src/binarystream/src/BinaryStream");
+const NamedTag = require("../nbt/tag/NamedTag");
+const CompoundTag = require("../nbt/tag/CompoundTag");
 const Zlib = require("zlib");
 
 class NBTStream{

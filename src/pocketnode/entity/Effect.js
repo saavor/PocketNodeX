@@ -1,4 +1,4 @@
-const EffectInstance = pocketnode("entity/EffectInstance");
+const EffectInstance = require("../entity/EffectInstance");
 
 class Effect{
     static get SPEED() {return 1};

@@ -1,4 +1,4 @@
-const Logger = pocketnode("logger/Logger");
+const Logger = require("../logger/Logger");
 
 class PluginLogger extends Logger {
     constructor(server, plugin){

@@ -1,6 +1,6 @@
 const Info = {};
 
-Info.PROTOCOL = 201;
+Info.PROTOCOL = 274;
 Info.VERSION = "1.5.0";
 
 Info.LOGIN_PACKET = 0x01;

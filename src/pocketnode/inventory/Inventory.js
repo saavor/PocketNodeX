@@ -1,7 +1,8 @@
-const Item = pocketnode("item/Item");
-const InventoryEventProcessor = pocketnode("inventory/InventoryEventProcessor");
+const Item = require("../item/Item");
+const InventoryEventProcessor = require("../inventory/InventoryEventProcessor");
 
 class Inventory {
+
     static get MAX_STACK() {
         return 64
     };
