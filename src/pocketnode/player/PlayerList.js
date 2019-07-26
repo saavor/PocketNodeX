@@ -1,4 +1,4 @@
-const Player = pocketnode("player/Player");
+const Player = require("./Player");
 
 class PlayerList extends Map {
     addPlayer(id, player){

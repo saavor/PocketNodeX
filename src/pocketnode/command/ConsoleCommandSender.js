@@ -1,4 +1,4 @@
-const CommandSender = pocketnode("command/CommandSender");
+const CommandSender = require("./CommandSender");
 
 class ConsoleCommandSender extends CommandSender {
     constructor(server){

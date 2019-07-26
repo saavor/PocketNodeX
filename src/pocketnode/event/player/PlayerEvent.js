@@ -1,4 +1,4 @@
-const Event = pocketnode("event/Event");
+const Event = require("../Event");
 
 /**
  * Player-only events

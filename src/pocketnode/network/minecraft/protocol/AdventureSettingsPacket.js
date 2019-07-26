@@ -1,9 +1,10 @@
-const DataPacket = pocketnode("network/minecraft/protocol/DataPacket");
-const MinecraftInfo = pocketnode("network/minecraft/Info");
+const DataPacket = require("./DataPacket");
+const ProtocolInfo = require("../Info");
 
 class AdventureSettingsPacket extends DataPacket {
+
     static getId() {
-        return MinecraftInfo.ADVENTURE_SETTINGS_PACKET;
+        return ProtocolInfo.ADVENTURE_SETTINGS_PACKET;
     }
 
     static get PERMISSION_NORMAL() {return 0};

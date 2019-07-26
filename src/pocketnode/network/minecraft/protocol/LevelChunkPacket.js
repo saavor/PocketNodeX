@@ -1,9 +1,10 @@
-const DataPacket = pocketnode("network/minecraft/protocol/DataPacket");
-const MinecraftInfo = pocketnode("network/minecraft/Info");
+const DataPacket = require("./DataPacket");
+const ProtocolInfo = require("../Info");
 
 class LevelChunkPacket extends DataPacket {
+
     static getId(){
-        return MinecraftInfo.FULL_CHUNK_DATA_PACKET;
+        return ProtocolInfo.FULL_CHUNK_DATA_PACKET;
     }
 
     initVars(){

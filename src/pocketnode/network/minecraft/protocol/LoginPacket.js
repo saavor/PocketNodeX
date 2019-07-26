@@ -1,16 +1,16 @@
-const DataPacket = pocketnode("network/minecraft/protocol/DataPacket");
-const MinecraftInfo = pocketnode("network/minecraft/Info");
+const DataPacket = require("./DataPacket");
+const ProtocolInfo = require("../Info");
 
-const Logger = pocketnode("logger/Logger");
+const BinaryStream = require("../NetworkBinaryStream");
 
-const BinaryStream = pocketnode("network/minecraft/NetworkBinaryStream");
-const Utils = pocketnode("utils/Utils");
+const Logger = require("../../../logger/Logger");
 
-const Isset = pocketnode("utils/methods/Isset");
+const Utils = require("../../../utils/Utils");
+const Isset = require("../../../utils/methods/Isset");
 
 class LoginPacket extends DataPacket {
     static getId(){
-        return MinecraftInfo.LOGIN_PACKET;
+        return ProtocolInfo.LOGIN_PACKET;
     }
 
     initVars(){

@@ -1,8 +1,8 @@
 const FileSystem = require("fs");
 
-const Plugin = pocketnode("plugin/Plugin");
-const PluginLogger = pocketnode("plugin/PluginLogger");
-const Config = pocketnode("utils/Config");
+const Plugin = require("./Plugin");
+const PluginLogger = require("./PluginLogger");
+const Config = require("../utils/Config");
 
 class PluginBase extends Plugin {
     initVars(){

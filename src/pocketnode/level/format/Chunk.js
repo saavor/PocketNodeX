@@ -1,8 +1,21 @@
-const BinaryStream = pocketnode("network/minecraft/NetworkBinaryStream");
-const SubChunk = pocketnode("level/format/SubChunk");
-const EmptySubChunk = pocketnode("level/format/EmptySubChunk");
+/*
+ *   _____           _        _   _   _           _
+ *  |  __ \         | |      | | | \ | |         | |
+ *  | |__) |__   ___| | _____| |_|  \| | ___   __| | ___
+ *  |  ___/ _ \ / __| |/ / _ \ __| . ` |/ _ \ / _` |/ _ \
+ *  | |  | (_) | (__|   <  __/ |_| |\  | (_) | (_| |  __/
+ *  |_|   \___/ \___|_|\_\___|\__|_| \_|\___/ \__,_|\___|
+ *
+ *  @author PocketNode Team
+ *  @link https://pocketnode.me
+*/
+
+const BinaryStream = require("../../network/minecraft/NetworkBinaryStream");
+const SubChunk = require("./SubChunk");
+const EmptySubChunk = require("./EmptySubChunk");
 
 class Chunk {
+
     initVars(){
         this._x = 0;
         this._z = 0;

@@ -1,5 +1,17 @@
-const NamedTag = pocketnode("nbt/tag/NamedTag");
-const ListTag = pocketnode("nbt/tag/ListTag");
+/*
+ *   _____           _        _   _   _           _
+ *  |  __ \         | |      | | | \ | |         | |
+ *  | |__) |__   ___| | _____| |_|  \| | ___   __| | ___
+ *  |  ___/ _ \ / __| |/ / _ \ __| . ` |/ _ \ / _` |/ _ \
+ *  | |  | (_) | (__|   <  __/ |_| |\  | (_) | (_| |  __/
+ *  |_|   \___/ \___|_|\_\___|\__|_| \_|\___/ \__,_|\___|
+ *
+ *  @author PocketNode Team
+ *  @link https://pocketnode.me
+*/
+
+const NamedTag = require("./NamedTag");
+const ListTag = require("./ListTag");
 
 class CompoundTag extends NamedTag {
 
@@ -10,8 +22,6 @@ class CompoundTag extends NamedTag {
     constructor(name = "", value = []){
         super();
         this.initVars();
-
-        //new this.constructor.call(); //should be parent
 
         value.forEach(tag => {
             this.setTag(tag);

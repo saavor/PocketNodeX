@@ -1,9 +1,9 @@
-const DataPacket = pocketnode("network/minecraft/protocol/DataPacket");
-const MinecraftInfo = pocketnode("network/minecraft/Info");
+const DataPacket = require("./DataPacket");
+const ProtocolInfo = require("../Info");
 
 class SetTimePacket extends DataPacket {
     static getId() {
-        return MinecraftInfo.SET_TIME_PACKET;
+        return ProtocolInfo.SET_TIME_PACKET;
     }
 
     initVars(){

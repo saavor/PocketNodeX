@@ -1,5 +1,6 @@
-const Isset = pocketnode("utils/methods/Isset");
-const BinaryStream = binarystream("BinaryStream");
+const Isset = require("../../../../utils/methods/Isset");
+
+const BinaryStream = require("../../../../../binarystream/BinaryStream");
 
 class RuntimeBlockMapping{
 

@@ -1,7 +1,19 @@
+/*
+ *   _____           _        _   _   _           _
+ *  |  __ \         | |      | | | \ | |         | |
+ *  | |__) |__   ___| | _____| |_|  \| | ___   __| | ___
+ *  |  ___/ _ \ / __| |/ / _ \ __| . ` |/ _ \ / _` |/ _ \
+ *  | |  | (_) | (__|   <  __/ |_| |\  | (_) | (_| |  __/
+ *  |_|   \___/ \___|_|\_\___|\__|_| \_|\___/ \__,_|\___|
+ *
+ *  @author PocketNode Team
+ *  @link https://pocketnode.me
+*/
+
 const TimeStamp = require("time-stamp");
 
-const TextFormat = pocketnode("utils/TextFormat");
-const TerminalTextFormat = pocketnode("utils/TerminalTextFormat");
+const TextFormat = require("../utils/TextFormat");
+const TerminalTextFormat = require("../utils/TerminalTextFormat");
 
 class Logger {
     constructor(caller, subcaller = ""){

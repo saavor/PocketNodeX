@@ -1,5 +1,5 @@
-const DataPacket = pocketnode("network/minecraft/protocol/DataPacket");
-const MinecraftInfo = pocketnode("network/minecraft/Info");
+const DataPacket = require("./DataPacket");
+const ProtocolInfo = require("../Info");
 
 class UpdateSoftEnumPacket extends DataPacket {
 
@@ -9,7 +9,7 @@ class UpdateSoftEnumPacket extends DataPacket {
 	}
 
 	static getId(){
-		return MinecraftInfo.UPDATE_SOFT_ENUM_PACKET;
+		return ProtocolInfo.UPDATE_SOFT_ENUM_PACKET;
 	}
 
 	initVars(){

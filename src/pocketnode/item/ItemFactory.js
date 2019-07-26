@@ -1,5 +1,18 @@
-const Item = pocketnode("item/Item");
-const CompoundTag = pocketnode("nbt/tag/CompoundTag");
+/*
+ *   _____           _        _   _   _           _
+ *  |  __ \         | |      | | | \ | |         | |
+ *  | |__) |__   ___| | _____| |_|  \| | ___   __| | ___
+ *  |  ___/ _ \ / __| |/ / _ \ __| . ` |/ _ \ / _` |/ _ \
+ *  | |  | (_) | (__|   <  __/ |_| |\  | (_) | (_| |  __/
+ *  |_|   \___/ \___|_|\_\___|\__|_| \_|\___/ \__,_|\___|
+ *
+ *  @author PocketNode Team
+ *  @link https://pocketnode.me
+*/
+
+const Item = require("./Item");
+
+const CompoundTag = require("../nbt/tag/CompoundTag");
 
 class ItemFactory{
 
@@ -47,24 +60,26 @@ class ItemFactory{
             console.log("`tags` argument must be a string or CompoundTag instance, . (is_object($tags) ? instance of  get_class($tags) : gettype($tags)) . given DEBUG NOT COMPLETE... TEST PURPOSE");
         }
 
+        let item = null;
         try {
             let listed = self.list[self.getListOffset(id)];
             if (listed !== null){
-                let item = Object.assign( Object.create( Object.getPrototypeOf(listed)), listed); //might not work
+                item = Object.assign( Object.create( Object.getPrototypeOf(listed)), listed); //might not work
             }else if (id >= 0 && id < 256){
                 //TODO: let item = new ItemBlock(id, meta);
             } else {
-                let item = new Item(id, meta);
+                item = new Item(id, meta);
             }
         }catch (e) {
             console.log(`Item ID ${id} is invalid or out of bounds`);
         }
 
-        //TODO: find a hack to fix that trash dude, maybe declaring just let item? naah
-        item.setDamage();
-        item.setCount();
-        item.setCompoundTag(tags);
-        return item;
+        if (item instanceof Item){
+            item.setDamage();
+            item.setCount();
+            item.setCompoundTag(tags);
+            return item;
+        }
     }
 
 

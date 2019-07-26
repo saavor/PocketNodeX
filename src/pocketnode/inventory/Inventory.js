@@ -1,7 +1,21 @@
-const Item = pocketnode("item/Item");
-const InventoryEventProcessor = pocketnode("inventory/InventoryEventProcessor");
+/*
+ *   _____           _        _   _   _           _
+ *  |  __ \         | |      | | | \ | |         | |
+ *  | |__) |__   ___| | _____| |_|  \| | ___   __| | ___
+ *  |  ___/ _ \ / __| |/ / _ \ __| . ` |/ _ \ / _` |/ _ \
+ *  | |  | (_) | (__|   <  __/ |_| |\  | (_) | (_| |  __/
+ *  |_|   \___/ \___|_|\_\___|\__|_| \_|\___/ \__,_|\___|
+ *
+ *  @author PocketNode Team
+ *  @link https://pocketnode.me
+*/
+
+const Item = require("../item/Item");
+
+const InventoryEventProcessor = require("./InventoryEventProcessor");
 
 class Inventory {
+
     static get MAX_STACK() {
         return 64
     };

@@ -1,7 +1,8 @@
-const BinaryStream = pocketnode("network/minecraft/NetworkBinaryStream");
-const Vector3 = pocketnode("math/Vector3");
+const BinaryStream = require("../NetworkBinaryStream");
+const Vector3 = require("../../../math/Vector3");
 
 class DataPacket extends BinaryStream {
+
     static getId(){
         return 0;
     }

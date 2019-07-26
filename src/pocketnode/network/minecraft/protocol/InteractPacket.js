@@ -1,16 +1,9 @@
-const DataPacket = pocketnode("network/minecraft/protocol/DataPacket");
-const MinecraftInfo = pocketnode("network/minecraft/Info");
-
-const Logger = pocketnode("logger/Logger");
-
-const BinaryStream = pocketnode("network/minecraft/NetworkBinaryStream");
-const Utils = pocketnode("utils/Utils");
-
-const Isset = pocketnode("utils/methods/Isset");
+const DataPacket = require("./DataPacket");
+const ProtocolInfo = require("../Info");
 
 class InteractPacket extends DataPacket {
     static getId() {
-        return MinecraftInfo.INTERACT_PACKET;
+        return ProtocolInfo.INTERACT_PACKET;
     }
 
     static get ACTION_LEAVE_VEHICLE() {return 3};

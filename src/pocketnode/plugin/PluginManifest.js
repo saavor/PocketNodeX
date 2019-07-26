@@ -1,4 +1,4 @@
-const PluginException = pocketnode("plugin/PluginException");
+const PluginException = require("./PluginException");
 
 class PluginManifest {
     initVars(){

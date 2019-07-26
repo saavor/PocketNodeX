@@ -1,4 +1,4 @@
-const BinaryStream = pocketnode("network/minecraft/NetworkBinaryStream");
+const BinaryStream = require("../network/minecraft/NetworkBinaryStream");
 
 class UUID {
     initVars(){

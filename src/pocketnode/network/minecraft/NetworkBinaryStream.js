@@ -1,8 +1,8 @@
-const UUID = pocketnode("utils/UUID");
-const Vector3 = pocketnode("math/Vector3");
-const Entity = pocketnode("entity/Entity");
+const UUID = require("../../utils/UUID");
+const Vector3 = require("../../math/Vector3");
+const Entity = require("../../entity/Entity");
 
-class NetworkBinaryStream extends binarystream("BinaryStream") {
+class NetworkBinaryStream extends require("../../../binarystream/BinaryStream") {
     /**
      * @return {string}
      */
@@ -50,7 +50,7 @@ class NetworkBinaryStream extends binarystream("BinaryStream") {
             let value = null;
             switch (type) {
                 case Entity.DATA_TYPE_BYTE:
-                    let value = this.readByte();
+                    value = this.readByte();
                     break;
                 case Entity.DATA_TYPE_SHORT:
                     value = this.readSignedLShort();

@@ -1,4 +1,4 @@
-const Isset = pocketnode("utils/methods/Isset");
+const Isset = require("../utils/methods/Isset");
 
 class Attribute{
 

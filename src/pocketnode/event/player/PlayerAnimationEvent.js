@@ -1,5 +1,5 @@
-const PlayerEvent = pocketnode("event/player/PlayerEvent");
-const Player = pocketnode("player/Player");
+const PlayerEvent = require("./PlayerEvent");
+const Player = require("../../player/Player");
 
 /**
  * Called when a player does an animation

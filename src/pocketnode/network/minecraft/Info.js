@@ -1,7 +1,7 @@
 const Info = {};
 
 Info.PROTOCOL = 313;
-Info.VERSION = "1.8.0";
+Info.VERSION = "1.12.0";
 
 Info.LOGIN_PACKET = 0x01;
 Info.PLAY_STATUS_PACKET = 0x02;

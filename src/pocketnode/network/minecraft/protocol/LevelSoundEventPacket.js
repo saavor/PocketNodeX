@@ -1,10 +1,11 @@
-const DataPacket = pocketnode("network/minecraft/protocol/DataPacket");
-const MinecraftInfo = pocketnode("network/minecraft/Info");
-const Vector3 = pocketnode("math/Vector3");
+const DataPacket = require("./DataPacket");
+const ProtocolInfo = require("../Info");
+const Vector3 = require("../../../math/Vector3");
 
 class LevelSoundEventPacket extends DataPacket {
+    
     static getId() {
-        return MinecraftInfo.LEVEL_SOUND_EVENT_PACKET;
+        return ProtocolInfo.LEVEL_SOUND_EVENT_PACKET;
     }
 
     static get SOUND_ITEM_USE_ON() {return 0};

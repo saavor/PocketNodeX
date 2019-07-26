@@ -1,12 +1,12 @@
 const Many = require("extends-classes");
 
-const Creature = pocketnode("entity/Creature");
-const ProjectileSource = pocketnode("entity/projectile/ProjectileSource");
-const InventoryHolder = pocketnode("inventory/InventoryHolder");
-const Skin = pocketnode("entity/Skin");
-const Player = pocketnode("player/Player");
-const PlayerSkinPacket = pocketnode("network/minecraft/protocol/PlayerSkinPacket");
-const CompoundTag = pocketnode("nbt/tag/CompoundTag");
+const Creature = require("./Creature");
+const ProjectileSource = require("./projectile/ProjectileSource");
+const InventoryHolder = require("../inventory/InventoryHolder");
+const Skin = require("./Skin");
+const Player = require("../player/Player");
+const PlayerSkinPacket = require("../network/minecraft/protocol/PlayerSkinPacket");
+const CompoundTag = require("../nbt/tag/CompoundTag");
 
 class Human extends Many(Creature, ProjectileSource, InventoryHolder)  /*implements ProjectileSource, InventoryHolder*/{
 

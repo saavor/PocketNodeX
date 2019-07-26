@@ -1,9 +1,10 @@
-const DataPacket = pocketnode("network/minecraft/protocol/DataPacket");
-const MinecraftInfo = pocketnode("network/minecraft/Info");
+const DataPacket = require("./DataPacket");
+const ProtocolInfo = require("../Info");
 
 class DisconnectPacket extends DataPacket {
+
     static getId(){
-        return MinecraftInfo.DISCONNECT_PACKET;
+        return ProtocolInfo.DISCONNECT_PACKET;
     }
 
     initVars(){

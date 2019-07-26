@@ -1,7 +1,21 @@
-const Isset = pocketnode("utils/methods/Isset");
-const Binary = pocketnode("../src/binarystream/BinaryStream");
-const NamedTag = pocketnode("nbt/tag/NamedTag");
-const CompoundTag = pocketnode("nbt/tag/CompoundTag");
+/*
+ *   _____           _        _   _   _           _
+ *  |  __ \         | |      | | | \ | |         | |
+ *  | |__) |__   ___| | _____| |_|  \| | ___   __| | ___
+ *  |  ___/ _ \ / __| |/ / _ \ __| . ` |/ _ \ / _` |/ _ \
+ *  | |  | (_) | (__|   <  __/ |_| |\  | (_) | (_| |  __/
+ *  |_|   \___/ \___|_|\_\___|\__|_| \_|\___/ \__,_|\___|
+ *
+ *  @author PocketNode Team
+ *  @link https://pocketnode.me
+*/
+
+const Binary = require("../../../src/binarystream/BinaryStream");
+
+const Isset = require("../utils/methods/Isset");
+
+const NamedTag = require("./tag/NamedTag");
+const CompoundTag = require("./tag/CompoundTag");
 const Zlib = require("zlib");
 
 class NBTStream{

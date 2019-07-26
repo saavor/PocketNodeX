@@ -1,11 +1,11 @@
-const DataPacket = pocketnode("network/minecraft/protocol/DataPacket");
-const RuntimeBlockMapping = pocketnode("network/minecraft/protocol/types/RuntimeBlockMapping");
-const NetworkBinaryStream = pocketnode("network/minecraft/NetworkBinaryStream");
-const MinecraftInfo = pocketnode("network/minecraft/Info");
+const DataPacket = require("./DataPacket");
+const ProtocolInfo = require("../Info");
+const RuntimeBlockMapping = require("./types/RuntimeBlockMapping");
+const NetworkBinaryStream = require("../NetworkBinaryStream");
 
 class StartGamePacket extends DataPacket {
     static getId(){
-        return MinecraftInfo.START_GAME_PACKET;
+        return ProtocolInfo.START_GAME_PACKET;
     }
 
     initVars(){

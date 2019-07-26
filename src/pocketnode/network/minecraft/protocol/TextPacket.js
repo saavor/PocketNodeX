@@ -1,9 +1,9 @@
-const DataPacket = pocketnode("network/minecraft/protocol/DataPacket");
-const MinecraftInfo = pocketnode("network/minecraft/Info");
+const DataPacket = require("./DataPacket");
+const ProtocolInfo = require("../Info");
 
 class TextPacket extends DataPacket {
     static getId(){
-        return MinecraftInfo.TEXT_PACKET;
+        return ProtocolInfo.TEXT_PACKET;
     }
 
     static get TYPE_RAW(){return 0}

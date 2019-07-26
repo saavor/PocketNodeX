@@ -1,6 +1,6 @@
-const DataPacket = pocketnode("network/minecraft/protocol/DataPacket");
-const MinecraftInfo = pocketnode("network/minecraft/Info");
-const ScoreboardEntry = pocketnode("network/minecraft/protocol/types/ScoreboardIdentityPacketEntry");
+const DataPacket = require("./DataPacket");
+const ProtocolInfo = require("../Info");
+const ScoreboardEntry = require("./types/ScoreboardIdentityPacketEntry");
 
 class SetScoreboardIdentityPacket extends DataPacket {
 
@@ -10,7 +10,7 @@ class SetScoreboardIdentityPacket extends DataPacket {
 	}
 
 	static getId(){
-		return MinecraftInfo.SET_SCOREBOARD_IDENTITY_PACKET;
+		return ProtocolInfo.SET_SCOREBOARD_IDENTITY_PACKET;
 	}
 
 	static TYPE_REGISTER_IDENTITY(){

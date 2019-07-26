@@ -1,9 +1,9 @@
-const DataPacket = pocketnode("network/minecraft/protocol/DataPacket");
-const MinecraftInfo = pocketnode("network/minecraft/Info");
+const DataPacket = require("./DataPacket");
+const ProtocolInfo = require("../Info");
 
 class SubClientLoginPacket extends DataPacket {
     static getId() {
-        return MinecraftInfo.SUB_CLIENT_LOGIN_PACKET;
+        return ProtocolInfo.SUB_CLIENT_LOGIN_PACKET;
     }
 
     initVars(){

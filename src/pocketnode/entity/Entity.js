@@ -1,21 +1,21 @@
 const assert = require('assert');
 
-const Isset = pocketnode("utils/methods/Isset");
+const Isset = require("../utils/methods/Isset");
 //const SetEntityDataPacket = pocketnode("network/minecraft/protocol/SetEntityDataPacket");
 
-const AxisAlignedBB = pocketnode("math/AxisAlignedBB");
-const Vector3 = pocketnode("math/Vector3");
+const AxisAlignedBB = require("../math/AxisAlignedBB");
+const Vector3 = require("../math/Vector3");
 
-const EventManager = pocketnode("event/EventManager");
+const EventManager = require("../event/EventManager");
 
-const ListTag = pocketnode("nbt/tag/ListTag");
-const CompoundTag = pocketnode("nbt/tag/CompoundTag");
+const ListTag = require("../nbt/tag/ListTag");
+const CompoundTag = require("../nbt/tag/CompoundTag");
 
-const Level = pocketnode("level/Level");
-const Location = pocketnode("level/Location");
+const Level = require("../level/Level");
+const Location = require("../level/Location");
 
-const Attribute = pocketnode("entity/Attribute");
-const DataPropertyManager = pocketnode("entity/DataPropertyManager");
+const Attribute = require("./Attribute");
+const DataPropertyManager = require("./DataPropertyManager");
 
 class Entity extends Location {
 

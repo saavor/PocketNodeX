@@ -1,7 +1,7 @@
 //const Damageable = pocketnode("entity/Damageable");
-const ArmorInventory = pocketnode("inventory/ArmorInventory");
-const ArmorInventoryEventProcessor = pocketnode("inventory/ArmorInventoryEventProcessor");
-const Entity = pocketnode("entity/Entity");
+const ArmorInventory = require("../inventory/ArmorInventory");
+const ArmorInventoryEventProcessor = require("../inventory/ArmorInventoryEventProcessor");
+const Entity = require("./Entity");
 
 class Living extends Entity /*implements Damageable*/{
 

@@ -1,5 +1,17 @@
-const NBT = pocketnode("nbt/NBT");
-const NamedTag = pocketnode("nbt/tag/NamedTag");
+/*
+ *   _____           _        _   _   _           _
+ *  |  __ \         | |      | | | \ | |         | |
+ *  | |__) |__   ___| | _____| |_|  \| | ___   __| | ___
+ *  |  ___/ _ \ / __| |/ / _ \ __| . ` |/ _ \ / _` |/ _ \
+ *  | |  | (_) | (__|   <  __/ |_| |\  | (_) | (_| |  __/
+ *  |_|   \___/ \___|_|\_\___|\__|_| \_|\___/ \__,_|\___|
+ *
+ *  @author PocketNode Team
+ *  @link https://pocketnode.me
+*/
+
+const NBT = require("../NBT");
+const NamedTag = require("./NamedTag");
 
 class ListTag extends NamedTag{
 
@@ -12,8 +24,6 @@ class ListTag extends NamedTag{
         super();
         this.initVars();
 
-        this.constructor.call();
-
         this.tagType = tagType;
         this.value = [];
         value.forEach(tag => {
@@ -25,11 +35,14 @@ class ListTag extends NamedTag{
         return NBT.TAG_List;
     }
 
-    //TODO: test if works xD
     getValue(){
         let value = [];
-        this.value.forEach(k => v => {
-            value[k] = v;
+        this.value.forEach(k => {
+           for (let v in k){
+               if (k.hasOwnProperty(v)){
+                   value[k] = v;
+               }
+           }
         });
 
         return value;

@@ -1,9 +1,9 @@
-const DataPacket = pocketnode("network/minecraft/protocol/DataPacket");
-const MinecraftInfo = pocketnode("network/minecraft/Info");
+const DataPacket = require("./DataPacket");
+const ProtocolInfo = require("../Info");
 
 class SetEntityDataPacket extends DataPacket {
     static getId() {
-        return MinecraftInfo.SET_ENTITY_DATA_PACKET;
+        return ProtocolInfo.SET_ENTITY_DATA_PACKET;
     }
 
     initVars(){

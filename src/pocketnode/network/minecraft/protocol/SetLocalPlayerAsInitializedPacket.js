@@ -1,9 +1,9 @@
-const DataPacket = pocketnode("network/minecraft/protocol/DataPacket");
-const MinecraftInfo = pocketnode("network/minecraft/Info");
+const DataPacket = require("./DataPacket");
+const ProtocolInfo = require("../Info");
 
 class SetLocalPlayerAsInitializedPacket extends DataPacket {
     static getId() {
-        return MinecraftInfo.SET_LOCAL_PLAYER_AS_INITIALIZED_PACKET;
+        return ProtocolInfo.SET_LOCAL_PLAYER_AS_INITIALIZED_PACKET;
     }
 
     initVars(){

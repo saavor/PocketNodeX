@@ -1,4 +1,4 @@
-const Logger = pocketnode("logger/Logger");
+const Logger = require("../logger/Logger");
 
 class PluginLogger extends Logger {
     constructor(server, plugin){
@@ -6,5 +6,4 @@ class PluginLogger extends Logger {
         this.setDebugging(server._debuggingLevel);
     }
 }
-
 module.exports = PluginLogger;

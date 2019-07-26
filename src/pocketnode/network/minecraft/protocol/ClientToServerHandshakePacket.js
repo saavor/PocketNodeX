@@ -1,9 +1,10 @@
-const DataPacket = pocketnode("network/minecraft/protocol/DataPacket");
-const MinecraftInfo = pocketnode("network/minecraft/Info");
+const DataPacket = require("./DataPacket");
+const ProtocolInfo = require("../Info");
 
 class ClientToServerHandshakePacket extends DataPacket {
+
     static getId() {
-        return MinecraftInfo.CLIENT_TO_SERVER_HANDSHAKE_PACKET;
+        return ProtocolInfo.CLIENT_TO_SERVER_HANDSHAKE_PACKET;
     }
 
     canBeSentBeforeLogin() {

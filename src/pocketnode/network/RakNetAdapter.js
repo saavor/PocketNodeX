@@ -1,12 +1,12 @@
 const RakNetServer = require("../../raknet/server/RakNetServer");
 
-const Logger = pocketnode("logger/Logger");
+const Logger = require("../logger/Logger");
 
-const PacketPool = pocketnode("network/minecraft/protocol/PacketPool");
-const BatchPacket = pocketnode("network/minecraft/protocol/BatchPacket");
+const PacketPool = require("./minecraft/protocol/PacketPool");
+const BatchPacket = require("./minecraft/protocol/BatchPacket");
 
-const Player = pocketnode("player/Player");
-const PlayerList = pocketnode("player/PlayerList");
+const Player = require("../player/Player");
+const PlayerList = require("../player/PlayerList");
 
 class RakNetAdapter {
     constructor(server){

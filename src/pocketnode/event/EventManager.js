@@ -1,6 +1,19 @@
-const Listener = pocketnode("event/Listener");
-const Plugin = pocketnode("plugin/Plugin");
-const RegisteredListener = pocketnode("plugin/RegisteredListener");
+/*
+ *   _____           _        _   _   _           _
+ *  |  __ \         | |      | | | \ | |         | |
+ *  | |__) |__   ___| | _____| |_|  \| | ___   __| | ___
+ *  |  ___/ _ \ / __| |/ / _ \ __| . ` |/ _ \ / _` |/ _ \
+ *  | |  | (_) | (__|   <  __/ |_| |\  | (_) | (_| |  __/
+ *  |_|   \___/ \___|_|\_\___|\__|_| \_|\___/ \__,_|\___|
+ *
+ *  @author PocketNode Team
+ *  @link https://pocketnode.me
+*/
+
+const Listener = require("./Listener");
+
+const Plugin = require("../plugin/Plugin");
+const RegisteredListener = require("../plugin/RegisteredListener");
 
 class EventManager {
     initVars(){

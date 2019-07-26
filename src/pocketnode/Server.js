@@ -1,33 +1,33 @@
-const MinecraftInfo = pocketnode("network/minecraft/Info");
-const Config = pocketnode("utils/Config");
+const ProtocolInfo = require("./network/minecraft/Info");
+const Config = require("./utils/Config");
 
-const PluginManager = pocketnode("plugin/PluginManager");
-const SourcePluginLoader = pocketnode("plugin/SourcePluginLoader");
-const ScriptPluginLoader = pocketnode("plugin/ScriptPluginLoader");
+const PluginManager = require("./plugin/PluginManager");
+const SourcePluginLoader = require("./plugin/SourcePluginLoader");
+const ScriptPluginLoader = require("./plugin/ScriptPluginLoader");
 
-const Isset = pocketnode("utils/methods/Isset");
+const Isset = require("./utils/methods/Isset");
 
-const RakNetAdapter = pocketnode("network/RakNetAdapter");
-const BatchPacket = pocketnode("network/minecraft/protocol/BatchPacket");
-const RuntimeBlockMapping = pocketnode("network/minecraft/protocol/types/RuntimeBlockMapping");
+const RakNetAdapter = require("./network/RakNetAdapter");
+const BatchPacket = require("./network/minecraft/protocol/BatchPacket");
+const RuntimeBlockMapping = require("./network/minecraft/protocol/types/RuntimeBlockMapping");
 
-const CommandMap = pocketnode("command/CommandMap");
-const ConsoleCommandReader = pocketnode("command/ConsoleCommandReader");
-const HelpCommand = pocketnode("command/defaults/HelpCommand");
-const StopCommand = pocketnode("command/defaults/StopCommand");
-const PluginsCommand = pocketnode("command/defaults/PluginsCommand");
+const CommandMap = require("./command/CommandMap");
+const ConsoleCommandReader = require("./command/ConsoleCommandReader");
+const HelpCommand = require("./command/defaults/HelpCommand");
+const StopCommand = require("./command/defaults/StopCommand");
+const PluginsCommand = require("./command/defaults/PluginsCommand");
 
-const Player = pocketnode("player/Player");
-const PlayerList = pocketnode("player/PlayerList");
-const Entity = pocketnode("entity/Entity");
+const Player = require("./player/Player");
+const PlayerList = require("./player/PlayerList");
+const Entity = require("./entity/Entity");
 
-const ResourcePackManager = pocketnode("resourcepacks/ResourcePackManager");
+const ResourcePackManager = require("./resourcepacks/ResourcePackManager");
 
-const Level = pocketnode("level/Level");
-const GeneratorManager = pocketnode("level/generator/GeneratorManager");
-const FlatGenerator = pocketnode("level/generator/FlatGenerator");
+const Level = require("./level/Level");
+const GeneratorManager = require("./level/generator/GeneratorManager");
+const FlatGenerator = require("./level/generator/FlatGenerator");
 
-const SFS = pocketnode("utils/SimpleFileSystem");
+const SFS = require("./utils/SimpleFileSystem");
 
 class Server {
 
@@ -288,14 +288,14 @@ class Server {
      * @return {string}
      */
     getVersion(){
-        return MinecraftInfo.VERSION;
+        return ProtocolInfo.VERSION;
     }
 
     /**
      * @return {number}
      */
     getProtocol(){
-        return MinecraftInfo.PROTOCOL;
+        return ProtocolInfo.PROTOCOL;
     }
 
     /**

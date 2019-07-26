@@ -10,7 +10,7 @@
  *  @link https://pocketnode.me
 */
 
-const Position = pocketnode("level/Position");
+const Position = require("./Position");
 
 class Location extends Position {
     /**

@@ -1,9 +1,10 @@
-const DataPacket = pocketnode("network/minecraft/protocol/DataPacket");
-const MinecraftInfo = pocketnode("network/minecraft/Info");
+const DataPacket = require("./DataPacket");
+const ProtocolInfo = require("../Info");
 
 class PlayerHotbarPacket extends DataPacket {
+
     static getId() {
-        return MinecraftInfo.PLAYER_ACTION_PACKET;
+        return ProtocolInfo.PLAYER_ACTION_PACKET;
     }
 
     _decodePayload() {
@@ -14,3 +15,4 @@ class PlayerHotbarPacket extends DataPacket {
 
     }
 }
+module.exports = PlayerHotbarPacket;

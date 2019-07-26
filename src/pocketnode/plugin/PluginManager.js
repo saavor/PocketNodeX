@@ -1,12 +1,12 @@
 const FileSystem = require("fs");
 const Path = require("path");
 
-const Plugin = pocketnode("plugin/Plugin");
-const PluginLoader = pocketnode("plugin/PluginLoader");
-const PluginManifest = pocketnode("plugin/PluginManifest");
+const Plugin = require("./Plugin");
+const PluginLoader = require("./PluginLoader");
+const PluginManifest = require("./PluginManifest");
 
-const Listener = pocketnode("event/Listener");
-const EventManager = pocketnode("event/EventManager");
+const Listener = require("../event/Listener");
+const EventManager = require("../event/EventManager");
 
 class PluginManager {
     initVars() {

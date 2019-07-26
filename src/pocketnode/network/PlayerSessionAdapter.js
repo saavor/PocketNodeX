@@ -1,21 +1,21 @@
-const DataPacket = pocketnode("network/minecraft/protocol/DataPacket");
-const Player = pocketnode("player/Player");
-const LoginPacket = pocketnode("network/minecraft/protocol/LoginPacket");
-const BatchPacket = pocketnode("network/minecraft/protocol/BatchPacket");
-const ResourcePackChunkDataPacket = pocketnode("network/minecraft/protocol/ResourcePackChunkDataPacket");
-const RequestChunkRadiusPacket = pocketnode("network/minecraft/protocol/RequestChunkRadiusPacket");
-const PlayStatusPacket = pocketnode("network/minecraft/protocol/PlayStatusPacket");
-const Vector3 = pocketnode("math/Vector3");
+const DataPacket = require("./minecraft/protocol/DataPacket");
+const Player = require("../player/Player");
+const LoginPacket = require("./minecraft/protocol/LoginPacket");
+const BatchPacket = require("./minecraft/protocol/BatchPacket");
+const ResourcePackChunkDataPacket = require("./minecraft/protocol/ResourcePackChunkDataPacket");
+const RequestChunkRadiusPacket = require("./minecraft/protocol/RequestChunkRadiusPacket");
+const PlayStatusPacket = require("./minecraft/protocol/PlayStatusPacket");
+const Vector3 = require("../math/Vector3");
 
-const DataPacketReceiveEvent = pocketnode("event/server/DataPacketReceiveEvent");
+const DataPacketReceiveEvent = require("../event/server/DataPacketReceiveEvent");
 
-const Chunk = pocketnode("level/format/Chunk");
+const Chunk = require("../level/format/Chunk");
 
-const TextPacket = pocketnode("network/minecraft/protocol/TextPacket");
+const TextPacket = require("./minecraft/protocol/TextPacket");
 
-const ResourcePack = pocketnode("resourcepacks/ResourcePack");
+const ResourcePack = require("../resourcepacks/ResourcePack");
 
-const Async = pocketnode("utils/Async");
+const Async = require("../utils/Async");
 
 class PlayerSessionAdapter{
     constructor(player){

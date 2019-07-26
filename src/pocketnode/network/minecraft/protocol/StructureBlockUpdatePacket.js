@@ -1,9 +1,9 @@
-const DataPacket = pocketnode("network/minecraft/protocol/DataPacket");
-const MinecraftInfo = pocketnode("network/minecraft/Info");
+const DataPacket = require("./DataPacket");
+const ProtocolInfo = require("../Info");
 
 class StructureBlockUpdatePacket extends DataPacket {
     static getId() {
-        return MinecraftInfo.STRUCTURE_BLOCK_UPDATE_PACKET;
+        return ProtocolInfo.STRUCTURE_BLOCK_UPDATE_PACKET;
     }
 
     _decodePayload() {

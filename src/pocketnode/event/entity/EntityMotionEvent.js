@@ -1,5 +1,7 @@
-const Cancellable = pocketnode("event/Cancellable");
-const Vector3 = pocketnode("math/Vector3");
+const Cancellable = require("../Cancellable");
+const Vector3 = require("../../math/Vector3");
+const Entity = require("../../entity/Entity");
+const EntityEvent = require("../entity/EntityEvent");
 
 class EntityMotionEvent extends EntityEvent implements Cancellable{
 
@@ -22,3 +24,4 @@ class EntityMotionEvent extends EntityEvent implements Cancellable{
         return this._mot;
     }
 }
+module.exports = EntityMotionEvent;

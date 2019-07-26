@@ -1,9 +1,9 @@
-const DataPacket = pocketnode("network/minecraft/protocol/DataPacket");
-const MinecraftInfo = pocketnode("network/minecraft/Info");
+const DataPacket = require("./DataPacket");
+const ProtocolInfo = require("../Info");
 
 class RequestChunkRadiusPacket extends DataPacket {
     static getId(){
-        return MinecraftInfo.REQUEST_CHUNK_RADIUS_PACKET;
+        return ProtocolInfo.REQUEST_CHUNK_RADIUS_PACKET;
     }
 
     initVars() {

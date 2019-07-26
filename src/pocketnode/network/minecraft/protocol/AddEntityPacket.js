@@ -1,9 +1,12 @@
-const DataPacket = pocketnode("network/minecraft/protocol/DataPacket");
-const EntityIds = pocketnode("entity/EntityIds");
-const MinecraftInfo = pocketnode("network/minecraft/Info");
-const Vector3 = pocketnode("math/Vector3");
-const Attribute = pocketnode("entity/Attribute");
-const Isset = pocketnode("utils/methods/Isset");
+const DataPacket = require("./DataPacket");
+const ProtocolInfo = require("../Info");
+
+const EntityIds = require("../../../entity/EntityIds");
+const Attribute = require("../../../entity/Attribute");
+
+const Vector3 = require("../../../math/Vector3");
+
+const Isset = require("../../../utils/methods/Isset");
 
 const LEGACY_ID_MAP_BC = [
 
@@ -110,7 +113,7 @@ const LEGACY_ID_MAP_BC = [
 class AddEntityPacket extends DataPacket{
 
     getId() {
-        return MinecraftInfo.ADD_ENTITY_PACKET;
+        return ProtocolInfo.ADD_ENTITY_PACKET;
     }
 
     initVars(){
@@ -194,6 +197,7 @@ class AddEntityPacket extends DataPacket{
         });
 
         //TODO
+        this.writeEntityMetadata(this.metadata);
     }
 }
 

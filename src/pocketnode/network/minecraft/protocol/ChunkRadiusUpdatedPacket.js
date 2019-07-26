@@ -1,9 +1,9 @@
-const DataPacket = pocketnode("network/minecraft/protocol/DataPacket");
-const MinecraftInfo = pocketnode("network/minecraft/Info");
+const DataPacket = require("./DataPacket");
+const ProtocolInfo = require("../Info");
 
 class ChunkRadiusUpdatedPacket extends DataPacket {
     static getId(){
-        return MinecraftInfo.CHUNK_RADIUS_UPDATED_PACKET;
+        return ProtocolInfo.CHUNK_RADIUS_UPDATED_PACKET;
     }
 
     initVars(){
@@ -11,7 +11,6 @@ class ChunkRadiusUpdatedPacket extends DataPacket {
     }
 
     _decodePayload(){
-        console.log("ChunkRadiusUpdatedPacket called");
         this.radius = this.readVarInt();
     }
 

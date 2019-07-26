@@ -1,4 +1,4 @@
-const Command = pocketnode("command/Command");
+const Command = require("../Command");
 
 class StopCommand extends Command {
     constructor(){

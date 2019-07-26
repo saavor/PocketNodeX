@@ -1,13 +1,14 @@
-const ServerEvent = pocketnode("event/server/ServerEvent");
-const DataPacket = pocketnode("network/minecraft/protocol/DataPacket");
+const ServerEvent = require("./ServerEvent");
+const DataPacket = require("../../network/minecraft/protocol/DataPacket");
 
 class DataPacketSendEvent extends ServerEvent {
+
     isCancellable(){
         return true;
     }
 
     /**
-     * @param {Player}    player
+     * @param {Player} player
      * @param {DataPacket} packet
      */
     constructor(player, packet){

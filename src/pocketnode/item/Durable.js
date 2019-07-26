@@ -1,6 +1,8 @@
+const Item = require("./Item");
+
 class Durable extends Item{
 
-    isUnbreakable() : boolean{
+    isUnbreakable() {
        // return this.getNamedTag()
     }
 }

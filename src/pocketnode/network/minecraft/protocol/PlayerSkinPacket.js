@@ -1,9 +1,9 @@
-const DataPacket = pocketnode("network/minecraft/protocol/DataPacket");
-const MinecraftInfo = pocketnode("network/minecraft/Info");
+const DataPacket = require("./DataPacket");
+const ProtocolInfo = require("../Info");
 
 class PlayerSkinPacket extends DataPacket{
     static getId() {
-        return MinecraftInfo.PLAYER_SKIN_PACKET;
+        return ProtocolInfo.PLAYER_SKIN_PACKET;
     }
 
     initVars(){

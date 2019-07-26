@@ -9,9 +9,9 @@ const INT32_MAX = 0x7fffffff;
 
 function PocketNode(paths){
     this.START_TIME = Date.now();
-    this.NAME = "PocketNode";
-    this.CODENAME = "[BEGINNINGS]";
-    this.VERSION = "0.0.5";
+    this.NAME = "PocketNodeX";
+    this.CODENAME = "[ALPHA]";
+    this.VERSION = "0.0.1";
     this.API_VERSION = "1.0.0";
 
     let logger = new Logger("Server");
@@ -23,9 +23,18 @@ function PocketNode(paths){
 
     for(let i in paths) if(typeof path[i] !== "undefined") path[i] = paths[i];
 
-    logger.info("Loading PocketNode...");
+    /*for (let i in path){
+        if (path.hasOwnProperty(i)) {
+            if (typeof path[i] !== "undefined"){
+                path[i] = paths[i];
+            }
+        }
+    }*/
+
+    logger.info("Loading PocketNodeX...");
 
     let server = new Server(this, logger, path);
+
     if(TRAVIS_BUILD === true){
         server.shutdown();
     }

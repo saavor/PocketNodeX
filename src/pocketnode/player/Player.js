@@ -1,64 +1,61 @@
-//const CommandSender = pocketnode("command/CommandSender");
+// const UUID = require("../utils/UUID");
+const PlayerSessionAdapter = require("../network/PlayerSessionAdapter");
+// const Level = require("../level/Level");
+const PlayerPreLoginEvent = require("../event/player/PlayerPreLoginEvent");
+const PlayerJoinEvent = require("../event/player/PlayerJoinEvent");
 
-//const MinecraftInfo = pocketnode("network/minecraft/Info");
-const UUID = pocketnode("utils/UUID");
-const PlayerSessionAdapter = pocketnode("network/PlayerSessionAdapter");
-const Level = pocketnode("level/Level");
-const PlayerPreLoginEvent = pocketnode("event/player/PlayerPreLoginEvent");
-const PlayerJoinEvent = pocketnode("event/player/PlayerJoinEvent");
+//const SetEntityDataPacket = require("network/minecraft/protocol/SetEntityDataPacket");
 
-//const SetEntityDataPacket = pocketnode("network/minecraft/protocol/SetEntityDataPacket");
+const BiomeDefinitionListPacket = require("../network/minecraft/protocol/BiomeDefinitionListPacket");
+const AvailableEntityIdentifiersPacket = require("../network/minecraft/protocol/AvailableEntityIdentifiersPacket");
 
-const BiomeDefinitionListPacket = pocketnode("network/minecraft/protocol/BiomeDefinitionListPacket");
-const AvailableEntityIdentifiersPacket = pocketnode("network/minecraft/protocol/AvailableEntityIdentifiersPacket");
+const PlayerJumpEvent = require("../event/player/PlayerJumpEvent");
+const PlayerAnimationEvent = require("../event/player/PlayerAnimationEvent");
+const PlayerInteractEvent = require("../event/player/PlayerInteractEvent");
 
-const PlayerJumpEvent = pocketnode("event/player/PlayerJumpEvent");
-const PlayerAnimationEvent = pocketnode("event/player/PlayerAnimationEvent");
-const PlayerInteractEvent = pocketnode("event/player/PlayerInteractEvent");
+//const EventManager = require("event/EventManager");
+const AttributeMap = require("../entity/AttributeMap");
 
-//const EventManager = pocketnode("event/EventManager");
-const AttributeMap = pocketnode("entity/AttributeMap");
+const ResourcePackClientResponsePacket = require("../network/minecraft/protocol/ResourcePackClientResponsePacket");
+const ResourcePackDataInfoPacket = require("../network/minecraft/protocol/ResourcePackDataInfoPacket");
+const ResourcePackStackPacket = require("../network/minecraft/protocol/ResourcePackStackPacket");
+// const ResourcePackChunkRequestPacket = pocketnode("network/minecraft/protocol/ResourcePackChunkRequestPacket");
 
-const ResourcePackClientResponsePacket = pocketnode("network/minecraft/protocol/ResourcePackClientResponsePacket");
-const ResourcePackDataInfoPacket = pocketnode("network/minecraft/protocol/ResourcePackDataInfoPacket");
-const ResourcePackStackPacket = pocketnode("network/minecraft/protocol/ResourcePackStackPacket");
-//const ResourcePackChunkRequestPacket = pocketnode("network/minecraft/protocol/ResourcePackChunkRequestPacket");
+const DataPacket = require("../network/minecraft/protocol/DataPacket");
+// const BatchPacket = require("../network/minecraft/protocol/BatchPacket");
+const AnimatePacket = require("../network/minecraft/protocol/AnimatePacket");
+const InteractPacket = require("../network/minecraft/protocol/InteractPacket");
+const PlayerActionPacket = require("../network/minecraft/protocol/PlayerActionPacket");
+const LoginPacket = require("../network/minecraft/protocol/LoginPacket");
+const PlayStatusPacket = require("../network/minecraft/protocol/PlayStatusPacket");
+const UpdateAttributesPacket = require("../network/minecraft/protocol/UpdateAttributesPacket");
+// const PlayerPreLoginEvent = require("event/player/PlayerPreLoginEvent");
+const DisconnectPacket = require("../network/minecraft/protocol/DisconnectPacket");
+const MovePlayerPacket = require("../network/minecraft/protocol/MovePlayerPacket");
+const ResourcePacksInfoPacket = require("../network/minecraft/protocol/ResourcePacksInfoPacket");
+const StartGamePacket = require("../network/minecraft/protocol/StartGamePacket");
+const ChunkRadiusUpdatedPacket = require("../network/minecraft/protocol/ChunkRadiusUpdatedPacket");
+const TextPacket = require("../network/minecraft/protocol/TextPacket");
+const LevelChunkPacket =  require("../network/minecraft/protocol/LevelChunkPacket");
+const SetPlayerGameTypePacket =  require("../network/minecraft/protocol/SetPlayerGameTypePacket");
 
-const DataPacket = pocketnode("network/minecraft/protocol/DataPacket");
-const BatchPacket = pocketnode("network/minecraft/protocol/BatchPacket");
-const AnimatePacket = pocketnode("network/minecraft/protocol/AnimatePacket");
-const InteractPacket = pocketnode("network/minecraft/protocol/InteractPacket");
-const PlayerActionPacket = pocketnode("network/minecraft/protocol/PlayerActionPacket");
-const LoginPacket = pocketnode("network/minecraft/protocol/LoginPacket");
-const PlayStatusPacket = pocketnode("network/minecraft/protocol/PlayStatusPacket");
-const UpdateAttributesPacket = pocketnode("network/minecraft/protocol/UpdateAttributesPacket");
-//const PlayerPreLoginEvent = pocketnode("event/player/PlayerPreLoginEvent");
-const DisconnectPacket = pocketnode("network/minecraft/protocol/DisconnectPacket");
-const MovePlayerPacket = pocketnode("network/minecraft/protocol/MovePlayerPacket");
-const ResourcePacksInfoPacket = pocketnode("network/minecraft/protocol/ResourcePacksInfoPacket");
-const StartGamePacket = pocketnode("network/minecraft/protocol/StartGamePacket");
-const ChunkRadiusUpdatedPacket = pocketnode("network/minecraft/protocol/ChunkRadiusUpdatedPacket");
-const TextPacket = pocketnode("network/minecraft/protocol/TextPacket");
-const LevelChunkPacket =  pocketnode("network/minecraft/protocol/LevelChunkPacket");
-const SetPlayerGameTypePacket =  pocketnode("network/minecraft/protocol/SetPlayerGameTypePacket");
+const DataPacketSendEvent = require("../event/server/DataPacketSendEvent");
 
-const DataPacketSendEvent = pocketnode("event/server/DataPacketSendEvent");
+const GameRule = require("../level/GameRule");
+const AxisAlignedBB = require("../math/AxisAlignedBB");
 
-const GameRule = pocketnode("level/GameRule");
-const AxisAlignedBB = pocketnode("math/AxisAlignedBB");
+const Vector3 = require("../math/Vector3");
 
-const Vector3 = pocketnode("math/Vector3");
+const Human = require("../entity/Human");
+const Skin = require("../entity/Skin");
+// const Position = require("../level/Position");
 
-const Human = pocketnode("entity/Human");
-const Skin = pocketnode("entity/Skin");
-const Position = pocketnode("level/Position");
+const CompoundTag = require("../nbt/tag/CompoundTag");
+const ResourcePack = require("../resourcepacks/ResourcePack");
+const TextFormat = require("../utils/TextFormat");
+const Base64 = require("../utils/Base64");
 
-const CompoundTag = pocketnode("nbt/tag/CompoundTag");
-const ResourcePack = pocketnode("resourcepacks/ResourcePack");
-const TextFormat = pocketnode("utils/TextFormat");
-const Base64 = pocketnode("utils/Base64");
-
-const Async = pocketnode("utils/Async");
+// const Async = require("../utils/Async");
 
 class Player extends Human{
     static get SURVIVAL(){return 0}

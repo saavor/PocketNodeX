@@ -1,10 +1,10 @@
-const DataPacket = pocketnode("network/minecraft/protocol/DataPacket");
-const MinecraftInfo = pocketnode("network/minecraft/Info");
+const DataPacket = require("./DataPacket");
+const ProtocolInfo = require("../Info");
 
 class AnimatePacket extends DataPacket {
 
     getId() {
-        return MinecraftInfo.ANIMATE_PACKET;
+        return ProtocolInfo.ANIMATE_PACKET;
     }
 
     static get ACTION_SWING_ARM() {return 1};

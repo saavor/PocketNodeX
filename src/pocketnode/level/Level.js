@@ -1,7 +1,7 @@
 const INT32_MIN = -0x80000000;
 const INT32_MAX = 0x7fffffff;
 
-const Isset = pocketnode("utils/methods/Isset");
+const Isset = require("../utils/methods/Isset");
 
  class Level {
 

@@ -1,9 +1,9 @@
-const DataPacket = pocketnode("network/minecraft/protocol/DataPacket");
-const MinecraftInfo = pocketnode("network/minecraft/Info");
+const DataPacket = require("./DataPacket");
+const ProtocolInfo = require("../Info");
 
 class BlockEventPacket extends DataPacket {
     static getId() {
-        return MinecraftInfo.BLOCK_EVENT_PACKET;
+        return ProtocolInfo.BLOCK_EVENT_PACKET;
     }
 
     initVars(){
@@ -20,9 +20,6 @@ class BlockEventPacket extends DataPacket {
     }
 
     _decodePayload() {
-
-        //console.log("BlockEventPacket got called!");
-
         this.getBlockPosition(this.x, this.y, this.z);
         this.eventType = this.readVarInt();
         this.eventData = this.readVarInt();
