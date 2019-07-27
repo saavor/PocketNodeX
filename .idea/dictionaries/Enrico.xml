@@ -22,10 +22,12 @@
       <w>minecraft</w>
       <w>mooshroom</w>
       <w>pigman</w>
+      <w>pocketnode</w>
       <w>pufferfish</w>
       <w>shulker</w>
       <w>subcaller</w>
       <w>tropicalfish</w>
+      <w>webtoken</w>
     </words>
   </dictionary>
 </component>

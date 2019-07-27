@@ -2,8 +2,10 @@ const Path = require("path");
 
 require("./utils/methods/Globals");
 
-const Logger = pocketnode("logger/Logger");
-const Server = pocketnode("Server");
+const Logger = require("./logger/Logger");
+const Server = require("./Server");
+const localizationManager = require("./localization/localizationManager");
+const Config = require("./utils/Config");
 const INT32_MIN = -0x80000000;
 const INT32_MAX = 0x7fffffff;
 
@@ -21,19 +23,21 @@ function PocketNode(paths){
         plugins: Path.normalize(__dirname + "/../../plugins/")
     };
 
-    for(let i in paths) if(typeof path[i] !== "undefined") path[i] = paths[i];
-
-    /*for (let i in path){
-        if (path.hasOwnProperty(i)) {
+    for (let i in paths){
+        if (paths.hasOwnProperty(i)) {
             if (typeof path[i] !== "undefined"){
                 path[i] = paths[i];
             }
         }
-    }*/
+    }
 
-    logger.info("Loading PocketNodeX...");
+    let config = new Config(path.data + "pocketnode.json", Config.JSON, {});
+    this.localizationManager = new localizationManager(config.getNested("server.language", "en"));
+    this.localizationManager.loadLanguages();
 
-    let server = new Server(this, logger, path);
+    logger.info(this.localizationManager.getPhrase("loading"));
+
+    let server = new Server(this, this.localizationManager, logger, path);
 
     if(TRAVIS_BUILD === true){
         server.shutdown();

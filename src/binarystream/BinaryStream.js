@@ -1,4 +1,4 @@
-const Round = binarystream("Round");
+const Round = require("./Round");
 
 class BinaryStream {
 	/**

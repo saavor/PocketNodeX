@@ -39,7 +39,7 @@ class LoginPacket extends DataPacket {
     }
 
     mayHaveUnreadBytes(){
-        return this.protocol !== null && this.protocol !== MinecraftInfo.PROTOCOL;
+        return this.protocol !== null && this.protocol !== ProtocolInfo.PROTOCOL;
     }
 
     _decodePayload(){

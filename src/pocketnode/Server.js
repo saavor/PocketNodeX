@@ -21,6 +21,8 @@ const Player = require("./player/Player");
 const PlayerList = require("./player/PlayerList");
 const Entity = require("./entity/Entity");
 
+const localizationManager = require("./localization/localizationManager");
+
 const ResourcePackManager = require("./resourcepacks/ResourcePackManager");
 
 const Level = require("./level/Level");
@@ -146,12 +148,14 @@ class Server {
         this._defaultLevel = null;
 
         this._entityCount = 0;
+        this._localizationManager = null;
     }
 
-    constructor(pocketnode, logger, paths){
+    constructor(pocketnode, localizationManager, logger, paths){
         this.initVars();
 
         this._pocketnode = pocketnode;
+        this.localizationManager = localizationManager;
 
         this._logger = logger;
         this._paths = paths;
@@ -168,9 +172,10 @@ class Server {
             SFS.mkdir(this._paths.plugins);
         }
 
-        this.getLogger().info("Loading " + this.getName() + " a Minecraft: Bedrock Edition server for version " + this.getVersion());
+        this.getLogger().info(localizationManager.getPhrase("language"));
+        this.getLogger().info(localizationManager.getPhrase("starting-pocketnode").replace("{{name}}", this.getName()).replace("{{version}}", this.getVersion()));
 
-        this.getLogger().info("Loading server configuration...");
+        this.getLogger().info(localizationManager.getPhrase("loading-properties"));
         if(!SFS.fileExists(this._paths.data + "pocketnode.json")){
             SFS.copy(this._paths.file + "pocketnode/resources/pocketnode.json", this._paths.data + "pocketnode.json");
         }
@@ -190,14 +195,16 @@ class Server {
 
         if(!TRAVIS_BUILD) process.stdout.write("\x1b]0;" + this.getName() + " " + this.getPocketNodeVersion() + "\x07");
 
-        this.getLogger().debug("Server Id:", this._serverId);
+        this.getLogger().debug("Server Id:", this._serverID);
 
-        this.getLogger().info("Starting server on " + this.getIp() + ":" + this.getPort());
+        this.getLogger().info(localizationManager.getPhrase("starting-server").replace("{{ip}}", this.getIp()).replace("{{port}}", this.getPort()));
 
         this._raknetAdapter = new RakNetAdapter(this);
 
         this.getLogger().info("This server is running " + this.getName() + " version " + this.getPocketNodeVersion() + " \"" + this.getCodeName() + "\" (API " + this.getApiVersion() + ")");
-        this.getLogger().info("PocketNode is distributed under the GPLv3 License.");
+        this.getLogger().info(localizationManager.getPhrase("license"));
+
+        this.getLogger().info(localizationManager.getPhrase("done").replace("{{time}}", Date.now() - this._pocketnode.START_TIME));
 
         this._commandMap = new CommandMap(this);
         this.registerDefaultCommands();
@@ -372,7 +379,7 @@ class Server {
      * @return {number}
      */
     getServerId(){
-        return this._serverId;
+        return this._serverID;
     }
 
     getGamemode(){
