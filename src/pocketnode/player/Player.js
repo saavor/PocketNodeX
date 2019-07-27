@@ -754,6 +754,7 @@ class Player extends Human{
 
         this.setRotation(packet.yaw, packet.pitch);
         this.newPosition = newPos;
+
         return true;
     }
 

@@ -4,6 +4,7 @@ const AnimatePacket = require("./AnimatePacket");
 const PlayStatusPacket = require("./PlayStatusPacket");
 const DisconnectPacket = require("./DisconnectPacket");
 const MovePlayerPacket = require("./MovePlayerPacket");
+const ModalFormRequestPacket = require("./ModalFormRequestPacket");
 const NetworkStackLatencyPacket = require("./NetworkStackLatencyPacket");
 const PlayerActionPacket = require("./PlayerActionPacket");
 const InteractPacket = require("./InteractPacket");
@@ -84,6 +85,7 @@ class PacketPool {
         this.registerPacket(BiomeDefinitionListPacket);
         this.registerPacket(RequestChunkRadiusPacket);
         this.registerPacket(AvailableEntityIdentifiersPacket);
+        this.registerPacket(ModalFormRequestPacket);
     }
 }
 
