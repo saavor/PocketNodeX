@@ -28,6 +28,10 @@ class OfflineMessageHandler {
                 return true;
 
             case OpenConnectionRequest1.getId():
+                if(packet.mtuSize < 400){
+                    throw new Error("MTU size has to be > 400, got " + packet.mtuSize);
+                }
+                
                 if(packet.protocolVersion !== RakNet.PROTOCOL){
                     pk = new IncompatibleProtocolVersion();
                     pk.protocolVersion = RakNet.PROTOCOL;
