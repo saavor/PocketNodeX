@@ -2,8 +2,8 @@ const RakNetServer = require("../../raknet/server/RakNetServer");
 
 const Logger = require("../logger/Logger");
 
-const PacketPool = require("./minecraft/protocol/PacketPool");
-const BatchPacket = require("./minecraft/protocol/BatchPacket");
+const PacketPool = require("./mcpe/protocol/PacketPool");
+const BatchPacket = require("./mcpe/protocol/BatchPacket");
 
 const Player = require("../player/Player");
 const PlayerList = require("../player/PlayerList");

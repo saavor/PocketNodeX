@@ -10,7 +10,7 @@
  *  @link https://pocketnode.me
 */
 
-const BinaryStream = require("../../network/minecraft/NetworkBinaryStream");
+const BinaryStream = require("../../network/mcpe/NetworkBinaryStream");
 const SubChunk = require("./SubChunk");
 const EmptySubChunk = require("./EmptySubChunk");
 

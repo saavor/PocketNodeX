@@ -1,4 +1,4 @@
-const BinaryStream = require("../network/minecraft/NetworkBinaryStream");
+const BinaryStream = require("../network/mcpe/NetworkBinaryStream");
 
 class UUID {
     initVars(){

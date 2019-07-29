@@ -13,9 +13,12 @@ class AnimatePacket extends DataPacket {
     static get ACTION_CRITICAL_HIT() {return 4};
 
     initVars(){
+        /** @type {number} */
         this.action = -1;
+        /** @type {number} */
         this.entityRuntimeId = -1;
-        this.float = 0.0;
+        /** @type {number} */
+        this.float = 0.0; //TODO (Boat rowing time?)
     }
 
     constructor(){
@@ -24,8 +27,6 @@ class AnimatePacket extends DataPacket {
     }
 
     _decodePayload() {
-        console.log("AnimatePacket called!");
-
         this.action = this.readVarInt();
         this.entityRuntimeId = this.getEntityRuntimeId();
         if (this.action & 0x80){

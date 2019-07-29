@@ -1,13 +1,13 @@
 // const UUID = require("../utils/UUID");
-const PlayerSessionAdapter = require("../network/PlayerSessionAdapter");
+const PlayerSessionAdapter = require("../network/PlayerNetworkSessionAdapter");
 // const Level = require("../level/Level");
 const PlayerPreLoginEvent = require("../event/player/PlayerPreLoginEvent");
 const PlayerJoinEvent = require("../event/player/PlayerJoinEvent");
 
-//const SetEntityDataPacket = require("network/minecraft/protocol/SetEntityDataPacket");
+//const SetEntityDataPacket = require("network/mcpe/protocol/SetEntityDataPacket");
 
-const BiomeDefinitionListPacket = require("../network/minecraft/protocol/BiomeDefinitionListPacket");
-const AvailableEntityIdentifiersPacket = require("../network/minecraft/protocol/AvailableEntityIdentifiersPacket");
+const BiomeDefinitionListPacket = require("../network/mcpe/protocol/BiomeDefinitionListPacket");
+const AvailableEntityIdentifiersPacket = require("../network/mcpe/protocol/AvailableEntityIdentifiersPacket");
 
 const PlayerJumpEvent = require("../event/player/PlayerJumpEvent");
 const PlayerAnimationEvent = require("../event/player/PlayerAnimationEvent");
@@ -16,28 +16,28 @@ const PlayerInteractEvent = require("../event/player/PlayerInteractEvent");
 //const EventManager = require("event/EventManager");
 const AttributeMap = require("../entity/AttributeMap");
 
-const ResourcePackClientResponsePacket = require("../network/minecraft/protocol/ResourcePackClientResponsePacket");
-const ResourcePackDataInfoPacket = require("../network/minecraft/protocol/ResourcePackDataInfoPacket");
-const ResourcePackStackPacket = require("../network/minecraft/protocol/ResourcePackStackPacket");
-// const ResourcePackChunkRequestPacket = pocketnode("network/minecraft/protocol/ResourcePackChunkRequestPacket");
+const ResourcePackClientResponsePacket = require("../network/mcpe/protocol/ResourcePackClientResponsePacket");
+const ResourcePackDataInfoPacket = require("../network/mcpe/protocol/ResourcePackDataInfoPacket");
+const ResourcePackStackPacket = require("../network/mcpe/protocol/ResourcePackStackPacket");
+// const ResourcePackChunkRequestPacket = pocketnode("network/mcpe/protocol/ResourcePackChunkRequestPacket");
 
-const DataPacket = require("../network/minecraft/protocol/DataPacket");
-// const BatchPacket = require("../network/minecraft/protocol/BatchPacket");
-const AnimatePacket = require("../network/minecraft/protocol/AnimatePacket");
-const InteractPacket = require("../network/minecraft/protocol/InteractPacket");
-const PlayerActionPacket = require("../network/minecraft/protocol/PlayerActionPacket");
-const LoginPacket = require("../network/minecraft/protocol/LoginPacket");
-const PlayStatusPacket = require("../network/minecraft/protocol/PlayStatusPacket");
-const UpdateAttributesPacket = require("../network/minecraft/protocol/UpdateAttributesPacket");
+const DataPacket = require("../network/mcpe/protocol/DataPacket");
+// const BatchPacket = require("../network/mcpe/protocol/BatchPacket");
+const AnimatePacket = require("../network/mcpe/protocol/AnimatePacket");
+const InteractPacket = require("../network/mcpe/protocol/InteractPacket");
+const PlayerActionPacket = require("../network/mcpe/protocol/PlayerActionPacket");
+const LoginPacket = require("../network/mcpe/protocol/LoginPacket");
+const PlayStatusPacket = require("../network/mcpe/protocol/PlayStatusPacket");
+const UpdateAttributesPacket = require("../network/mcpe/protocol/UpdateAttributesPacket");
 // const PlayerPreLoginEvent = require("event/player/PlayerPreLoginEvent");
-const DisconnectPacket = require("../network/minecraft/protocol/DisconnectPacket");
-const MovePlayerPacket = require("../network/minecraft/protocol/MovePlayerPacket");
-const ResourcePacksInfoPacket = require("../network/minecraft/protocol/ResourcePacksInfoPacket");
-const StartGamePacket = require("../network/minecraft/protocol/StartGamePacket");
-const ChunkRadiusUpdatedPacket = require("../network/minecraft/protocol/ChunkRadiusUpdatedPacket");
-const TextPacket = require("../network/minecraft/protocol/TextPacket");
-const LevelChunkPacket =  require("../network/minecraft/protocol/LevelChunkPacket");
-const SetPlayerGameTypePacket =  require("../network/minecraft/protocol/SetPlayerGameTypePacket");
+const DisconnectPacket = require("../network/mcpe/protocol/DisconnectPacket");
+const MovePlayerPacket = require("../network/mcpe/protocol/MovePlayerPacket");
+const ResourcePacksInfoPacket = require("../network/mcpe/protocol/ResourcePacksInfoPacket");
+const StartGamePacket = require("../network/mcpe/protocol/StartGamePacket");
+const ChunkRadiusUpdatedPacket = require("../network/mcpe/protocol/ChunkRadiusUpdatedPacket");
+const TextPacket = require("../network/mcpe/protocol/TextPacket");
+const LevelChunkPacket =  require("../network/mcpe/protocol/LevelChunkPacket");
+const SetPlayerGameTypePacket =  require("../network/mcpe/protocol/SetPlayerGameTypePacket");
 
 const DataPacketSendEvent = require("../event/server/DataPacketSendEvent");
 
@@ -188,8 +188,8 @@ class Player extends Human{
             return false;
         }
 
-        /*if(packet.protocol] !== MinecraftInfo.PROTOCOL){
-            if(packet.protocol < MinecraftInfo.PROTOCOL){
+        /*if(packet.protocol] !== mcpeInfo.PROTOCOL){
+            if(packet.protocol < mcpeInfo.PROTOCOL){
                 this.sendPlayStatus(PlayStatusPacket.LOGIN_FAILED_CLIENT, true);
             }else{
                 this.sendPlayStatus(PlayStatusPacket.LOGIN_FAILED_SERVER, true);
@@ -258,125 +258,7 @@ class Player extends Human{
         return true;
     }
 
-        /*Async(function(){
-            const MOJANG_ROOT_PUBLIC_KEY = "MHYwEAYHKoZIzj0CAQYFK4EEACIDYgAE8ELkixyLcwlZryUQcu1TvPOmI2B7vX83ndnWRUaXm74wFfa5f/lwQNTfrLVHa2PmenpGI6JhIMUJaWZrjmMj90NoKNFSNBuKdm8rYiXsfaz3K36x/1U26HpG0ZxK/V1V";
-            let info = {
-                authenticated: false,
-                valid: false
-            };
-
-            void function(){
-                function validateToken(jwt, _, first = false){
-                    let [headB64, payloadB64, sigB64] = jwt.split(".");
-
-                    let headers = JSON.parse(Base64.decode((headB64.replace(/-/g, "+").replace(/_/g, "/")), true));
-
-                    if(_.currentPublicKey === null){
-                        if(!first){
-                            return false;
-                        }
-                        _.currentPublicKey = headers.x5u;
-                    }
-
-                    let plainSignature = Base64.decode((sigB64.replace(/-/g, "+").replace(/_/g, "/")), true);
-
-                    assert(plainSignature.length === 96);
-
-                    let [rString, sString] = [plainSignature.substr(0, 48), plainSignature.substr(48)];
-
-                    rString = rString.ltrim("\x00");
-                    if(rString.charCodeAt(0) >= 128){
-                        rString = "\x00" + rString;
-                    }
-
-                    sString = sString.ltrim("\x00");
-                    if(sString.charCodeAt(0) >= 128){
-                        sString = "\x00" + sString;
-                    }
-
-                    let sequence = "\x02" + String.fromCharCode(rString.length) + rString + "\x02" + String.fromCharCode(sString.length) + sString;
-                    let derSignature = "\x30" + String.fromCharCode(sequence.length) + sequence;
-
-                    let pub = [
-                        "-----BEGIN PUBLIC KEY-----",
-                        _.currentPublicKey.wordwrap(64, "\n", true),
-                        "-----END PUBLIC KEY-----\n"
-                    ].join("\n");
-
-                    const crypto = require("crypto");
-                    let verified =
-                        crypto.createVerify("SHA384")
-                            .update(headB64+"."+payloadB64)
-                            .verify(pub, derSignature, "latin1");
-
-                    if(!verified){
-                        return false;
-                    }
-
-                    if(_.currentPublicKey === MOJANG_ROOT_PUBLIC_KEY){
-                        info.authenticated = true;
-                    }
-
-                    let claims = JSON.parse(Base64.decode((payloadB64.replace(/-/g, "+").replace(/_/g, "/")), true));
-
-                    let now = Math.floor(Date.now() / 1000);
-                    if(claims.nbf && claims.nbf > now){
-                        return false;
-                    }
-
-                    if(claims.exp && claims.exp < now){
-                        return false;
-                    }
-
-                    _.currentPublicKey = claims.identityPublicKey ? claims.identityPublicKey : null;
-
-                    return true;
-                }
-
-                let _ = { //hack since js doesnt have &
-                    currentPublicKey: null
-                };
-                let first = true;
-
-                for(let i in packet.chainData.chain){
-                    let jwt = packet.chainData.chain[i];
-                    if(!validateToken(jwt, _, first)){
-                        return;
-                    }
-                    first = false;
-                }
-
-                if(!validateToken(packet.clientDataJwt, _)){
-                    return;
-                }
-
-                info.valid = true;
-            }();
-            
-            return info;
-        }.bind(this))
-
-            .then(function(info){
-
-                if(!this.isConnected()){
-                    this.getServer().getLogger().error("Player " + this.getName() + " was disconnected before their login could be verified");
-                }else{
-                    this.onVerifyCompleted(packet, info.valid, info.authenticated);
-                }
-
-            }.bind(this))
-                .catch(function (info) {
-                    // this.getLogger().error("Login rejected for player " + this.getName());
-                    //todo: log
-                    this.onVerifyCompleted(packet, info.valid, info.authenticated);
-            }.bind(this));
-
-        return true;
-    }*/
-
     doFirstSpawn(){
-        console.log("doFirstSpawn called!");
-
         this.spawned = true;
 
         this.sendPlayStatus(PlayStatusPacket.PLAYER_SPAWN);
@@ -754,7 +636,6 @@ class Player extends Human{
 
         this.setRotation(packet.yaw, packet.pitch);
         this.newPosition = newPos;
-
         return true;
     }
 
@@ -1011,7 +892,7 @@ class Player extends Human{
             case PlayerActionPacket.ACTION_STOP_SWIMMING:
                 break;
             default:
-                console.log("Unhandled/unknown player action type " + packet.action + " from " + this.player.getName());
+                console.log("Unhandled/unknown player action type " + packet.action + " from " + this.getName());
                 return false;
         }
 

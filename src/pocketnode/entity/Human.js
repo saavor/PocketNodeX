@@ -5,7 +5,7 @@ const ProjectileSource = require("./projectile/ProjectileSource");
 const InventoryHolder = require("../inventory/InventoryHolder");
 const Skin = require("./Skin");
 const Player = require("../player/Player");
-const PlayerSkinPacket = require("../network/minecraft/protocol/PlayerSkinPacket");
+const PlayerSkinPacket = require("../network/mcpe/protocol/PlayerSkinPacket");
 const CompoundTag = require("../nbt/tag/CompoundTag");
 
 class Human extends Many(Creature, ProjectileSource, InventoryHolder)  /*implements ProjectileSource, InventoryHolder*/{

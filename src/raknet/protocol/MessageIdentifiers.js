@@ -1,5 +1,5 @@
 const MessageIdentifiers = {
-    MINECRAFT_HEADER: 0xFE,
+    mcpe_HEADER: 0xFE,
     //From https://github.com/OculusVR/RakNet/blob/master/Source/MessageIdentifiers.h
     //
     // RESERVED TYPES - DO NOT CHANGE THESE

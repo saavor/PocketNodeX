@@ -1,23 +1,18 @@
-const DataPacket = require("./minecraft/protocol/DataPacket");
-const Player = require("../player/Player");
-const LoginPacket = require("./minecraft/protocol/LoginPacket");
-const BatchPacket = require("./minecraft/protocol/BatchPacket");
-const ResourcePackChunkDataPacket = require("./minecraft/protocol/ResourcePackChunkDataPacket");
-const RequestChunkRadiusPacket = require("./minecraft/protocol/RequestChunkRadiusPacket");
-const PlayStatusPacket = require("./minecraft/protocol/PlayStatusPacket");
-const Vector3 = require("../math/Vector3");
-
 const DataPacketReceiveEvent = require("../event/server/DataPacketReceiveEvent");
+const DataPacket = require("./mcpe/protocol/DataPacket");
+const Player = require("../player/Player");
+const ResourcePackChunkDataPacket = require("./mcpe/protocol/ResourcePackChunkDataPacket");
 
 const Chunk = require("../level/format/Chunk");
 
-const TextPacket = require("./minecraft/protocol/TextPacket");
+const TextPacket = require("./mcpe/protocol/TextPacket");
 
 const ResourcePack = require("../resourcepacks/ResourcePack");
 
 const Async = require("../utils/Async");
 
-class PlayerSessionAdapter{
+class PlayerNetworkSessionAdapter{
+
     constructor(player){
         /** @type {Server} */
         this.server = player.server;
@@ -34,11 +29,15 @@ class PlayerSessionAdapter{
     handleDataPacket(packet){
         CheckTypes([DataPacket, packet]);
 
+        if (!this.player.isConnected()){
+            return;
+        }
+
         packet.decode();
 
         if(!packet.feof() && !packet.mayHaveUnreadBytes()){
             let remains = packet.buffer.slice(packet.offset);
-            console.log("Still "+ remains.length + " bytes unread in " + packet.getName() + ": 0x" + remains.toString("hex"));
+            this.server.getLogger().debug("Still "+ remains.length + " bytes unread in " + packet.getName() + ": 0x" + remains.toString("hex"));
         }
 
         console.log("Got "+packet.getName()+" from "+this);
@@ -51,11 +50,39 @@ class PlayerSessionAdapter{
     }
 
     handleLogin(packet){
+        //CheckTypes([LoginPacket, packet]);
+
         return this.player.handleLogin(packet);
     }
 
+    handleClientToServerHandshake(packet){
+        //CheckTypes([])
+        return false;
+    }
+
+    // resourcepack client response
+
+    //handleText
+
+    //handlePLayerMove
+
+    //handleLevelSoundEventPacket
+
+    handleActorEvent(packet){
+        return this.player.handleEntityEvent(packet);
+    }
+
+    handleActorFall(packet){
+        //CheckTypes([ActorFallPacket, packet]);
+        return true; // Not used
+    }
+
+    handleActorPickRequest(packet){
+        //CheckTypes([ActorPickRequestPacket, packet]);
+        return false; // TODO
+    }
+
     handleSetLocalPlayerAsInitialized(packet){
-        console.log("PlayerInitialized handled!");
         this.player.doFirstSpawn();
         return true;
     }
@@ -79,7 +106,7 @@ class PlayerSessionAdapter{
 
             return false;
         }
-        
+
         let pk = new ResourcePackChunkDataPacket();
         pk.packId = pack.getPackId();
         pk.chunkIndex = packet.chunkIndex;
@@ -164,10 +191,6 @@ class PlayerSessionAdapter{
         return false;
     }
 
-    handleClientToServerHandshake(packet){
-        return false; //TODO
-    }
-
     handleAnimate(packet){
         return this.player.handleAnimate(packet);
     }
@@ -180,6 +203,14 @@ class PlayerSessionAdapter{
         return false;
     }
 
+    handleAddBehaviorTree(packet){
+        return false;
+    }
+
+    handleAddEntity(packet){
+        return false;
+    }
+
     handleSetDefaultGameType(){
         return this.player.handleSetDefaultGameType(packet);
     }
@@ -188,8 +219,24 @@ class PlayerSessionAdapter{
         return false;
     }
 
+    handleAddPainting(packet){
+        return false;
+    }
+
+    handleAdventureSettings(packet){
+        this.player.handleAdventureSettings(packet);
+    }
+
     handleInteract(packet){
         this.player.handleInteract(packet);
+    }
+
+    handleAutomationClientConnect(packet){
+        return false;
+    }
+
+    handleAvailableCommands(packet){
+        return false;
     }
 
     handleText(packet){
@@ -205,4 +252,4 @@ class PlayerSessionAdapter{
     }
 }
 
-module.exports = PlayerSessionAdapter;
+module.exports = PlayerNetworkSessionAdapter;

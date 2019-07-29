@@ -1,7 +1,7 @@
 const assert = require('assert');
 
 const Isset = require("../utils/methods/Isset");
-//const SetEntityDataPacket = pocketnode("network/minecraft/protocol/SetEntityDataPacket");
+//const SetEntityDataPacket = pocketnode("network/mcpe/protocol/SetEntityDataPacket");
 
 const AxisAlignedBB = require("../math/AxisAlignedBB");
 const Vector3 = require("../math/Vector3");

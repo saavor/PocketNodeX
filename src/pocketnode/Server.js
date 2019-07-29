@@ -1,4 +1,4 @@
-const ProtocolInfo = require("./network/minecraft/Info");
+const ProtocolInfo = require("./network/mcpe/Info");
 const Config = require("./utils/Config");
 
 const PluginManager = require("./plugin/PluginManager");
@@ -8,8 +8,8 @@ const ScriptPluginLoader = require("./plugin/ScriptPluginLoader");
 const Isset = require("./utils/methods/Isset");
 
 const RakNetAdapter = require("./network/RakNetAdapter");
-const BatchPacket = require("./network/minecraft/protocol/BatchPacket");
-const RuntimeBlockMapping = require("./network/minecraft/protocol/types/RuntimeBlockMapping");
+const BatchPacket = require("./network/mcpe/protocol/BatchPacket");
+const RuntimeBlockMapping = require("./network/mcpe/protocol/types/RuntimeBlockMapping");
 
 const CommandMap = require("./command/CommandMap");
 const ConsoleCommandReader = require("./command/ConsoleCommandReader");

@@ -18,6 +18,7 @@
   "license": "ISC",
   "dependencies": {
     "adm-zip": "^0.4.7",
+    "locutus": "^2.0.11",
     "pocketnode-binarystream": "git+https://github.com/PocketNode/PocketNode-BinaryStream.git",
     "pocketnode-language": "git+https://github.com/PocketNode/PocketNode-Language.git",
     "raknet": "git+https://github.com/PocketNode/RakNet.git",

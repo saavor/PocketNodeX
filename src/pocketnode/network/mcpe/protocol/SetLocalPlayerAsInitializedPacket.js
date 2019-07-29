@@ -16,8 +16,6 @@ class SetLocalPlayerAsInitializedPacket extends DataPacket {
     }
 
     _decodePayload() {
-        console.log("SetLocalPlayerAsInitialized called!");
-
         this.entityRuntimeId = this.getEntityRuntimeId();
     }
 

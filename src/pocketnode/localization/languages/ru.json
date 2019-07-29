@@ -3,9 +3,9 @@
   "content" : {
     "loading" : "Загрузка PocketNode...",
     "language" : "Установка языка ru (русский)",
-    "starting-pocketnode" : "Запуск {{name}}, сервер Minecraft: Bedrock Edition для версии {{version}}",
+    "starting-pocketnode" : "Запуск {{name}}, сервер mcpe: Bedrock Edition для версии {{version}}",
     "loading-properties" : "Загрузка свойств сервера...",
-    "starting-server" : "Запуск Minecraft: PE сервера на {{ip}}: {{port}}",
+    "starting-server" : "Запуск mcpe: PE сервера на {{ip}}: {{port}}",
     "loading-plugin" : "Запуск {{plugin}",
     "enabling-plugin" : "Включение {{plugin}}",
     "server-info" : "На этом сервере запущена {{name}} версия {{version}} \"{{version-name}}\" (API {{api}})",

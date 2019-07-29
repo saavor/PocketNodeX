@@ -110,10 +110,10 @@ const LEGACY_ID_MAP_BC = [
     EntityIds.TRIPOD_CAMERA = "minecraft:tripod_camera"
 ];
 
-class AddEntityPacket extends DataPacket{
+class AddActorPacket extends DataPacket{
 
     getId() {
-        return ProtocolInfo.ADD_ENTITY_PACKET;
+        return ProtocolInfo.ADD_ACTOR_PACKET;
     }
 
     initVars(){
@@ -201,4 +201,4 @@ class AddEntityPacket extends DataPacket{
     }
 }
 
-module.exports = AddEntityPacket;
+module.exports = AddActorPacket;

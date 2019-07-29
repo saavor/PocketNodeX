@@ -56,6 +56,46 @@ class AdventureSettingsPacket extends DataPacket {
     _decodePayload() {
         this.flags = this.readUnsignedVarInt();
         this.commandPermission = this.readUnsignedVarInt();
+        this.flags2 = this.readUnsignedVarInt();
+        this.playerPermission = this.readUnsignedVarInt();
+        this.customFlags = this.readUnsignedVarInt();
+        this.entityUniqueId = this.readLLong();
+    }
+
+    _encodePayload() {
+        this.writeUnsignedVarInt(this.flags);
+        this.writeUnsignedVarInt(this.commandPermission);
+        this.writeUnsignedVarInt(this.flags2);
+        this.writeUnsignedVarInt(this.playerPermission);
+        this.writeUnsignedVarInt(this.customFlags);
+        this.writeLLong(this.entityUniqueId);
+    }
+
+    getFlag(flag){
+        CheckTypes([Number, flag]);
+        if (flag & AdventureSettingsPacket.BITFLAG_SECOND_SET){
+            return (this.flags2 & flag) !== 0;
+        }
+    }
+
+    setFlag(flag, value){
+        CheckTypes([Number, flag], [Boolean, value]);
+        let flagSet;
+        if (flag & AdventureSettingsPacket.BITFLAG_SECOND_SET){
+            flagSet = flagSet & this.flags2;
+        } else {
+            flagSet = flagSet & this.flags;
+        }
+
+        if (value){
+            flagSet |= flag;
+        } else {
+            flagSet = flagSet & ~flag;
+        }
+    }
+
+    handle(session) {
+        return session.handleAdventureSettings(this);
     }
 
 }

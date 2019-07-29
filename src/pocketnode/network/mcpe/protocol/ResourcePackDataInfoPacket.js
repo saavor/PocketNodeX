@@ -1,8 +1,6 @@
 const DataPacket = require("./DataPacket");
 const ProtocolInfo = require("../Info");
 
-const ResourcePackType = require("./types/ResourcePackType");
-
 class ResourcePackDataInfoPacket extends DataPacket {
     static getId(){
         return ProtocolInfo.RESOURCE_PACK_DATA_INFO_PACKET;
@@ -15,7 +13,7 @@ class ResourcePackDataInfoPacket extends DataPacket {
         this.compressedPackSize = 0;
         this.sha256 = "";
         this.isPremium = false;
-        this.packType = ResourcePackType.RESOURCES;
+        this.packType = 1;
     }
 
     _decodePayload(){

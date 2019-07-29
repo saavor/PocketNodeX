@@ -1,5 +1,5 @@
 const ServerEvent = require("./ServerEvent");
-const DataPacket = require("../../network/minecraft/protocol/DataPacket");
+const DataPacket = require("../../network/mcpe/protocol/DataPacket");
 
 class DataPacketReceiveEvent extends ServerEvent {
 

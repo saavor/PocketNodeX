@@ -3,9 +3,9 @@
   "content" : {
     "loading" : "Cargando PocketNode...",
     "language" : "Establecer el idioma en es (español)",
-    "starting-pocketnode" : "Iniciando {{name}}, un servidor de Minecraft: Bedrock Edition para la versión {{version}}",
+    "starting-pocketnode" : "Iniciando {{name}}, un servidor de mcpe: Bedrock Edition para la versión {{version}}",
     "loading-properties" : "Cargando las propiedades del servidor...",
-    "starting-server" : "Iniciando Minecraft: servidor PE en {{ip}}:{{port}}",
+    "starting-server" : "Iniciando mcpe: servidor PE en {{ip}}:{{port}}",
     "loading-plugin" : "Cargando {{plugin}}",
     "enabling-plugin" : "Habilitando {{plugin}}",
     "server-info" : "Este servidor ejecuta la versión de {{name}} {{version}} \"{{version-name}}\" (API {{api}})",

@@ -4,7 +4,6 @@ const AnimatePacket = require("./AnimatePacket");
 const PlayStatusPacket = require("./PlayStatusPacket");
 const DisconnectPacket = require("./DisconnectPacket");
 const MovePlayerPacket = require("./MovePlayerPacket");
-const ModalFormRequestPacket = require("./ModalFormRequestPacket");
 const NetworkStackLatencyPacket = require("./NetworkStackLatencyPacket");
 const PlayerActionPacket = require("./PlayerActionPacket");
 const InteractPacket = require("./InteractPacket");
@@ -32,6 +31,12 @@ const TextPacket = require("./TextPacket");
 const SetDefaultGameTypePacket = require("./SetDefaultGameTypePacket");
 const SetPlayerGameTypePacket = require("./SetPlayerGameTypePacket");
 const AddPlayerPacket = require("./AddPlayerPacket");
+const ActorEventPacket = require("./ActorEventPacket");
+const AddActorPacket = require("./AddActorPacket");
+const AddItemActorPacket = require("./AddItemActorPacket");
+const AddPaintingPacket = require("./AddPaintingPacket");
+const AvailableCommandsPacket = require("./AvailableCommandsPacket");
+const AutomationClientConnectPacket = require("./AutomationClientConnectPacket");
 
 class PacketPool {
     constructor(){
@@ -64,8 +69,17 @@ class PacketPool {
         this.registerPacket(SetTimePacket);
         this.registerPacket(StartGamePacket);
         this.registerPacket(AddPlayerPacket);
+        this.registerPacket(AddActorPacket);
+        //TODO: remove actor pk
+        this.registerPacket(AddItemActorPacket);
+        //TODO: take item actor pk
+        //TODO: move player absolute
         this.registerPacket(MovePlayerPacket);
+        //TODO: rider jump pl
+        //TODO: update block pk
+        this.registerPacket(AddPaintingPacket);
         this.registerPacket(PlayerActionPacket);
+        this.registerPacket(ActorEventPacket);
         // this.registerPacket(UpdateAttributesPacket);
         this.registerPacket(InteractPacket);
         this.registerPacket(UpdateSoftEnumPacket);
@@ -85,7 +99,8 @@ class PacketPool {
         this.registerPacket(BiomeDefinitionListPacket);
         this.registerPacket(RequestChunkRadiusPacket);
         this.registerPacket(AvailableEntityIdentifiersPacket);
-        this.registerPacket(ModalFormRequestPacket);
+        this.registerPacket(AvailableCommandsPacket);
+        this.registerPacket(AutomationClientConnectPacket);
     }
 }
 
