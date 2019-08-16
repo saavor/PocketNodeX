@@ -38,13 +38,20 @@ const ChunkRadiusUpdatedPacket = require("../network/mcpe/protocol/ChunkRadiusUp
 const TextPacket = require("../network/mcpe/protocol/TextPacket");
 const LevelChunkPacket =  require("../network/mcpe/protocol/LevelChunkPacket");
 const SetPlayerGameTypePacket =  require("../network/mcpe/protocol/SetPlayerGameTypePacket");
+const AvailableCommandsPacket = require("../network/mcpe/protocol/AvailableCommandsPacket");
 
 const DataPacketSendEvent = require("../event/server/DataPacketSendEvent");
 
 const GameRule = require("../level/GameRule");
 const AxisAlignedBB = require("../math/AxisAlignedBB");
 
+const CommandData = require("../network/mcpe/protocol/types/CommandData");
+const CommandParameter = require("../network/mcpe/protocol/types/CommandParameter");
+const CommandEnum = require("../network/mcpe/protocol/types/CommandEnum");
+
 const Vector3 = require("../math/Vector3");
+
+const Isset = require("../utils/methods/Isset");
 
 const Human = require("../entity/Human");
 const Skin = require("../entity/Skin");
@@ -579,9 +586,52 @@ class Player extends Human{
         //this.sendData(this);
 
         //this.sendAttributes(true);
+        this.sendCommandData();
 
         this.server.addOnlinePlayer(this);
         this.server.onPlayerCompleteLoginSequence(this);
+    }
+
+    sendCommandData(){
+        let pk = new AvailableCommandsPacket();
+        this.server.getCommandMap().getCommands().forEach(command => {
+           for (let name in command) {
+               if (command.hasOwnProperty(name)) {
+                   if (Isset(pk.commandData[command.getName()]) || command.getName() === "help") {
+                       continue;
+                   }
+
+                   let data = new CommandData();
+                   //TODO: commands containing uppercase letters in the name crash 1.9.0 client
+                   data.commandName = command.getName().toLowerCase();
+                   data.commandDescription = command.getDescription();
+                   data.flags = 0;
+                   data.permission = 0;
+
+                   let parameter = new CommandParameter();
+                   parameter.paramName = "args";
+                   parameter.paramType = AvailableCommandsPacket.ARG_FLAG_VALID | AvailableCommandsPacket.ARG_TYPE_RAWTEXT;
+                   parameter.isOptional = true;
+                   data.overloads[0] = [];
+                   data.overloads[0][0] = parameter;
+
+                   let aliases = command.getAliases();
+                   if (aliases.length !== 0) {
+                       if (aliases.indexOf(data.commandName) === -1) {
+                           //work around a client bug which makes the original name not show when aliases are used
+                           aliases = data.commandName;
+                       }
+                       data.aliases = new CommandEnum();
+                       data.aliases.enumName = command.getName().charAt(0).toUpperCase() + command.getName().substring(1) + "Aliases";
+                       data.aliases.enumValues = aliases;
+                   }
+
+                   pk.commandData[command.getName()] = data;
+               }
+           }
+        });
+
+        this.dataPacket(pk);
     }
 
     chat(message){
@@ -595,18 +645,20 @@ class Player extends Human{
         
         message = message.split("\n");
         for(let i in message){
-            let messagePart = message[i];
-            if(messagePart.trim() !== "" && messagePart.length <= 255){// && this.messageCounter-- > 0){
-                if(messagePart.startsWith("./")){
-                    messagePart = messagePart.substr(1);
-                }
+            if (message.hasOwnProperty(i)) {
+                let messagePart = message[i];
+                if (messagePart.trim() !== "" && messagePart.length <= 255) {// && this.messageCounter-- > 0){
+                    if (messagePart.startsWith("./")) {
+                        messagePart = messagePart.substr(1);
+                    }
 
-                if(messagePart.startsWith("/")){
-                    this.server.getCommandMap().dispatchCommand(this, messagePart.substr(1));
-                }else{
-                    let msg = "<:player> :message".replace(":player", this.getName()).replace(":message", messagePart);
-                    this.server.getLogger().info(msg);
-                    this.server.broadcastMessage(msg);
+                    if (messagePart.startsWith("/")) {
+                        this.server.getCommandMap().dispatchCommand(this, messagePart.substr(1));
+                    } else {
+                        let msg = "<:player> :message".replace(":player", this.getName()).replace(":message", messagePart);
+                        this.server.getLogger().info(msg);
+                        this.server.broadcastMessage(msg);
+                    }
                 }
             }
         }
@@ -891,6 +943,8 @@ class Player extends Human{
                 break; //TODO
             case PlayerActionPacket.ACTION_STOP_SWIMMING:
                 break;
+            case PlayerActionPacket.ACTION_INTERACT_BLOCK: //ignored (for now)
+                break;
             default:
                 console.log("Unhandled/unknown player action type " + packet.action + " from " + this.getName());
                 return false;
@@ -906,7 +960,9 @@ class Player extends Human{
 
     handleInteract(packet){
 
-        //todo finish
+        if (!this.spawned || !this.isAlive()) {
+
+        }
 
         if (packet.action === InteractPacket.ACTION_MOUSEOVER && packet.target === 0){
             return true;

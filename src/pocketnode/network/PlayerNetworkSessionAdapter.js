@@ -183,11 +183,31 @@ class PlayerNetworkSessionAdapter{
         return false;
     }
 
+    handleUpdateBlock(packet){
+        return false;
+    }
+
+    handleRiderJump(packet){
+        return false;
+    }
+
+    handleMoveActorAbsolute(packet){
+        return false;
+    }
+
     handleBlockEvent(packet){
         return false;
     }
 
+    handleRemoveActor(packet){
+        return false;
+    }
+
     handleServerToClientHandshake(packet){
+        return false;
+    }
+
+    handleTakeItemActor(packet){
         return false;
     }
 

@@ -134,6 +134,14 @@ class NetworkBinaryStream extends require("../../../binarystream/BinaryStream") 
         });
     }
 
+    readByteRotation(){
+        return (this.readByte() * (360 / 256));
+    }
+
+    writeByteRotation(rotation){
+        this.writeByte((rotation / (360 / 256)));
+    }
+
     readEntityLink(){
         //TODO
     }

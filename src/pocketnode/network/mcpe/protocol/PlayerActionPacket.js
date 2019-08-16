@@ -31,6 +31,7 @@ class PlayerActionPacket extends DataPacket {
     static get ACTION_STOP_SWIMMING() {return 22};
     static get ACTION_START_SPIN_ATTACK() {return 23};
     static get ACTION_STOP_SPIN_ATTACK() {return 24};
+    static get ACTION_INTERACT_BLOCK() {return 25};
 
     initVars(){
         this.entityRuntimeId = -1;
@@ -63,7 +64,6 @@ class PlayerActionPacket extends DataPacket {
     handle(session) {
         return session.handlePlayerAction(this);
     }
-
 }
 
 module.exports = PlayerActionPacket;

@@ -71,8 +71,13 @@ class StartGamePacket extends DataPacket {
         this.enchantmentSeed = 0;
         this.multiplayerCorrelationId = "";
 
-        this.onlySpawnV1Villagers = false;
-        this.runtimeIdTable = null;
+        this.blockTable = null;
+        this.itemTable = null;
+
+        this._blockTableCache = null;
+        this._itemTableCache = null;
+        //this.onlySpawnV1Villagers = false;
+        //this.runtimeIdTable = null;
     }
 
     constructor(){
@@ -130,18 +135,23 @@ class StartGamePacket extends DataPacket {
 
         this.enchantmentSeed = this.readVarInt();
 
-        let count = this.readUnsignedVarInt();
-        let table = [];
-        let i;
-        for (i = 0; i < count; ++i){
+        this.blockTable = [];
+        for (let i = 0, count = this.readUnsignedVarInt(); i < count; ++i){
             let id = this.readString();
-            let data = this.readLShort();
-            table[i] = {"name": id, "data": data};
+            let data = this.readSignedLShort();
+            let unknown = this.readSignedLShort();
+
+            this.blockTable[i] = {"name": id, "data": data, "legacy_id": unknown};
         }
-        this.runtimeIdTable = table;
-        
+        this.itemTable = [];
+        for (let i = 0, count = this.readUnsignedVarInt(); i < count; ++i){
+            let id = this.readString();
+            let legacyId = this.readSignedLShort();
+
+            this.itemTable[id] = legacyId;
+        }
+
         this.multiplayerCorrelationId = this.readString();
-        this.onlySpawnV1Villagers = this.readBool();
     }
 
     _encodePayload() {
@@ -193,29 +203,40 @@ class StartGamePacket extends DataPacket {
 
         this.writeVarInt(this.enchantmentSeed);
 
-        if (this.runtimeIdTable === null) {
-
-            if (this._runtimeIdTableCache === null){
-                this._runtimeIdTableCache = this.serializeBlockTable(RuntimeBlockMapping.getBedrockKnownStates());
+        if (this.blockTable === null){
+            if (this._blockTableCache === null) {
+                //this is a really nasty hack, but it'll do for now
+                this._blockTableCache = this.serializeBlockTable(RuntimeBlockMapping.getBedrockKnownStates());
             }
-
-            this.append(this._runtimeIdTableCache);
+            this.append(this._blockTableCache);
         }else {
-            this.append(this.serializeBlockTable(this.runtimeIdTable));
+            this.append(this.serializeBlockTable(this.blockTable));
         }
 
+        /*if (this.itemTable === null){
+            if (this._itemTableCache === null){
+                this._itemTableCache = this.serializeItemTable(file);
+            }
+        }*/
+
         this.writeString(this.multiplayerCorrelationId);
-        this.writeBool(this.onlySpawnV1Villagers);
     }
 
     serializeBlockTable(...table){
         let stream = new NetworkBinaryStream();
         stream.writeUnsignedVarInt(table.length);
         table.forEach(v => {
-            if (v.name && v.data){
+
+            if (!v.name || !v.data || !v.legacy_id){
+                console.log(v.name);
+                console.log(v.data);
+                console.log(v.legacy_id);
+            }
+
+            if (v.name && v.data && v.legacy_id) {
                 stream.writeString(v.name);
                 stream.writeLShort(v.data);
-                //stream.writeLShort(v.legacy_id);
+                stream.writeLShort(v.legacy_id);
             }
         });
         return stream.getBuffer();

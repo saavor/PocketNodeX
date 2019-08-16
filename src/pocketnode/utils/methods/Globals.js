@@ -22,6 +22,17 @@ global.raknet = function(path){
 
 global.atob = require("atob");
 
+// By Jackx
+global.flipArray = function(array){
+    let newA = [];
+    for(let prop in array){
+        if(array.hasOwnProperty(prop)){
+            newA[array[prop]] = prop;
+        }
+    }
+    return newA;
+};
+
 global.str_pad = function(input, padLength, padString, padType){
 
     let half = "";

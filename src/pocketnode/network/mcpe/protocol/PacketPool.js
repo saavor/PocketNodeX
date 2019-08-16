@@ -33,12 +33,18 @@ const SetPlayerGameTypePacket = require("./SetPlayerGameTypePacket");
 const AddPlayerPacket = require("./AddPlayerPacket");
 const ActorEventPacket = require("./ActorEventPacket");
 const AddActorPacket = require("./AddActorPacket");
+const RemoveActorPacket = require("./RemoveActorPacket");
 const AddItemActorPacket = require("./AddItemActorPacket");
 const AddPaintingPacket = require("./AddPaintingPacket");
 const AvailableCommandsPacket = require("./AvailableCommandsPacket");
 const AutomationClientConnectPacket = require("./AutomationClientConnectPacket");
+const TakeItemActorPacket = require("./TakeItemActorPacket");
+const MoveActorAbsolutePacket = require("./MoveActorAbsolutePacket");
+const RiderJumpPacket = require("./RiderJumpPacket");
+const UpdateBlockPacket = require("./UpdateBlockPacket");
 
 class PacketPool {
+
     constructor(){
         this.packetPool = new Map();
         this.registerPackets();
@@ -70,14 +76,17 @@ class PacketPool {
         this.registerPacket(StartGamePacket);
         this.registerPacket(AddPlayerPacket);
         this.registerPacket(AddActorPacket);
-        //TODO: remove actor pk
+        this.registerPacket(RemoveActorPacket);
         this.registerPacket(AddItemActorPacket);
-        //TODO: take item actor pk
-        //TODO: move player absolute
+        this.registerPacket(TakeItemActorPacket);
+        this.registerPacket(MoveActorAbsolutePacket);
         this.registerPacket(MovePlayerPacket);
-        //TODO: rider jump pl
-        //TODO: update block pk
+        this.registerPacket(RiderJumpPacket);
+        this.registerPacket(UpdateBlockPacket);
         this.registerPacket(AddPaintingPacket);
+        //todo: explode pk
+        //todo: level sound event pk v1
+        this.registerPacket(LevelSoundEventPacket);
         this.registerPacket(PlayerActionPacket);
         this.registerPacket(ActorEventPacket);
         // this.registerPacket(UpdateAttributesPacket);
@@ -88,7 +97,6 @@ class PacketPool {
         this.registerPacket(SetScoreboardIdentityPacket);
         // this.registerPacket(SetEntityDataPacket);
         this.registerPacket(BlockEventPacket);
-        this.registerPacket(LevelSoundEventPacket);
         this.registerPacket(SetLocalPlayerAsInitializedPacket);
         this.registerPacket(SetDefaultGameTypePacket);
         this.registerPacket(SetPlayerGameTypePacket);

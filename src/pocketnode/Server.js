@@ -15,6 +15,7 @@ const CommandMap = require("./command/CommandMap");
 const ConsoleCommandReader = require("./command/ConsoleCommandReader");
 const HelpCommand = require("./command/defaults/HelpCommand");
 const StopCommand = require("./command/defaults/StopCommand");
+const VersionCommand = require("./command/defaults/VersionCommand");
 const PluginsCommand = require("./command/defaults/PluginsCommand");
 
 const Player = require("./player/Player");
@@ -249,6 +250,7 @@ class Server {
         this.getCommandMap().registerCommand(new HelpCommand());
         this.getCommandMap().registerCommand(new StopCommand());
         this.getCommandMap().registerCommand(new PluginsCommand());
+        this.getCommandMap().registerCommand(new VersionCommand());
     }
 
     /**

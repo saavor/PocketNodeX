@@ -326,6 +326,11 @@ class Entity extends Location {
         this._closeInFlight = false;
     }
 
+    init() {
+        //TODO
+        //Entity.registerEntity()
+    }
+
     /**
      *
      * @param level {Level}
@@ -345,8 +350,8 @@ class Entity extends Location {
         }
 
         Entity._id = Entity._entityCount++;
-        //Entity.namedtag = nbt;
-        //Entity.namedtag = new CompoundTag();
+        // //Entity.namedtag = nbt;
+        // Entity.namedtag = new CompoundTag();
         //this._server = level.getServer();
 
         //let pos = Entity.namedtag.getListTag("Pos").getAllValues();
@@ -363,12 +368,13 @@ class Entity extends Location {
             console.log("Cannot create entities in unloaded chunks");
         }*/
         
-        /*this._motion = new Vector3(0, 0, 0);
-        if (this.namedtag.hasTag("Motion", ListTag)) {
+        this._motion = new Vector3(0, 0, 0);
+        /*if (this.namedtag.hasTag("Motion", ListTag)) {
             let motion = this.namedtag.getListTag("Motion").getAllValues();
-            this.setMotion(this.temporalVector.setComponents(...motion)); //TODO: function setMotion()
+            this.setMotion(this.temporalVector.setComponents(motion)); //TODO: function setMotion()
         }*/
         this._propertyManager = new DataPropertyManager();
+        // this._propertyManager.
         this.setGenericFlag(Entity.DATA_FLAG_AFFECTED_BY_GRAVITY, true);
         this.setGenericFlag(Entity.DATA_FLAG_HAS_COLLISION, true);
     }
@@ -449,7 +455,7 @@ class Entity extends Location {
                 return false;
             }
 
-            let shortName = className.getShortName();
+            let shortName = className.constructor.name;
             if (saveNames.includes(saveNames)) {
                 saveNames.push(shortName);
             }
@@ -556,6 +562,10 @@ class Entity extends Location {
 
     isSprinting(){
         return false; //TODO
+    }
+
+    isAlive() {
+        return this._health > 0;
     }
 
     //TODO: finish and take a look

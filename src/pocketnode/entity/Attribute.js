@@ -34,22 +34,22 @@ class Attribute{
     }
 
      static init(){
-        self.addAttribute(self.ABSORPTION, "mcpe:absorption", 0.00, 340282346638528859811704183484516925440.00, 0.00);
-        self.addAttribute(self.SATURATION, "mcpe:player.saturation", 0.00, 20.00, 20.00);
-        self.addAttribute(self.EXHAUSTION, "mcpe:player.exhaustion", 0.00, 5.00, 0.0, false);
-        self.addAttribute(self.KNOCKBACK_RESISTANCE, "mcpe:knockback_resistance", 0.00, 1.00, 0.00);
-        self.addAttribute(self.HEALTH, "mcpe:health", 0.00, 20.00, 20.00);
-        self.addAttribute(self.MOVEMENT_SPEED, "mcpe:movement", 0.00, 340282346638528859811704183484516925440.00, 0.10);
-        self.addAttribute(self.FOLLOW_RANGE, "mcpe:follow_range", 0.00, 2048.00, 16.00, false);
-        self.addAttribute(self.HUNGER, "mcpe:player.hunger", 0.00, 20.00, 20.00);
-        self.addAttribute(self.ATTACK_DAMAGE, "mcpe:attack_damage", 0.00, 340282346638528859811704183484516925440.00, 1.00, false);
-        self.addAttribute(self.EXPERIENCE_LEVEL, "mcpe:player.level", 0.00, 24791.00, 0.00);
-        self.addAttribute(self.EXPERIENCE, "mcpe:player.experience", 0.00, 1.00, 0.00);
-        self.addAttribute(self.UNDERWATER_MOVEMENT, "mcpe:underwater_movement", 0.0, 340282346638528859811704183484516925440.0, 0.02);
-        self.addAttribute(self.LUCK, "mcpe:luck", -1024.0, 1024.0, 0.0);
-        self.addAttribute(self.FALL_DAMAGE, "mcpe:fall_damage", 0.0, 340282346638528859811704183484516925440.0, 1.0);
-        self.addAttribute(self.HORSE_JUMP_STRENGTH, "mcpe:horse.jump_strength", 0.0, 2.0, 0.7);
-        self.addAttribute(self.ZOMBIE_SPAWN_REINFORCEMENTS, "mcpe:zombie.spawn_reinforcements", 0.0, 1.0, 0.0);
+        self.addAttribute(self.ABSORPTION, "minecraft:absorption", 0.00, 340282346638528859811704183484516925440.00, 0.00);
+        self.addAttribute(self.SATURATION, "minecraft:player.saturation", 0.00, 20.00, 20.00);
+        self.addAttribute(self.EXHAUSTION, "minecraft:player.exhaustion", 0.00, 5.00, 0.0, false);
+        self.addAttribute(self.KNOCKBACK_RESISTANCE, "minecraft:knockback_resistance", 0.00, 1.00, 0.00);
+        self.addAttribute(self.HEALTH, "minecraft:health", 0.00, 20.00, 20.00);
+        self.addAttribute(self.MOVEMENT_SPEED, "minecraft:movement", 0.00, 340282346638528859811704183484516925440.00, 0.10);
+        self.addAttribute(self.FOLLOW_RANGE, "minecraft:follow_range", 0.00, 2048.00, 16.00, false);
+        self.addAttribute(self.HUNGER, "minecraft:player.hunger", 0.00, 20.00, 20.00);
+        self.addAttribute(self.ATTACK_DAMAGE, "minecraft:attack_damage", 0.00, 340282346638528859811704183484516925440.00, 1.00, false);
+        self.addAttribute(self.EXPERIENCE_LEVEL, "minecraft:player.level", 0.00, 24791.00, 0.00);
+        self.addAttribute(self.EXPERIENCE, "minecraft:player.experience", 0.00, 1.00, 0.00);
+        self.addAttribute(self.UNDERWATER_MOVEMENT, "minecraft:underwater_movement", 0.0, 340282346638528859811704183484516925440.0, 0.02);
+        self.addAttribute(self.LUCK, "minecraft:luck", -1024.0, 1024.0, 0.0);
+        self.addAttribute(self.FALL_DAMAGE, "minecraft:fall_damage", 0.0, 340282346638528859811704183484516925440.0, 1.0);
+        self.addAttribute(self.HORSE_JUMP_STRENGTH, "minecraft:horse.jump_strength", 0.0, 2.0, 0.7);
+        self.addAttribute(self.ZOMBIE_SPAWN_REINFORCEMENTS, "minecraft:zombie.spawn_reinforcements", 0.0, 1.0, 0.0);
     }
 
     static addAttribute(id, name, minValue, maxValue, defaultValue, currentValue, shouldSend = true){

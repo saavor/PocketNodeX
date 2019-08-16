@@ -8,6 +8,7 @@ class InteractPacket extends DataPacket {
 
     static get ACTION_LEAVE_VEHICLE() {return 3};
     static get ACTION_MOUSEOVER() {return 4};
+
     static get ACTION_OPEN_INVENTORY() {return 6};
 
     initVars(){

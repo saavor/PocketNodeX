@@ -3,15 +3,16 @@ const CommandSender = require("./CommandSender");
 const InvalidParameterError = require("../error/InvalidParameterError");
 
 class CommandMap {
+
     initVars(){
-        this.PocketNodeServer = {};
+        this.server = null;
         this.commands = new Map();
         this.aliases = new Map();
     }
 
     constructor(Server){
         this.initVars();
-        this.PocketNodeServer = Server;
+        this.server = Server;
     }
 
     commandExists(commandName){
@@ -29,7 +30,9 @@ class CommandMap {
                 command.getAliases().forEach(alias => {
                     this.registerAlias(alias, command);
                 });
+                return true;
             }
+            return false;
         }else{
             throw new InvalidParameterError("The command: " + command + " is not an instance of Command!");
         }
@@ -41,7 +44,7 @@ class CommandMap {
                 this.aliases.set(alias, command);
             }
         }else{
-
+            throw new InvalidParameterError("The command: " + command + " is not an instance of Command!");
         }
     }
 
@@ -52,7 +55,9 @@ class CommandMap {
                 this.unregisterAlias(alias);
             });
             this.commands.delete(commandName);
+            return true;
         }
+        return false;
     }
 
     unregisterAlias(alias){
@@ -79,7 +84,7 @@ class CommandMap {
             return command;
         }
 
-        return false;
+        return null;
     }
 
     getCommandByName(commandName){
@@ -87,7 +92,7 @@ class CommandMap {
             return this.commands.get(commandName);
         }
 
-        return false;
+        return null;
     }
 
     getCommandByAlias(commandName){
@@ -105,38 +110,46 @@ class CommandMap {
 
     dispatchCommand(sender, commandLine) {
         if(commandLine === "") return;
-        commandLine = commandLine.split(" ");
-        let cmd = commandLine.shift();
-        let args = commandLine;
+        let commandParts = commandLine.split(" ");
+        let cmd = commandParts.shift();
+        let args = commandParts;
 
         if(this.commands.has(cmd)){
-             let command = this.commands.get(cmd);
-             if(command.getArguments().filter(arg => arg.isRequired()).length > 0){
-                 if(args.length > 0){
-                     if(sender instanceof CommandSender){
-                         command.execute(sender, args);
-                     }
-                 }else{
-                    sender.sendMessage(command.getUsage());
-                 }
-             }else{
-                 if(sender instanceof CommandSender){
-                     command.execute(sender, args);
-                 }
-             }
-        }else if(this.aliases.has(cmd)){
-            let command = this.aliases.get(cmd);
+            let command = this.commands.get(cmd);
             if(command.getArguments().filter(arg => arg.isRequired()).length > 0){
                 if(args.length > 0){
-                    if(sender instanceof CommandSender){
+                    if(sender instanceof CommandSender || sender instanceof Player || sender instanceof ConsoleCommandSender){
                         command.execute(sender, args);
+                    } else {
+                        throw new InvalidParameterError("Sender was not of type CommandSender/Player/ConsoleCommandSender.");
                     }
                 }else{
                     sender.sendMessage(command.getUsage());
                 }
             }else{
-                if(sender instanceof CommandSender){
+                if(sender instanceof CommandSender || sender instanceof Player || sender instanceof ConsoleCommandSender){
                     command.execute(sender, args);
+                } else {
+                    throw new InvalidParameterError("Sender was not of type CommandSender/Player/ConsoleCommandSender.");
+                }
+            }
+        }else if(this.aliases.has(cmd)){
+            let command = this.aliases.get(cmd);
+            if(command.getArguments().filter(arg => arg.isRequired()).length > 0){
+                if(args.length > 0){
+                    if(sender instanceof CommandSender || sender instanceof Player || sender instanceof ConsoleCommandSender){
+                        command.execute(sender, args);
+                    } else {
+                        throw new InvalidParameterError("Sender was not of type CommandSender/Player/ConsoleCommandSender.");
+                    }
+                }else{
+                    sender.sendMessage(command.getUsage());
+                }
+            }else{
+                if(sender instanceof CommandSender || sender instanceof Player || sender instanceof ConsoleCommandSender){
+                    command.execute(sender, args);
+                } else {
+                    throw new InvalidParameterError("Sender was not of type CommandSender/Player/ConsoleCommandSender.");
                 }
             }
         }else{

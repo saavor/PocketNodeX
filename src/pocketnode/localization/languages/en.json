@@ -3,7 +3,7 @@
   "content" : {
     "loading" : "Loading PocketNode...",
     "language" : "Setting language to en (English)",
-    "starting-pocketnode" : "Starting {{name}}, a mcpe: Bedrock Edition server for version {{version}}",
+    "starting-pocketnode" : "Starting {{name}}, a Minecraft: Bedrock Edition server for version {{version}}",
     "loading-properties" : "Loading server properties...",
     "starting-server" : "Starting mcpe: PE server on {{ip}}:{{port}}",
     "loading-plugin" : "Loading {{plugin}}",

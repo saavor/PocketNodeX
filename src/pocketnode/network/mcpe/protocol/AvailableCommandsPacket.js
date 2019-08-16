@@ -236,7 +236,6 @@ class AvailableCommandsPacket extends DataPacket {
     }
 
     putCommandData(data) {
-        CheckTypes([CommandData, data]);
         this.writeString(data.commandName);
         this.writeString(data.commandDescription);
         this.writeByte(data.flag);
@@ -250,7 +249,6 @@ class AvailableCommandsPacket extends DataPacket {
 
         this.writeUnsignedVarInt(data.overloads.length);
         data.overloads.forEach(overload => {
-            /** @type {CommandParameter[]} */
             this.writeUnsignedVarInt(overload.length);
             overload.forEach(parameter => {
                 this.writeString(parameter.paramName);
@@ -318,7 +316,7 @@ class AvailableCommandsPacket extends DataPacket {
         });
 
         this.enums = Object.values(enumMap);
-        this.enumMap = Object.keys(enumMap).reverse();
+        this.enumMap = flipArray(Object.keys(enumMap));
         this.writeUnsignedVarInt(Object.keys(this.enums).length);
         this.enums.forEach(enumVal => {
             this.putEnum(enumVal);

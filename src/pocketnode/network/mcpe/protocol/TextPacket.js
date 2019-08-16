@@ -15,15 +15,16 @@ class TextPacket extends DataPacket {
     static get TYPE_SYSTEM(){return 6}
     static get TYPE_WHISPER(){return 7}
     static get TYPE_ANNOUNCEMENT(){return 8}
+    static get TYPE_JSON(){return 9}
 
     initVars(){
         this.type = -1;
         this.needsTranslation = false;
-        this.source = "";
+        this.sourceName = "";
         this.message = "";
         this.parameters = [];
-        this.xuid = "";
-        this.pcId = "";
+        this.xboxUserId = "";
+        this.platformChatId = "";
     }
 
     constructor(){
@@ -32,22 +33,20 @@ class TextPacket extends DataPacket {
     }
 
     _decodePayload(){
-
-        console.log("TextPacket decode");
-
         this.type = this.readByte();
         this.needsTranslation = this.readBool();
         switch(this.type){
             case TextPacket.TYPE_CHAT:
             case TextPacket.TYPE_WHISPER:
+            /** @noinspection */
             case TextPacket.TYPE_ANNOUNCEMENT:
-                this.source = this.readString();
+                this.sourceName = this.readString();
             case TextPacket.TYPE_RAW:
             case TextPacket.TYPE_TIP:
             case TextPacket.TYPE_SYSTEM:
+            case TextPacket.TYPE_JSON:
                 this.message = this.readString();
                 break;
-
             case TextPacket.TYPE_TRANSLATION:
             case TextPacket.TYPE_POPUP:
             case TextPacket.TYPE_JUKEBOX_POPUP:
@@ -59,14 +58,11 @@ class TextPacket extends DataPacket {
                 break;
         }
 
-        this.xuid = this.readString();
-        this.pcId = this.readString();
+        this.xboxUserId = this.readString();
+        this.platformChatId = this.readString();
     }
 
     _encodePayload(){
-
-        console.log("TextPacket encode");
-
         this.writeByte(this.type);
         this.writeBool(this.needsTranslation);
         switch(this.type){
@@ -74,10 +70,11 @@ class TextPacket extends DataPacket {
             case TextPacket.TYPE_WHISPER:
             /** @noinspection */
             case TextPacket.TYPE_ANNOUNCEMENT:
-                this.writeString(this.source);
+                this.writeString(this.sourceName);
             case TextPacket.TYPE_RAW:
             case TextPacket.TYPE_TIP:
             case TextPacket.TYPE_SYSTEM:
+            case TextPacket.TYPE_JSON:
                 this.writeString(this.message);
                 break;
 
@@ -90,8 +87,8 @@ class TextPacket extends DataPacket {
                 break;
         }
 
-        this.writeString(this.xuid);
-        this.writeString(this.pcId);
+        this.writeString(this.xboxUserId);
+        this.writeString(this.platformChatId);
     }
 
     handle(session){

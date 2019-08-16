@@ -3,6 +3,7 @@
     <words>
       <w>biome</w>
       <w>commandblockoutput</w>
+      <w>deserializing</w>
       <w>dodaylightcycle</w>
       <w>doentitydrops</w>
       <w>dofiretick</w>
@@ -13,6 +14,7 @@
       <w>enderman</w>
       <w>endermite</w>
       <w>feof</w>
+      <w>gamerule</w>
       <w>ghast</w>
       <w>golem</w>
       <w>illager</w>
@@ -20,13 +22,18 @@
       <w>isset</w>
       <w>minecart</w>
       <w>minecraft</w>
+      <w>mojang</w>
       <w>mooshroom</w>
+      <w>nographic</w>
       <w>pigman</w>
       <w>pocketnode</w>
       <w>pufferfish</w>
+      <w>retval</w>
       <w>shulker</w>
       <w>subcaller</w>
+      <w>teleport</w>
       <w>tropicalfish</w>
+      <w>uvarint</w>
       <w>webtoken</w>
     </words>
   </dictionary>
