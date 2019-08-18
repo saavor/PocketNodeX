@@ -6,7 +6,7 @@ const Isset = require("../utils/methods/Isset");
 const AxisAlignedBB = require("../math/AxisAlignedBB");
 const Vector3 = require("../math/Vector3");
 
-const EventManager = require("../event/EventManager");
+// const EventManager = require("../event/EventManager");
 
 const ListTag = require("../nbt/tag/ListTag");
 const CompoundTag = require("../nbt/tag/CompoundTag");
@@ -406,7 +406,7 @@ class Entity extends Location {
 
         this.blocksAround = null;
 
-        //this.checkChunks();
+        this.checkChunks();
 
         return true;
     }
@@ -508,11 +508,11 @@ class Entity extends Location {
      */
     setMotion(motion){
         if (!this._justCreated){
-            let ev = EntityMotionEvent(this, motion);
-            EventManager.callEvent(ev.getName(), ev);
-            if (ev.isCancelled()){
-                return false;
-            }
+            // let ev = EntityMotionEvent(this, motion);
+            // EventManager.callEvent(ev.getName(), ev);
+            // if (ev.isCancelled()){
+            //     return false;
+            // }
         }
 
         this._motion = Object.assign({}, motion); //might not work, test purpose clone
@@ -522,6 +522,28 @@ class Entity extends Location {
         }
 
         return true;
+    }
+
+    checkChunks() {
+        let chunkX = this.getFloorX() >> 4;
+        let chunkZ = this.getFloorZ() >> 4;
+        
+        if (this.chunk === null || (this.chunk.getX() !== chunkX || this.chunk.getZ() !== chunkZ)) {
+            if (this.chunk !== null) {
+                this.chunk.removeEntity(this);
+            }
+            this.chunk = this.level.getChunk(chunkX, chunkZ, true);
+
+            if (!this._justCreated) {
+                // let newChunk = this.level.getViewersForPosition(this);
+            }
+
+            if (this.chunk === null) {
+                return;
+            }
+
+            this.chunk.addEntity(this);
+        }
     }
 
    /* sendData(player, data = null){

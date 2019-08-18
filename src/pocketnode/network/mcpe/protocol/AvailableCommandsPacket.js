@@ -15,7 +15,7 @@ class AvailableCommandsPacket extends DataPacket {
 
     /**
      * This flag is set on all types EXCEPT the POSTFIX type. Not completely sure what this is for, but it is required
-     * for the argtype to work correctly. VALID seems as good a name as any.
+     * for the arg type to work correctly. VALID seems as good a name as any.
      */
     static get ARG_FLAG_VALID() {return 0x100000};
 
@@ -160,7 +160,7 @@ class AvailableCommandsPacket extends DataPacket {
         this.writeUnsignedVarInt(enumVal.enumValues.length);
         enumVal.enumValues.forEach(value => {
             let index = this.enumValues.indexOf(value);
-            if(index === -1){ // todo: or false?
+            if(index === -1){
                 throw new RangeError(`Enum value '${value}' not found`);
             }
             this.putEnumValueIndex(index);

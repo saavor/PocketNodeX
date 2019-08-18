@@ -1,37 +1,51 @@
-class Event{
-    static getName(){
-        return this.name.toLowerCase().substr(-5) === "event" ? this.name.slice(0, -5) : this.name;
-    }
+/*
+ *   _____           _        _   _   _           _
+ *  |  __ \         | |      | | | \ | |         | |
+ *  | |__) |__   ___| | _____| |_|  \| | ___   __| | ___
+ *  |  ___/ _ \ / __| |/ / _ \ __| . ` |/ _ \ / _` |/ _ \
+ *  | |  | (_) | (__|   <  __/ |_| |\  | (_) | (_| |  __/
+ *  |_|   \___/ \___|_|\_\___|\__|_| \_|\___/ \__,_|\___|
+ *
+ *  @author PocketNode Team
+ *  @link https://pocketnode.me
+*/
+class Event {
 
-    getName(){
-        return this.constructor.getName();
-    }
-
-    isCancellable(){
-        return false;
-    }
-    
     constructor(){
-        this._isCancelled = false;
+        this.eventName = null;
+        this.isCancelled = false;
     }
 
-    isCancelled(){
-        if(!this.isCancellable()){
-            throw new Error("Event is not cancellable");
-        }
+    /**
+	 * @return string
+	 */
+	getEventName(){
+		return this.eventName ? null : this.constructor.name;
+	}
 
-        return this._isCancelled === true;
-    }
+	/**
+	 * @return bool
+	 *
+	 * @throws Error
+	 */
+	isCancelled(){
+		//if(!(this instanceof Cancellable)){
+		//	throw new Error("Event is not Cancellable");
+		//}
+		return this.isCancelled === true;
+	}
 
-    setCancelled(v = true){
-        CheckTypes([Boolean, v]);
+	/**
+	 *
+	 * @throws Error
+	 * @param value
+	 */
+	setCancelled(value = true){
+		//if(!(this instanceof Cancellable)){
+		//	throw new Error("Event is not Cancellable");
+		//}
+		this.isCancelled = value;
+	}
 
-        if(!this.isCancellable()){
-            throw new Error("Event is not cancellable");
-        }
-
-        this._isCancelled = v;
-    }
 }
-
 module.exports = Event;

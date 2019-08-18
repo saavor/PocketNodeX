@@ -2,6 +2,9 @@ const Command = require("./Command");
 const CommandSender = require("./CommandSender");
 const InvalidParameterError = require("../error/InvalidParameterError");
 
+const Player = require("../player/Player");
+const ConsoleCommandSender = require("./ConsoleCommandSender");
+
 class CommandMap {
 
     initVars(){
@@ -42,6 +45,9 @@ class CommandMap {
         if(command instanceof Command){
             if (!this.aliasExists(alias)) {
                 this.aliases.set(alias, command);
+                return true;
+            }else {
+                return false;
             }
         }else{
             throw new InvalidParameterError("The command: " + command + " is not an instance of Command!");
@@ -76,11 +82,11 @@ class CommandMap {
 
     getCommand(commandName){
         let command = this.getCommandByName(commandName);
-        if(command !== false){
+        if(command !== null){
             return command;
         }
         command = this.getCommandByAlias(commandName);
-        if(command !== false){
+        if(command !== null){
             return command;
         }
 
@@ -96,7 +102,7 @@ class CommandMap {
     }
 
     getCommandByAlias(commandName){
-        let command = false;
+        let command = null;
 
         for(let [alias, cmd] in this.aliases){
             if(alias === commandName){
@@ -121,7 +127,7 @@ class CommandMap {
                     if(sender instanceof CommandSender || sender instanceof Player || sender instanceof ConsoleCommandSender){
                         command.execute(sender, args);
                     } else {
-                        throw new InvalidParameterError("Sender was not of type CommandSender/Player/ConsoleCommandSender.");
+                        throw new InvalidParameterError("Sender is not instance of CommandSender/Player/ConsoleCommandSender.");
                     }
                 }else{
                     sender.sendMessage(command.getUsage());
@@ -130,7 +136,7 @@ class CommandMap {
                 if(sender instanceof CommandSender || sender instanceof Player || sender instanceof ConsoleCommandSender){
                     command.execute(sender, args);
                 } else {
-                    throw new InvalidParameterError("Sender was not of type CommandSender/Player/ConsoleCommandSender.");
+                    throw new InvalidParameterError("Sender is not instance of CommandSender/Player/ConsoleCommandSender.");
                 }
             }
         }else if(this.aliases.has(cmd)){
@@ -138,18 +144,18 @@ class CommandMap {
             if(command.getArguments().filter(arg => arg.isRequired()).length > 0){
                 if(args.length > 0){
                     if(sender instanceof CommandSender || sender instanceof Player || sender instanceof ConsoleCommandSender){
-                        command.execute(sender, args);
+                        command.execute({sender: sender, args: args});
                     } else {
-                        throw new InvalidParameterError("Sender was not of type CommandSender/Player/ConsoleCommandSender.");
+                        throw new InvalidParameterError("Sender is not instance of CommandSender/Player/ConsoleCommandSender.");
                     }
                 }else{
                     sender.sendMessage(command.getUsage());
                 }
             }else{
                 if(sender instanceof CommandSender || sender instanceof Player || sender instanceof ConsoleCommandSender){
-                    command.execute(sender, args);
+                    command.execute({sender: sender, args: args});
                 } else {
-                    throw new InvalidParameterError("Sender was not of type CommandSender/Player/ConsoleCommandSender.");
+                    throw new InvalidParameterError("Sender is not instance of CommandSender/Player/ConsoleCommandSender.");
                 }
             }
         }else{

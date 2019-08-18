@@ -1,17 +1,17 @@
 // const UUID = require("../utils/UUID");
 const PlayerSessionAdapter = require("../network/PlayerNetworkSessionAdapter");
 // const Level = require("../level/Level");
-const PlayerPreLoginEvent = require("../event/player/PlayerPreLoginEvent");
-const PlayerJoinEvent = require("../event/player/PlayerJoinEvent");
+// const PlayerPreLoginEvent = require("../event/player/PlayerPreLoginEvent");
+// const PlayerJoinEvent = require("../event/player/PlayerJoinEvent");
 
 //const SetEntityDataPacket = require("network/mcpe/protocol/SetEntityDataPacket");
 
 const BiomeDefinitionListPacket = require("../network/mcpe/protocol/BiomeDefinitionListPacket");
-const AvailableEntityIdentifiersPacket = require("../network/mcpe/protocol/AvailableEntityIdentifiersPacket");
+const AvailableActorIdentifiersPacket = require("../network/mcpe/protocol/AvailableActorIdentifiersPacket");
 
-const PlayerJumpEvent = require("../event/player/PlayerJumpEvent");
-const PlayerAnimationEvent = require("../event/player/PlayerAnimationEvent");
-const PlayerInteractEvent = require("../event/player/PlayerInteractEvent");
+// const PlayerJumpEvent = require("../event/player/PlayerJumpEvent");
+// const PlayerAnimationEvent = require("../event/player/PlayerAnimationEvent");
+// const PlayerInteractEvent = require("../event/player/PlayerInteractEvent");
 
 //const EventManager = require("event/EventManager");
 const AttributeMap = require("../entity/AttributeMap");
@@ -39,8 +39,8 @@ const TextPacket = require("../network/mcpe/protocol/TextPacket");
 const LevelChunkPacket =  require("../network/mcpe/protocol/LevelChunkPacket");
 const SetPlayerGameTypePacket =  require("../network/mcpe/protocol/SetPlayerGameTypePacket");
 const AvailableCommandsPacket = require("../network/mcpe/protocol/AvailableCommandsPacket");
-
-const DataPacketSendEvent = require("../event/server/DataPacketSendEvent");
+const SetTitlePacket = require("../network/mcpe/protocol/SetTitlePacket");
+// const DataPacketSendEvent = require("../event/server/DataPacketSendEvent");
 
 const GameRule = require("../level/GameRule");
 const AxisAlignedBB = require("../math/AxisAlignedBB");
@@ -61,6 +61,9 @@ const CompoundTag = require("../nbt/tag/CompoundTag");
 const ResourcePack = require("../resourcepacks/ResourcePack");
 const TextFormat = require("../utils/TextFormat");
 const Base64 = require("../utils/Base64");
+
+const PlayerJoinEvent = require("../event/player/PlayerJoinEvent");
+const PlayerQuitEvent = require("../event/player/PlayerQuitEvent");
 
 // const Async = require("../utils/Async");
 
@@ -244,13 +247,13 @@ class Player extends Human{
 
         this._skin = skin; //todo: function setSkin()
 
-        let ev = new PlayerPreLoginEvent(this, "Test");
-        this.server.getPluginManager().callEvent(ev);
+        // let ev = new PlayerPreLoginEvent(this, "Test");
+        // this.server.getPluginManager().callEvent(ev);
         
-        if (ev.isCancelled()) {
-             this.close("", ev.getKickMessage());
-             return true;
-         }
+        // if (ev.isCancelled()) {
+        //      this.close("", ev.getKickMessage());
+        //      return true;
+        //  }
 
         //this.server._whitelist
         //todo: if whitelisted/banned kick
@@ -270,12 +273,12 @@ class Player extends Human{
 
         this.sendPlayStatus(PlayStatusPacket.PLAYER_SPAWN);
 
-        let ev = new PlayerJoinEvent(this, "test");
-        this.server.getPluginManager().callEvent(ev);
-
-        if (ev.getJoinMessage().length > 0){
-            this.server.broadcastMessage(ev.getJoinMessage());
-        }
+        // let ev = new PlayerJoinEvent(this, "test");
+        // this.server.getPluginManager().callEvent(ev);
+        //
+        // if (ev.getJoinMessage().length > 0){
+        //     this.server.broadcastMessage(ev.getJoinMessage());
+        // }
 
         this.noDamageTicks = 60;
     }
@@ -385,11 +388,11 @@ class Player extends Human{
             throw new Error("Attempted to send "+packet.getName()+" to "+this.getName()+" before they got logged in.");
         }
 
-        let ev = new DataPacketSendEvent(this, packet);
-        this.server.getPluginManager().callEvent(ev);
-        if(ev.isCancelled()){
-            return false;
-        }
+        // let ev = new DataPacketSendEvent(this, packet);
+        // this.server.getPluginManager().callEvent(ev);
+        // if(ev.isCancelled()){
+        //     return false;
+        // }
 
         let identifier = this.getSessionAdapter().sendPacket(packet, needACK, immediate);
 
@@ -418,6 +421,70 @@ class Player extends Human{
         }
 
         this.close(reason, message);
+    }
+
+    /**
+     * Adds a title text to the user's screen, with an optional subtitle.
+     *
+     * @param title {string}
+     * @param subtitle {string}
+     * @param fadeIn {number} Duration in ticks for fade-in. If -1 is given, client-sided defaults will be used.
+     * @param stay {number} Duration in ticks to stay on screen for
+     * @param fadeOut {number} Duration in ticks for fade-out.
+     */
+    addTitle(title, subtitle = "", fadeIn = -1, stay = -1, fadeOut = -1) {
+        this.setTitleDuration(fadeIn, stay, fadeOut);
+        if (subtitle !== ""){
+            this.addSubTitle(subtitle);
+        }
+        this.sendTitleText(title, SetTitlePacket.TYPE_SET_TITLE);
+    }
+
+    /**
+     * Sets the subtitle message, without sending a title.
+     *
+     * @param subtitle {string}
+     */
+    addSubTitle(subtitle){
+        this.sendTitleText(subtitle, SetTitlePacket.TYPE_SET_SUBTITLE);
+    }
+
+    /**
+     * Adds small text to the user's screen.
+     *
+     * @param message {string}
+     */
+    addActionBarMessage(message){
+        this.sendTitleText(message, SetTitlePacket.TYPE_SET_ACTIONBAR_MESSAGE);
+    }
+
+    /**
+     * Removes the title from the client's screen.
+     */
+    removeTitles(){
+        let pk = new SetTitlePacket();
+        pk.type = SetTitlePacket.TYPE_CLEAR_TITLE;
+        this.dataPacket(pk);
+    }
+
+    /**
+     * Resets the title duration settings to defaults and removes any existing titles.
+     */
+    resetTitles(){
+        let pk = new SetTitlePacket();
+        pk.type = SetTitlePacket.TYPE_RESET_TITLE;
+        this.dataPacket(pk);
+    }
+
+    setTitleDuration(fadeIn, stay, fadeOut){
+        if (fadeIn >= 0 && stay >= 0 && fadeOut >= 0){
+            let pk = new SetTitlePacket();
+            pk.type = SetTitlePacket.TYPE_SET_ANIMATION_TIMES;
+            pk.fadeInTime = fadeIn;
+            pk.stayTime = stay;
+            pk.fadeOutTime = fadeOut;
+            this.dataPacket(pk);
+        }
     }
 
     close(message, reason = "generic reason", notify = true){
@@ -454,6 +521,15 @@ class Player extends Human{
                 }
 
                 this.spawned = false;
+
+                let ev = new PlayerQuitEvent(this, "A Player quit due to " + reason, reason);
+                this.server.getEventSystem().callEvent(ev);
+                if(ev.getQuitMessage().length > 0){
+                    let message = ev.getQuitMessage();
+                    this.server.broadcastMessage(message);
+                } else {
+                    this.server.getLogger().warning("Player quit message is blank or null.");
+                }
 
                 this.server.getLogger().info(TextFormat.AQUA + this.getName() + TextFormat.WHITE + " (" + this._ip + ":" + this._port + ") has disconnected due to " + reason);
 
@@ -540,7 +616,7 @@ class Player extends Human{
         ];
         this.dataPacket(pk);
 
-        this.sendDataPacket(new AvailableEntityIdentifiersPacket());
+        this.sendDataPacket(new AvailableActorIdentifiersPacket());
         this.sendDataPacket(new BiomeDefinitionListPacket());
 
         /*pk.generator = 2;
@@ -590,6 +666,14 @@ class Player extends Human{
 
         this.server.addOnlinePlayer(this);
         this.server.onPlayerCompleteLoginSequence(this);
+
+        let ev = new PlayerJoinEvent(this, "A Player Joined!");
+        this.server.getEventSystem().callEvent(ev);
+        if(ev.getJoinMessage().length > 0){
+            this.server.broadcastMessage(ev.getJoinMessage());
+        } else {
+            this.server.getLogger().warning("Player join message is blank or null.");
+        }
     }
 
     sendCommandData(){
@@ -635,15 +719,33 @@ class Player extends Human{
     }
 
     chat(message){
-        //if(this.spawned === false || !this.isAlive()){
-        //    return false;
-        //}
+        
+        // if(this.spawned === false || !this.isAlive()){
+        //     console.log("Player nto spawned or alive");
+        //     return false;
+        // }
 
         //this.resetCraftingGridType();
 
         message = TextFormat.clean(message, false);//this._removeFormat);
         
-        message = message.split("\n");
+        message.split("\n").forEach(messagePart => {
+           if (messagePart.trim() !== "" && messagePart.length <= 255 && this.messageCounter-- > 0 ){
+               if (messagePart.startsWith("./")) {
+                   messagePart = messagePart.substr(1);
+               }
+
+               if (messagePart.startsWith("/")) {
+                   this.server.getCommandMap().dispatchCommand(this, messagePart.substr(1));
+               }else {
+                   let msg = "<:player> :message".replace(":player", this.getName()).replace(":message", messagePart);
+                   this.server.getLogger().info(msg);
+                   this.server.broadcastMessage(msg);
+               }
+           }
+        });
+        
+        /*message = message.split("\n");
         for(let i in message){
             if (message.hasOwnProperty(i)) {
                 let messagePart = message[i];
@@ -663,7 +765,7 @@ class Player extends Human{
             }
         }
 
-        return true;
+        return true;*/
     }
 
     handleLevelSoundEvent(packet){
@@ -985,6 +1087,18 @@ class Player extends Human{
         
         //let result = this.getOffsetPosition(Vector3);
     }*/
+
+    /**
+     *
+     * @param title {string}
+     * @param type {number}
+     */
+    sendTitleText(title, type) {
+        let pk = new SetTitlePacket();
+        pk.type = type;
+        pk.text = title;
+        this.dataPacket(pk);
+    }
 
     sendMessage(message){
         let pk = new TextPacket();

@@ -1,4 +1,4 @@
-const DataPacketReceiveEvent = require("../event/server/DataPacketReceiveEvent");
+// const DataPacketReceiveEvent = require("../event/server/DataPacketReceiveEvent");
 const DataPacket = require("./mcpe/protocol/DataPacket");
 const Player = require("../player/Player");
 const ResourcePackChunkDataPacket = require("./mcpe/protocol/ResourcePackChunkDataPacket");
@@ -42,11 +42,13 @@ class PlayerNetworkSessionAdapter{
 
         console.log("Got "+packet.getName()+" from "+this);
 
-        let ev = new DataPacketReceiveEvent(this.player, packet);
-        this.server.getPluginManager().callEvent(ev);
-        if(!ev.isCancelled() && !packet.handle(this)){
-            console.log("Unhandled " + packet.getName() + " received from " + this.player.getName() + ": 0x" + packet.buffer.toString("hex"));
-        }
+        packet.handle(this);
+
+        // let ev = new DataPacketReceiveEvent(this.player, packet);
+        // this.server.getPluginManager().callEvent(ev);
+        // if(!ev.isCancelled() && !packet.handle(this)){
+        //     console.log("Unhandled " + packet.getName() + " received from " + this.player.getName() + ": 0x" + packet.buffer.toString("hex"));
+        // }
     }
 
     handleLogin(packet){
@@ -257,6 +259,18 @@ class PlayerNetworkSessionAdapter{
 
     handleAvailableCommands(packet){
         return false;
+    }
+
+    handleCommandOutput(packet) {
+        return false;
+    }
+
+    handleSetTitle(packet){
+        return false;
+    }
+
+    handleCommandRequest(packet) {
+        this.player.chat(packet.command);
     }
 
     handleText(packet){

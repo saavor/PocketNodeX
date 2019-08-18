@@ -10,7 +10,7 @@ class BinaryStream {
 		/** @type {number} */
 		this.offset = 0;
 
-		if(buffer instanceof Buffer){
+		if(buffer !== null){
 			this.append(buffer);
 			this.offset = 0;
 		}

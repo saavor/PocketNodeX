@@ -1,4 +1,8 @@
 const TextFormat = require("../utils/TextFormat");
+const CommandSender = require("./CommandSender");
+const ConsoleCommandSender = require("./ConsoleCommandSender");
+const InvalidParameterError = require("../error/InvalidParameterError");
+
 
 class Command {
     initVars(){
@@ -88,7 +92,11 @@ class Command {
         return this.arguments;
     }
 
-    execute(sender, args){}
+    execute(sender, args){
+        if(!sender instanceof CommandSender && !sender instanceof ConsoleCommandSender){
+            throw new InvalidParameterError("Command sender not of type CommandSender.");
+        }
+    }
 }
 
 module.exports = Command;

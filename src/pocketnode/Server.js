@@ -17,6 +17,7 @@ const HelpCommand = require("./command/defaults/HelpCommand");
 const StopCommand = require("./command/defaults/StopCommand");
 const VersionCommand = require("./command/defaults/VersionCommand");
 const PluginsCommand = require("./command/defaults/PluginsCommand");
+const TitleCommand = require("./command/defaults/TitleCommand");
 
 const Player = require("./player/Player");
 const PlayerList = require("./player/PlayerList");
@@ -29,6 +30,9 @@ const ResourcePackManager = require("./resourcepacks/ResourcePackManager");
 const Level = require("./level/Level");
 const GeneratorManager = require("./level/generator/GeneratorManager");
 const FlatGenerator = require("./level/generator/FlatGenerator");
+
+const EventHandler = require("./event/EventHandler");
+const TestEvent = require("./event/TestEvent");
 
 const SFS = require("./utils/SimpleFileSystem");
 
@@ -143,6 +147,8 @@ class Server {
         this._loggedInPlayers = new PlayerList();
         this._playerList = new PlayerList();
 
+        this._eventSystem = new EventHandler(this);
+
         /** @type {Map<String, Level>} */
         this._levels = new Map();
 
@@ -251,6 +257,7 @@ class Server {
         this.getCommandMap().registerCommand(new StopCommand());
         this.getCommandMap().registerCommand(new PluginsCommand());
         this.getCommandMap().registerCommand(new VersionCommand());
+        this.getCommandMap().registerCommand(new TitleCommand());
     }
 
     /**
@@ -701,6 +708,10 @@ class Server {
 
     getTicksPerSecond(){
         return Math.round_php(this._currentTPS, 2);
+    }
+
+    getEventSystem(){
+        return this._eventSystem;
     }
 
     getTicksPerSecondAverage(){

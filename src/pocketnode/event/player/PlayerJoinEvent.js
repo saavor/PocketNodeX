@@ -1,34 +1,45 @@
+/*
+ *   _____           _        _   _   _           _
+ *  |  __ \         | |      | | | \ | |         | |
+ *  | |__) |__   ___| | _____| |_|  \| | ___   __| | ___
+ *  |  ___/ _ \ / __| |/ / _ \ __| . ` |/ _ \ / _` |/ _ \
+ *  | |  | (_) | (__|   <  __/ |_| |\  | (_) | (_| |  __/
+ *  |_|   \___/ \___|_|\_\___|\__|_| \_|\___/ \__,_|\___|
+ *
+ *  @author PocketNode Team
+ *  @link https://pocketnode.me
+*/
 const PlayerEvent = require("./PlayerEvent");
-const Player = require("../../player/Player");
 
-/**
- * Called when a player joins the server, after sending all the spawn packets
- */
 class PlayerJoinEvent extends PlayerEvent {
+
+
     /**
      * PlayerJoinEvent constructor.
-     * @param {Player} player
-     * @param {String} joinMessage
+     *
+     * @param player
+     * @param joinMessage
      */
     constructor(player, joinMessage){
-        super(player);
-
-        this._joinMessage = "";
+        super();
+        this.player = player;
+        /** @var string|TextContainer */
+        this.joinMessage = joinMessage;
     }
 
     /**
-     * @param {String} joinMessage
+     * @param joinMessage
      */
     setJoinMessage(joinMessage){
-        this._joinMessage = joinMessage;
+        this.joinMessage = joinMessage;
     }
 
     /**
-     * @return {String}
-     */
+	 * @return string|TextContainer
+	 */
     getJoinMessage(){
-        return this._joinMessage;
+        return this.joinMessage;
     }
-}
 
+}
 module.exports = PlayerJoinEvent;

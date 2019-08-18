@@ -47,6 +47,7 @@ class TextPacket extends DataPacket {
             case TextPacket.TYPE_JSON:
                 this.message = this.readString();
                 break;
+
             case TextPacket.TYPE_TRANSLATION:
             case TextPacket.TYPE_POPUP:
             case TextPacket.TYPE_JUKEBOX_POPUP:

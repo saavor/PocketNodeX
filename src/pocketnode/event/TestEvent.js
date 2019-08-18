@@ -9,18 +9,13 @@
  *  @author PocketNode Team
  *  @link https://pocketnode.me
 */
-const Event = require("../Event");
+const Event = require("./Event");
 
-class PlayerEvent extends Event {
+class TestEvent extends Event{
 
     constructor(){
         super();
-        this.player = null;
-    }
-
-    getPlayer(){
-        return this.player;
     }
 
 }
-module.exports = PlayerEvent;
+module.exports = TestEvent;

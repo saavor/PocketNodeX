@@ -2,6 +2,8 @@ const UUID = require("../../utils/UUID");
 const Vector3 = require("../../math/Vector3");
 const Entity = require("../../entity/Entity");
 
+const CommandOriginData = require("./protocol/types/CommandOriginData");
+
 class NetworkBinaryStream extends require("../../../binarystream/BinaryStream") {
     /**
      * @return {string}
@@ -150,6 +152,34 @@ class NetworkBinaryStream extends require("../../../binarystream/BinaryStream") 
         x = this.readVarInt();
         y = this.readVarInt();
         z = this.readVarInt();
+    }
+
+    getCommandOriginData() {
+        let result = new CommandOriginData();
+
+        result.type = this.readUnsignedVarInt();
+        result.uuid = this.readUUID();
+        result.requestId = this.readString();
+        
+        if (result.type === CommandOriginData.ORIGIN_DEV_CONSOLE || result.type === CommandOriginData.ORIGIN_TEST) {
+            result.varlong1 = this.readVarLong();
+        }
+
+        return result;
+    }
+
+    /**
+     *
+     * @param data {CommandOriginData}
+     */
+    putCommandOriginData(data) {
+        this.writeUnsignedVarInt(data.type);
+        this.writeUUID(data.uuid);
+        this.writeString(data.requestId);
+
+        if (data.type === CommandOriginData.ORIGIN_DEV_CONSOLE || data.type === CommandOriginData.ORIGIN_TEST) {
+            this.writeVarLong(data.varlong1);
+        }
     }
 
     // todo everything else

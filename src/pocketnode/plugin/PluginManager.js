@@ -5,15 +5,15 @@ const Plugin = require("./Plugin");
 const PluginLoader = require("./PluginLoader");
 const PluginManifest = require("./PluginManifest");
 
-const Listener = require("../event/Listener");
-const EventManager = require("../event/EventManager");
+// const Listener = require("../event/Listener");
+// const EventManager = require("../event/EventManager");
 
 class PluginManager {
     initVars() {
         this.server = null;
         this.plugins = new Map();
         this.loaders = new Map();
-        this.eventManager = new EventManager();
+        // this.eventManager = new EventManager();
     }
 
     constructor(server) {
@@ -197,16 +197,16 @@ class PluginManager {
     }
 
     registerListener(listener, plugin){
-        CheckTypes([Listener, listener], [Plugin, plugin]);
+        // CheckTypes([Listener, listener], [Plugin, plugin]);
 
-        return this.eventManager.registerListener(listener, plugin);
+        // return this.eventManager.registerListener(listener, plugin);
     }
 
     /**
      * @param  {Event} event
      */
     callEvent(event){
-        return this.eventManager.callEvent(event.getName(), event);
+        // return this.eventManager.callEvent(event.getName(), event);
     }
 }
 

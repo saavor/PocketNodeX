@@ -26,7 +26,8 @@ const SetLocalPlayerAsInitializedPacket = require("./SetLocalPlayerAsInitialized
 const StartGamePacket = require("./StartGamePacket");
 const SetTimePacket = require("./SetTimePacket");
 const BiomeDefinitionListPacket = require("./BiomeDefinitionListPacket");
-const AvailableEntityIdentifiersPacket = require("./AvailableEntityIdentifiersPacket");
+const CommandOutputPacket = require("./CommandOutputPacket");
+const CommandRequestPacket = require("./CommandRequestPacket");
 const TextPacket = require("./TextPacket");
 const SetDefaultGameTypePacket = require("./SetDefaultGameTypePacket");
 const SetPlayerGameTypePacket = require("./SetPlayerGameTypePacket");
@@ -106,7 +107,8 @@ class PacketPool {
         this.registerPacket(ResourcePackChunkRequestPacket);
         this.registerPacket(BiomeDefinitionListPacket);
         this.registerPacket(RequestChunkRadiusPacket);
-        this.registerPacket(AvailableEntityIdentifiersPacket);
+        this.registerPacket(CommandOutputPacket);
+        this.registerPacket(CommandRequestPacket);
         this.registerPacket(AvailableCommandsPacket);
         this.registerPacket(AutomationClientConnectPacket);
     }
