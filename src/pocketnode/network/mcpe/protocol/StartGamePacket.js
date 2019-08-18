@@ -2,10 +2,42 @@ const DataPacket = require("./DataPacket");
 const ProtocolInfo = require("../Info");
 const RuntimeBlockMapping = require("./types/RuntimeBlockMapping");
 const NetworkBinaryStream = require("../NetworkBinaryStream");
+const BinaryStream = require("../../../../binarystream/BinaryStream");
 
 class StartGamePacket extends DataPacket {
     static getId(){
         return ProtocolInfo.START_GAME_PACKET;
+    }
+
+    ITEM_DATA_PALETTE() {
+        let item_ids = require("../../../resources/runtime_item_ids");
+
+        this.writeUnsignedVarInt(Object.values(item_ids).length);
+        Object.values(item_ids).forEach(entry => {
+            this.writeString(entry.name);
+            this.writeLShort(entry.id);
+        });
+        console.log("item palette sent!");
+
+        let stream = new BinaryStream();
+
+        return stream.getBuffer();
+    }
+
+    BLOCK_DATA_PALETTE() {
+        let block_ids = require("../../../resources/runtimeid_table");
+
+        this.writeUnsignedVarInt(Object.values(block_ids).length);
+        Object.values(block_ids).forEach(entry => {
+            this.writeString(entry.name);
+            this.writeLShort(entry.data);
+            this.writeLShort(entry.id);
+        });
+        console.log("block palette sent!");
+
+        let stream = new BinaryStream();
+
+        return stream.getBuffer();
     }
 
     initVars(){
@@ -143,13 +175,13 @@ class StartGamePacket extends DataPacket {
 
             this.blockTable[i] = {"name": id, "data": data, "legacy_id": unknown};
         }
-        this.itemTable = [];
+        /*this.itemTable = [];
         for (let i = 0, count = this.readUnsignedVarInt(); i < count; ++i){
             let id = this.readString();
             let legacyId = this.readSignedLShort();
 
             this.itemTable[id] = legacyId;
-        }
+        }*/
 
         this.multiplayerCorrelationId = this.readString();
     }
@@ -203,43 +235,11 @@ class StartGamePacket extends DataPacket {
 
         this.writeVarInt(this.enchantmentSeed);
 
-        if (this.blockTable === null){
-            if (this._blockTableCache === null) {
-                //this is a really nasty hack, but it'll do for now
-                this._blockTableCache = this.serializeBlockTable(RuntimeBlockMapping.getBedrockKnownStates());
-            }
-            this.append(this._blockTableCache);
-        }else {
-            this.append(this.serializeBlockTable(this.blockTable));
-        }
-
-        /*if (this.itemTable === null){
-            if (this._itemTableCache === null){
-                this._itemTableCache = this.serializeItemTable(file);
-            }
-        }*/
+        //TODO: see why it crashes server
+        //this.append(this.BLOCK_DATA_PALETTE());
+        //this.append(this.ITEM_DATA_PALETTE());
 
         this.writeString(this.multiplayerCorrelationId);
-    }
-
-    serializeBlockTable(...table){
-        let stream = new NetworkBinaryStream();
-        stream.writeUnsignedVarInt(table.length);
-        table.forEach(v => {
-
-            if (!v.name || !v.data || !v.legacy_id){
-                console.log(v.name);
-                console.log(v.data);
-                console.log(v.legacy_id);
-            }
-
-            if (v.name && v.data && v.legacy_id) {
-                stream.writeString(v.name);
-                stream.writeLShort(v.data);
-                stream.writeLShort(v.legacy_id);
-            }
-        });
-        return stream.getBuffer();
     }
 }
 
