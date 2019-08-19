@@ -6,16 +6,22 @@ const Isset = require("../utils/methods/Isset");
 const AxisAlignedBB = require("../math/AxisAlignedBB");
 const Vector3 = require("../math/Vector3");
 
+const Server = require("../Server");
+
 // const EventManager = require("../event/EventManager");
 
 const ListTag = require("../nbt/tag/ListTag");
 const CompoundTag = require("../nbt/tag/CompoundTag");
 
 const Level = require("../level/Level");
+// const Chunk = require("../level/format/Chunk");
 const Location = require("../level/Location");
 
 const Attribute = require("./Attribute");
+const AttributeMap = require("./AttributeMap");
 const DataPropertyManager = require("./DataPropertyManager");
+
+//const Player = require("../player/Player");
 
 class Entity extends Location {
 
@@ -244,118 +250,257 @@ class Entity extends Location {
     static get DATA_PLAYER_FLAG_DEAD() {return 2}; //TODO: CHECK
 
     initVars(){
-        this._entityCount = 1;
+
+        /** @static */
+        this.entityCount = 1;
+        /**
+         * @type {Entity[]}
+         * @private
+         * @static
+         */
         this._knownEntities = [];
+        /**
+         * @type {string[][]}
+         * @private
+         * @static
+         */
         this._saveNames = [];
 
+        /**
+         * @type {Player[]}
+         * @protected
+         */
         this._hasSpawned = [];
 
+        /**
+         * @type {number}
+         * @protected
+         */
         this._id = -1;
 
+        /**
+         * @type {DataPropertyManager}
+         * @protected
+         */
         this._propertyManager = null;
 
+        /** @type {Chunk|null}*/
         this.chunk = null;
 
+        //TODO: EntityDamageEvent|null
+        /** @protected */
         this._lastDamageCause = null;
 
+        //TODO: Block[]
+        /** @protected */
         this._blocksAround = [];
 
+        /** @type {number} */
         this.lastX = null;
+        /** @type {number} */
         this.lastY = null;
+        /** @type {number} */
         this.lastZ = null;
 
+        /**
+         * @type {Vector3}
+         * @protected
+         */
         this._motion = null;
+        /**
+         * @type {Vector3}
+         * @protected
+         */
         this._lastMotion = null;
+        /**
+         * @type {boolean}
+         * @protected
+         */
         this._forceMovementUpdate = false;
 
+        /**
+         * @type {Vector3}
+         */
         this.temporalVector = null;
 
+        /** @type {number} */
         this.lastYaw = 0.0;
+        /** @type {number} */
         this.lastPitch = 0.0;
 
+        /** @type {AxisAlignedBB} */
         this.boundingBox = null;
+        /** @type {boolean} */
         this.onGround = false;
 
+        /** @type {number} */
         this.eyeHeight = null;
 
+        /** @type {number} */
         this.height = 4.0;
+        /** @type {number} */
         this.width = 0.0;
 
+        /**
+         * @type {number}
+         * @protected
+         */
         this._baseOffset = 0.0;
 
+        /**
+         * @type {number}
+         * @private
+         */
         this._health = 20.0;
+        /**
+         * @type {number}
+         * @private
+         */
         this._maxHealth = 20;
 
+        /**
+         * @type {number}
+         * @protected
+         */
         this._ySize = 0.0;
+        /**
+         * @type {number}
+         * @protected
+         */
         this._stepHeight = 0.0;
+        /** @type {boolean} */
         this.keepMovement = false;
 
+        /** @type {number} */
         this.fallDistance = 0.0;
+        /** @type {boolean} */
         this.ticksLived = 0;
+        /** @type {boolean} */
         this.lastUpdate = -1;
+        /** @type {boolean} */
         this._fireTicks = 0;
-        this.namedtag = new CompoundTag();
+        /** @type {CompoundTag} */
+        this.namedtag = null;
+        /** @type {boolean} */
         this.canCollide = true;
 
+        /**
+         * @type {boolean}
+         * @protected
+         */
         this._isStatic = false;
 
+        /**
+         * @type {boolean}
+         * @private
+         */
         this._savedWithChunks = true;
 
+        /** @type {boolean} */
         this.isCollided = false;
+        /** @type {boolean} */
         this.isCollidedHorizontally = false;
+        /** @type {boolean} */
         this.isCollidedVertically = false;
 
+        /** @type {number} */
         this.noDamageTicks = 0;
+        /**
+         * @type {boolean}
+         * @protected
+         */
         this._justCreated = true;
+        /**
+         * @type {boolean}
+         * @private
+         */
         this._invulnerable = false;
 
+        /**
+         * @type {AttributeMap}
+         * @protected
+         */
         this._attributeMap = null;
 
+        /**
+         * @type {number}
+         * @protected
+         */
         this._gravity = 0.0;
-        this._drag = null; //float
+        /**
+         * @type {number}
+         * @protected
+         */
+        this._drag = 0.0;
 
+        /**
+         * @type {Server}
+         * @protected
+         */
         this._server = null;
 
+        /**
+         * @type {boolean}
+         * @protected
+         */
         this._closed = false;
+        /**
+         * @type {boolean}
+         * @private
+         */
         this._needsDespawn = false;
 
+        //TODO: TimingsHandler
+        /**
+         * @type {null}
+         * @protected
+         */
         this._timings = null;
 
+        /**
+         * @type {boolean}
+         * @protected
+         */
         this._constructed = false;
 
+        /**
+         * @type {boolean}
+         * @private
+         */
         this._closeInFlight = false;
-    }
-
-    init() {
-        //TODO
-        //Entity.registerEntity()
     }
 
     /**
      *
-     * @param level {Level}
+     * @param server
      * @param nbt {CompoundTag}
      */
-    constructor(level, nbt){
-        super(); //mhh.. werid.. i cannot just call it later.. mhh..
+    constructor(server, nbt){
+        super();
         this.initVars();
 
-        Entity._constructed = true;
+        this._constructed = true;
         //TODO: this._timings = Timings.getEntityTimings(this);
 
-        Entity.temporalVector = new Vector3();
+        this.temporalVector = new Vector3();
 
-        if (Entity.eyeHeight === null){
-            Entity.eyeHeight = Entity.height / 2 + 0.1;
+        if (this.eyeHeight === null){
+            this.eyeHeight = this.height / 2 + 0.1;
         }
 
-        Entity._id = Entity._entityCount++;
-        // //Entity.namedtag = nbt;
-        // Entity.namedtag = new CompoundTag();
-        //this._server = level.getServer();
+        this._id = this._entityCount++;
+        this.namedtag = nbt;
+        this._server = server;
 
-        //let pos = Entity.namedtag.getListTag("Pos").getAllValues();
-        //let rotation = Entity.namedtag.getListTag("Rotation").getAllValues();
+        //TODO: remove, testing purpose
+        if (this.level === null){
+            this.level = new Level(server, "world");
+
+        }
+
+        //TODO: to make this work i have to create a Child class.
+        // let pos = this.namedtag.getListTag("Pos").getAllValues();
+        // let rotation = this.namedtag.getListTag("Rotation").getAllValues();
         //super(pos[0], pos[1], pos[2], rotation[0], rotation[1], level);
         //assert(!Number.isNaN(this.x) && Number.isFinite(this.x) && !Number.isNaN(this.y) && Number.isFinite(this.y) && !Number.isNaN(this.z) && Number.isFinite(this.z));
 
@@ -363,10 +508,10 @@ class Entity extends Location {
         this.boundingBox = new AxisAlignedBB(0, 0, 0, 0, 0, 0);
         this.recalculateBoundingBox();
 
-        /*this.chunk = this.level.getChunkAtPosition(this, false);
-        if (this.chunk === null){
-            console.log("Cannot create entities in unloaded chunks");
-        }*/
+        // this.chunk = this.level.getChunkAtPosition(new Vector3(0, 0, 0), false);
+        // if (this.chunk === null){
+        //     console.log("Cannot create entities in unloaded chunks");
+        // }
         
         this._motion = new Vector3(0, 0, 0);
         /*if (this.namedtag.hasTag("Motion", ListTag)) {
@@ -377,13 +522,18 @@ class Entity extends Location {
         // this._propertyManager.
         this.setGenericFlag(Entity.DATA_FLAG_AFFECTED_BY_GRAVITY, true);
         this.setGenericFlag(Entity.DATA_FLAG_HAS_COLLISION, true);
+
+        // this.chunk.addEntity(this);
+        //TODO: same on level
+        this.lastUpdate = this._server.getTick();
     }
 
-    static init(){
+    getNameTag() {
+        //TODO
+    }
 
-        //Entity.registerEntity();
-        //let attr = new Attribute();
-        //attr.init();
+    static init() {
+        Attribute.init();
     }
 
     setRotation(yaw, pitch){
@@ -499,6 +649,18 @@ class Entity extends Location {
      */
     getDataFlag(propertyId, flagId){
         //return Number(this.propertyManager)
+    }
+
+    /**
+     * Returns whether the entity has been "closed".
+     * @return {boolean}
+     */
+    isClosed() {
+        return this._closed;
+    }
+
+    getId() {
+        return this._id;
     }
 
     /**

@@ -14,7 +14,7 @@ const AvailableActorIdentifiersPacket = require("../network/mcpe/protocol/Availa
 // const PlayerInteractEvent = require("../event/player/PlayerInteractEvent");
 
 //const EventManager = require("event/EventManager");
-const AttributeMap = require("../entity/AttributeMap");
+// const AttributeMap = require("../entity/AttributeMap");
 
 const ResourcePackClientResponsePacket = require("../network/mcpe/protocol/ResourcePackClientResponsePacket");
 const ResourcePackDataInfoPacket = require("../network/mcpe/protocol/ResourcePackDataInfoPacket");
@@ -50,11 +50,16 @@ const CommandParameter = require("../network/mcpe/protocol/types/CommandParamete
 const CommandEnum = require("../network/mcpe/protocol/types/CommandEnum");
 
 const Vector3 = require("../math/Vector3");
+const Position = require("../level/Position");
 
 const Isset = require("../utils/methods/Isset");
 
 const Human = require("../entity/Human");
 const Skin = require("../entity/Skin");
+
+const Inventory = require("../inventory/Inventory");
+
+const Form = require("../form/Form");
 // const Position = require("../level/Position");
 
 const CompoundTag = require("../nbt/tag/CompoundTag");
@@ -67,73 +72,418 @@ const PlayerQuitEvent = require("../event/player/PlayerQuitEvent");
 
 // const Async = require("../utils/Async");
 
-class Player extends Human{
+/**
+ * Main class that handles networking, recovery, and packet sending to the server part
+ */
+class Player extends Human {
+
     static get SURVIVAL(){return 0}
     static get CREATIVE(){return 1}
     static get ADVENTURE(){return 2}
     static get SPECTATOR(){return 3}
     static get VIEW(){return Player.SPECTATOR}
 
+    /**
+     * Validates the given username.
+     *
+     * @param name {string}
+     *
+     * @return {boolean}
+     */
+    static isValidUserName(name){
+        if (name == null){
+            return false;
+        }
+
+        return name.toLowerCase() !== "rcon" && name.toLowerCase() !== "console" && name.length >= 1 && name.length <= 16 && /[^A-Za-z0-9_ ]/.test(name);
+    }
+
     initVars(){
+
+        //TODO: /** @type {SourceInterface} */
+        this._interface = null;
+
+        /**
+         * TODO: remove this once player and network are divorced properly
+         *
+         * @type {PlayerSessionAdapter}
+         * @protected
+         */
         this._sessionAdapter = null;
 
-        this.playedBefore = false;
-        this.spawned = false;
-        this.loggedIn = false;
-        this.joined = false;
-        this.closed = false;
-        this.gamemode = 0;
-
-        this.attributeMap = new AttributeMap();
-
-        this._authenticated = false;
-        this._xuid = "";
-
-        this.speed = null;
-
-        this.creationTime = 0;
-
-        this._randomClientId = 0;
-
+        /**
+         * @type {string}
+         * @protected
+         */
         this._ip = "";
+        /**
+         * @type {string}
+         * @protected
+         */
         this._port = 0;
-        this._username = "";
-        this._iusername = "";
-        this._displayName = "";
-        this._clientId = null;
-        this.locale = "";
-        this._uuid = "";
-        this._rawUUID = "";
 
-        this._pitch = 0;
-        this._boundingBox = new AxisAlignedBB();
-        this._yaw = 0;
-
-        this._viewDistance = -1;
-
-        this._skin = {};
-
+        /**
+         * @type {boolean[]}
+         * @private
+         */
         this._needACK = {};
 
-        this.onGround = false;
+        /**
+         * @type {DataPacket[]}
+         * @private
+         */
+        this._batchedPackets = [];
 
-        this.usedChunks = [];
+        /**
+         * @type {number}
+         * @protected
+         * Last measurement of player's latency in milliseconds.
+         */
+        this._lastPingMeasure = 1;
+
+        /** @type {number} */
+        this.creationTime = 0;
+
+        /** @type {boolean} */
+        this.loggedIn = false;
+
+        /** @type {boolean} */
+        this.spawned = false;
+
+        /**
+         * @type {string}
+         * @protected
+         */
+        this._username = "";
+        /**
+         * @type {string}
+         * @protected
+         */
+        this._iusername = "";
+        /**
+         * @type {string}
+         * @protected
+         */
+        this._displayName = "";
+        /**
+         * @type {number}
+         * @protected
+         */
+        this._randomClientId = -1;
+        /**
+         * @type {string}
+         * @protected
+         */
+        this._xuid = "";
+
+        /**
+         * @type {number}
+         * @protected
+         */
+        this._windowCnt = 2;
+        /**
+         * @type {number[]}
+         * @protected
+         */
+        this._windows = [];
+        /**
+         * @type {Inventory[]}
+         * @protected
+         */
+        this._windowIndex = [];
+        /**
+         * @type {boolean[]}
+         * @protected
+         */
+        this._permanentWindows = [];
+        //TODO: PlayerCursorInventory.
+        /** @protected */
+        this._cursorInventory = null;
+        //TODO: CraftingGrid
+        /** @protected */
+        this._craftingGrid = null;
+        //TODO: CraftingTransaction
+        /** @protected */
+        this._craftingTransaction = null;
+
+        /**
+         * @type {number}
+         * @protected
+         */
+        this._messageCounter = 2;
+        /**
+         * @type {boolean}
+         * @protected
+         */
+        this._removeFormat = true;
+
+        /**
+         * @type {boolean[]}
+         * @protected
+         */
+        this._achievements = [];
+        /**
+         * @type {boolean}
+         * @protected
+         */
+        this._playedBefore = false;
+        /**
+         * @type {number}
+         * @protected
+         */
+        this._gamemode = 0;
+
+        /**
+         * @type {number}
+         * @private
+         */
+        this._loaderId = 0;
+
+        /** @type {boolean[]} chunkHash => bool (true = sent, false = needs sending) */
+        this.usedChunks = {};
+        /**
+         * @type {boolean[]}
+         * @protected
+         * chunkHash => dummy
+         */
+        this._loadQueue = {};
+        /**
+         * @type {number}
+         * @protected
+         */
+        this._nextChunkOrderRun = 5;
+
+        /**
+         * @type {boolean[]}
+         * @protected
+         * map: raw UUID (string) => bool
+         */
+        this._hiddenPlayers = {};
+
+        /**
+         * @type {Vector3|null}
+         * @protected
+         */
+        this._newPosition = null;
+        /**
+         * @type {boolean}
+         * @protected
+         */
+        this._isTeleporting = false;
+        /**
+         * @type {number}
+         * @protected
+         */
+        this._isAirTicks = 0;
+        /**
+         * @type {number}
+         * @protected
+         */
+        this._stepHeight = 0.6;
+        /**
+         * @type {boolean}
+         * @protected
+         */
+        this._allowMovementCheats = false;
+
+        /**
+         * @type {Vector3|null}
+         * @protected
+         */
+        this._sleeping = null;
+        /**
+         * @type {Position|null}
+         * @private
+         */
+        this._spawnPosition = null;
+
+        //TODO: Abilities
+        /**
+         * @type {boolean}
+         * @protected
+         */
+        this._autoJump = true;
+        /**
+         * @type {boolean}
+         * @protected
+         */
+        this._allowFlight = false;
+        /**
+         * @type {boolean}
+         * @protected
+         */
+        this._flying = false;
+
+
+        //TODO: /** @type {PermissibleBase} */
+        this._perm = null;
+
+        /**
+         * @type {number|null}
+         * @protected
+         */
+        this._lineHeight = null;
+        /**
+         * @type {string}
+         * @private
+         */
+        this._locale = "en_US";
+
+        /**
+         * @type {number}
+         * @protected
+         */
+        this._startAction = -1;
+        /**
+         * @type {number[]}
+         * @private
+         * ID => ticks map
+         */
+        this._usedItemsCooldown = {};
+
+        /**
+         * @type {number}
+         * @protected
+         */
+        this._formIdCounter = 0;
+        /**
+         * @type {Form[]}
+         * @private
+         */
+        this._forms = [];
+
+        /**
+         * @type {number}
+         * @protected
+         */
+        this._lastRightClickTime = 0.0;
+        /**
+         * @type {Vector3|null}
+         * @protected
+         */
+        this._lastRightClickPos = null;
     }
-    
+
+    /**
+     * @return {string}
+     */
+    getLeaveMessage(){
+        if(this.joined){
+            return TextFormat.YELLOW + this.getName() + " has left the game";
+        }
+        return "";
+    }
+
+    /**
+     * This might disappear in the future. Please use getUniqueId() instead.
+     * @deprecated
+     *
+     * @return {number}
+     */
+    getClientId(){
+        return this._randomClientId;
+    }
+
+    /**
+     * @return {boolean}
+     */
+    isBanned(){
+        this.server.getNameBans().isBanned(this._username);
+    }
+
+    /**
+     * @param value {boolean}
+     */
+    setBanned(value){
+        if (value){
+            this.server.getNameBans().addBan(this.getName(), null, null, null);
+            this.kick("You have been banned");
+        }else{
+            this.server.getNameBans().remove(this.getName());
+        }
+    }
+
+    /**
+     * @return {boolean}
+     */
+    isWhitelisted(){
+        return this.server.isWhitelisted(this._username);
+    }
+
+    /**
+     * @param value {boolean}
+     */
+    setWhitelisted(value){
+        if(value){
+            this.server.addWhitelist(this._username);
+        }else {
+            this.server.removeWhitelist(this._username);
+        }
+    }
+
+    /**
+     * @return {boolean}
+     */
+    isAuthenticated(){
+        return this._xuid !== "";
+    }
+
+    /**
+     * If the player is logged into Xbox Live, returns their Xbox user ID (XUID) as a string. Returns an empty string if
+     * the player is not logged into Xbox Live.
+     * @return {string}
+     */
+    getXuid(){
+        return this._xuid;
+    }
+
+    /**
+     * Returns the player's UUID. This should be preferred over their Xbox user ID (XUID) because UUID is a standard
+     * format which will never change, and all players will have one regardless of whether they are logged into Xbox
+     * Live.
+     *
+     * The UUID is comprised of:
+     * - when logged into XBL: a hash of their XUID (and as such will not change for the lifetime of the XBL account)
+     * - when NOT logged into XBL: a hash of their name + clientID + secret device ID.
+     *
+     * WARNING: UUIDs of players **not logged into Xbox Live** CAN BE FAKED and SHOULD NOT be trusted!
+     *
+     * (In the olden days this method used to return a fake UUID computed by the server, which was used by plugins such
+     * as SimpleAuth for authentication. This is NOT SAFE anymore as this UUID is now what was given by the client, NOT
+     * a server-computed UUID.)
+     *
+     * @return {UUID|null}
+     */
+    getUniqueId() {
+        return super.getUniqueId();
+    }
+
+    /**
+     * @return {Player}
+     */
+    getPlayer(){
+        return this;
+    }
+
+    getFirstPlayed(){
+        return this.name
+    }
+
     constructor(server, clientId, ip, port){
-        super(null, new CompoundTag());
+        super(server, new CompoundTag());
         this.initVars();
         this.server = server;
         this._clientId = clientId;
         this._ip = ip;
         this._port = port;
         this.creationTime = Date.now();
+        this.level = server.getDefaultLevel();
 
-        this.namedtag = new CompoundTag();
-        this._boundingBox = new AxisAlignedBB(0, 0, 0, 0, 0, 0, 0);
-
-        this._uuid = null;
-        this._rawUUID = null;
+        // this.namedtag = new CompoundTag();
+        // this._boundingBox = new AxisAlignedBB(0, 0, 0, 0, 0, 0, 0);
+        //
+        // this._uuid = null;
+        // this._rawUUID = null;
 
         //TODO: this.onGround = this.namedtag.getByte("onGround", 0) !== 0;
 
@@ -143,33 +493,13 @@ class Player extends Human{
         //Entity.constructor.call(this.level, this.namedtag);
     }
 
-    getLeaveMessage(){
-        if(this.joined){
-            return TextFormat.YELLOW + this.getName() + " has left the game";
-        }
-        return "";
-    }
+
 
     isConnected(){
         return this._sessionAdapter !== null;
     }
-    
-    static isValidUserName(name){
 
-        if (name == null){
-            return false;
-        }
 
-        return name.toLowerCase() !== "rcon" && name.toLowerCase() !== "console" && name.length >= 1 && name.length <= 16 && /[^A-Za-z0-9_ ]/.test(name);
-    }
-
-    isAuthenticated(){
-        return this._xuid !== "";
-    }
-
-    getXuid(){
-        return this._xuid;
-    }
 
     hasPlayedBefore(){
         return this.playedBefore;
@@ -194,9 +524,9 @@ class Player extends Human{
     handleLogin(packet) {
         CheckTypes([LoginPacket, packet]);
 
-        if (this.loggedIn) {
-            return false;
-        }
+        // if (this.loggedIn) {
+        //     return false;
+        // }
 
         /*if(packet.protocol] !== mcpeInfo.PROTOCOL){
             if(packet.protocol < mcpeInfo.PROTOCOL){
@@ -258,12 +588,14 @@ class Player extends Human{
         //this.server._whitelist
         //todo: if whitelisted/banned kick
 
-        if (!packet.skipVerification){
+        /*if (!packet.skipVerification){
             //todo: transfer code here from async comment
             this.onVerifyCompleted(packet, null, true); //todo: momentanely fix
         }else{
             this.onVerifyCompleted(packet, null, true);
-        }
+        }*/
+
+        this.onVerifyCompleted(packet, null, true);
 
         return true;
     }
@@ -285,7 +617,7 @@ class Player extends Human{
 
 
     onVerifyCompleted(packet, error, signedByMojang){
-        if(this.closed) return;
+        // if(this.closed) return;
         
         if (error !== null) {
             this.close("", "Invalid Session");
@@ -1056,7 +1388,7 @@ class Player extends Human{
     }
 
     jump() {
-        this.server.getPluginManager(new PlayerJumpEvent(this));
+        // this.server.getPluginManager(new PlayerJumpEvent(this));
         super.jump();
     }
 

@@ -2,9 +2,10 @@ const Living = require("./Living");
 
 class Creature extends Living{
 
-    recalculateBoundingBox() {
-        super.recalculateBoundingBox();
+    constructor(server, nbt){
+        super(server, nbt);
     }
+
 }
 
 module.exports = Creature;

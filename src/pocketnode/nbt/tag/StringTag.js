@@ -11,6 +11,7 @@
 */
 
 const NamedTag = require("./NamedTag");
+const NBTStream = require("../NBTStream");
 const NBT = require("../NBT");
 
 class StringTag extends NamedTag{
@@ -29,7 +30,7 @@ class StringTag extends NamedTag{
         this.value = value;
     }
 
-    getType(): number {
+    getType() {
         return NBT.TAG_String;
     }
 

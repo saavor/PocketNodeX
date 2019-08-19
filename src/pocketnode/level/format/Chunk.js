@@ -112,11 +112,8 @@ class Chunk {
 
     addEntity(entity){
         if(!entity.isClosed()){
-            this._entities.set(entity.getRuntimeId(), entity);
-            return true;
+            this._entities[entity.getId()] = entity;
         }
-
-        return false;
     }
 
     removeEntity(entity){

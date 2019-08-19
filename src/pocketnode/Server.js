@@ -229,7 +229,7 @@ class Server {
         this._generatorManager = new GeneratorManager();
         this._generatorManager.addGenerator("flat", FlatGenerator);
         if(this.getDefaultLevel() === null){
-            this._defaultLevel = new Level();
+            this._defaultLevel = new Level(this);
         }
 
         Entity.init();

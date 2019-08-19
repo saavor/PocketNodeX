@@ -83,20 +83,20 @@ class NBTStream{
         }
     }
 
-    writeTag(tag): void{
+    writeTag(tag){
         CheckTypes([NamedTag, tag]);
         this.putByte(tag.getType());
         this.putString(tag.getName());
         tag.write(this);
     }
 
-    putByte(v) : void{
+    putByte(v) {
         this.buffer.append(Binary.writeByte(v));
     }
 
-    putShort(v) : void;
+    putShort(v) {};
 
-    putString(v) : void{
+    putString(v) {
         let len = v.length;
         if (len > 32767){
             console.log(`NBT strings cannot be longer than 32767 bytes, got ${len} bytes`)
@@ -105,11 +105,11 @@ class NBTStream{
         this.put(v);
     }
 
-    getString() : string{
+    getString() {
         return this.get(this.getShort());
     }
 
-    readTag() : ?NamedTag{
+    readTag() {
         let tagType = this.getByte();
         if (tagType === NBT.TAG_End){
             return null;
@@ -121,15 +121,15 @@ class NBTStream{
         return tag;
     }
 
-    getByte() : number{
+    getByte() {
         Binary.readByte(this.get(1));
     }
 
-    getShort() : number;
+    getShort() {};
 
-    getInt() : number;
+    getInt() {};
 
-    putInt(v) : void;
+    putInt(v) {};
 }
 
 module.exports = NBTStream;

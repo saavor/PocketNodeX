@@ -7,14 +7,26 @@ const Skin = require("./Skin");
 const Player = require("../player/Player");
 const PlayerSkinPacket = require("../network/mcpe/protocol/PlayerSkinPacket");
 const CompoundTag = require("../nbt/tag/CompoundTag");
+const UUID = require("../utils/UUID");
+const Level = require("../level/Level");
+const StringTag = require("../nbt/tag/StringTag");
 
 class Human extends Many(Creature, ProjectileSource, InventoryHolder)  /*implements ProjectileSource, InventoryHolder*/{
 
     initVars() {
+
+        //TODO: PlayerInventory
+        /** @protected */
         this._inventory = null;
 
+        //TODO: EnderChestInventory
+        /** @protected */
         this._enderChestInventory = null;
 
+        /**
+         * @type {UUID}
+         * @protected
+         */
         this._uuid = null;
         this._rawUUID = null;
 
@@ -22,14 +34,23 @@ class Human extends Many(Creature, ProjectileSource, InventoryHolder)  /*impleme
         this.height = 1.8;
         this.eyeHeight = 1.62;
 
+        /**
+         * @type {Skin}
+         * @protected
+         */
         this._skin = null;
 
+        /** @protected */
         this._foodTickTimer = 0;
 
+        /** @protected */
         this._totalXp = 0;
+        /** @protected */
         this._xpSeed = 0;
+        /** @protected */
         this._xpCooldown = 0;
 
+        /** @protected */
         this._baseOffset = 1.62;
     }
 
@@ -37,12 +58,14 @@ class Human extends Many(Creature, ProjectileSource, InventoryHolder)  /*impleme
         //console.log(`'${method}()' is missing!`);
     }
 
-    constructor(level, nbt){
-        super();
 
-        console.log("constructor got called");
-
-        //CheckTypes([CompoundTag, nbt]); //TODO: check Level, but not implemented atm
+    //TODO: replace Server with level
+    /**
+     * @param server
+     * @param nbt {CompoundTag}
+     */
+    constructor(server, nbt){
+        super(server, nbt);
 
         if (this._skin === null){
             let skinTag = nbt.getCompoundTag("Skin");
@@ -59,7 +82,6 @@ class Human extends Many(Creature, ProjectileSource, InventoryHolder)  /*impleme
      * @param skinTag {CompoundTag}
      */
     static deserializeSkinNBT(skinTag){
-        //CheckTypes([CompoundTag, skinTag]);
         let skin = new Skin(
             skinTag.getString("Name"),
             skinTag.hasTag("Data", StringTag) ? skinTag.getString("Data") : skinTag.getByteArray("Data"),
@@ -81,15 +103,13 @@ class Human extends Many(Creature, ProjectileSource, InventoryHolder)  /*impleme
     }
 
     /**
-     *
-     * @returns {UUID|null}
+     * @return {UUID|null}
      */
     getUniqueId(){
         return this._uuid;
     }
 
     /**
-     *
      * @returns {string}
      */
     getRawUniqueId(){
@@ -98,7 +118,7 @@ class Human extends Many(Creature, ProjectileSource, InventoryHolder)  /*impleme
 
     /**
      * Returns a Skin object containing information about this human's skin.
-     * @returns {Skin}
+     * @return {Skin}
      */
     getSkin(){
         return this._skin;
@@ -125,16 +145,19 @@ class Human extends Many(Creature, ProjectileSource, InventoryHolder)  /*impleme
         let pk = new PlayerSkinPacket();
         pk.uuid = this.getUniqueId();
         pk.skin = this._skin;
-        //TODO: broadcast packet to online entities
+        this.server.broadcastPackets(pk, targets)
+        // this.server.broadcastPackets(pk, targets || this.hasSpawned)
     }
 
     jump(){
-        //super.jump();
-        
+        super.jump();
         if (this.isSprinting()) {
             //TODO
         }
+    }
 
+    getFood(){
+        //TODO: attribute map
     }
 
 }

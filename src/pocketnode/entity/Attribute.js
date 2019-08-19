@@ -21,35 +21,48 @@ class Attribute{
     static get ZOMBIE_SPAWN_REINFORCEMENTS() {return 15};
 
     initVars(){
+        /** @private */
         this.id = -1;
+        /** @protected */
         this.minValue = -1;
+        /** @protected */
         this.maxValue = -1;
+        /** @protected */
         this.defaultValue = -1;
+        /** @protected */
         this.currentValue = -1;
+        /** @protected */
         this.name = "";
+        /** @protected */
         this.shouldSend = false;
+
+        /** @protected */
         this.desynchronized = true;
 
-        this._attributes = [];
+        /**
+         * @type {Map<number, Attribute>}
+         * @protected
+         */
+        this.attributes = new Map();
     }
 
      static init(){
-        self.addAttribute(self.ABSORPTION, "minecraft:absorption", 0.00, 340282346638528859811704183484516925440.00, 0.00);
-        self.addAttribute(self.SATURATION, "minecraft:player.saturation", 0.00, 20.00, 20.00);
-        self.addAttribute(self.EXHAUSTION, "minecraft:player.exhaustion", 0.00, 5.00, 0.0, false);
-        self.addAttribute(self.KNOCKBACK_RESISTANCE, "minecraft:knockback_resistance", 0.00, 1.00, 0.00);
-        self.addAttribute(self.HEALTH, "minecraft:health", 0.00, 20.00, 20.00);
-        self.addAttribute(self.MOVEMENT_SPEED, "minecraft:movement", 0.00, 340282346638528859811704183484516925440.00, 0.10);
-        self.addAttribute(self.FOLLOW_RANGE, "minecraft:follow_range", 0.00, 2048.00, 16.00, false);
-        self.addAttribute(self.HUNGER, "minecraft:player.hunger", 0.00, 20.00, 20.00);
-        self.addAttribute(self.ATTACK_DAMAGE, "minecraft:attack_damage", 0.00, 340282346638528859811704183484516925440.00, 1.00, false);
-        self.addAttribute(self.EXPERIENCE_LEVEL, "minecraft:player.level", 0.00, 24791.00, 0.00);
-        self.addAttribute(self.EXPERIENCE, "minecraft:player.experience", 0.00, 1.00, 0.00);
-        self.addAttribute(self.UNDERWATER_MOVEMENT, "minecraft:underwater_movement", 0.0, 340282346638528859811704183484516925440.0, 0.02);
-        self.addAttribute(self.LUCK, "minecraft:luck", -1024.0, 1024.0, 0.0);
-        self.addAttribute(self.FALL_DAMAGE, "minecraft:fall_damage", 0.0, 340282346638528859811704183484516925440.0, 1.0);
-        self.addAttribute(self.HORSE_JUMP_STRENGTH, "minecraft:horse.jump_strength", 0.0, 2.0, 0.7);
-        self.addAttribute(self.ZOMBIE_SPAWN_REINFORCEMENTS, "minecraft:zombie.spawn_reinforcements", 0.0, 1.0, 0.0);
+        Attribute.addAttribute(Attribute.ABSORPTION, "minecraft:absorption", 0.00, 340282346638528859811704183484516925440.00, 0.00);
+        Attribute.addAttribute(Attribute.SATURATION, "minecraft:player.saturation", 0.00, 20.00, 20.00);
+        Attribute.addAttribute(Attribute.EXHAUSTION, "minecraft:player.exhaustion", 0.00, 5.00, 0.0, false);
+        Attribute.addAttribute(Attribute.KNOCKBACK_RESISTANCE, "minecraft:knockback_resistance", 0.00, 1.00, 0.00);
+        Attribute.addAttribute(Attribute.HEALTH, "minecraft:health", 0.00, 20.00, 20.00);
+        Attribute.addAttribute(Attribute.MOVEMENT_SPEED, "minecraft:movement", 0.00, 340282346638528859811704183484516925440.00, 0.10);
+        Attribute.addAttribute(Attribute.FOLLOW_RANGE, "minecraft:follow_range", 0.00, 2048.00, 16.00, false);
+        Attribute.addAttribute(Attribute.HUNGER, "minecraft:player.hunger", 0.00, 20.00, 20.00);
+        Attribute.addAttribute(Attribute.ATTACK_DAMAGE, "minecraft:attack_damage", 0.00, 340282346638528859811704183484516925440.00, 1.00, false);
+        Attribute.addAttribute(Attribute.EXPERIENCE_LEVEL, "minecraft:player.level", 0.00, 24791.00, 0.00);
+        Attribute.addAttribute(Attribute.EXPERIENCE, "minecraft:player.experience", 0.00, 1.00, 0.00);
+        Attribute.addAttribute(Attribute.UNDERWATER_MOVEMENT, "minecraft:underwater_movement", 0.0, 340282346638528859811704183484516925440.0, 0.02);
+        Attribute.addAttribute(Attribute.LUCK, "minecraft:luck", -1024.0, 1024.0, 0.0);
+        Attribute.addAttribute(Attribute.FALL_DAMAGE, "minecraft:fall_damage", 0.0, 340282346638528859811704183484516925440.0, 1.0);
+        Attribute.addAttribute(Attribute.HORSE_JUMP_STRENGTH, "minecraft:horse.jump_strength", 0.0, 2.0, 0.7);
+        Attribute.addAttribute(Attribute.ZOMBIE_SPAWN_REINFORCEMENTS, "minecraft:zombie.spawn_reinforcements", 0.0, 1.0, 0.0);
     }
 
     static addAttribute(id, name, minValue, maxValue, defaultValue, currentValue, shouldSend = true){
@@ -57,17 +70,18 @@ class Attribute{
             console.log(`Invalid ranges: min value: ${minValue}, max value: ${maxValue}, defaultValue: ${defaultValue}`);
         }
 
-        return self._attributes[id] = new self(id, name, minValue, maxValue, defaultValue, currentValue, shouldSend);
+        Attribute.attributes = new Map();
+        return Attribute.attributes.set(id, new Attribute(id, name, minValue, maxValue, defaultValue, currentValue, shouldSend));
     }
 
     static getAttribute(id){
-        return Isset(self._attributes[id] ? self._attributes[id].clone() : null);
+        return Isset(Attribute.attributes.get(id) ? Object.assign(Object.create(Object.getPrototypeOf(Attribute.attributes.get(id))), Attribute.attributes.get(id)) : null);
     }
 
-    static getAttributeByName(){
-        self._attributes.forEach(attribute => {
+    static getAttributeByName(name){
+        Attribute.attributes.forEach(attribute => {
             if (attribute.getName() === name){
-                return attribute.clone();
+                return Object.assign(Object.create(Object.getPrototypeOf(attribute)), attribute);
             }
         });
 
@@ -187,5 +201,4 @@ class Attribute{
         this.desynchronized = !synced;
     }
 }
-
 module.exports = Attribute;

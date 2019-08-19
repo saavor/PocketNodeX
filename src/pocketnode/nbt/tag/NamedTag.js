@@ -44,7 +44,7 @@ class NamedTag{
 
     /**
      *
-     * @param identation
+     * @param identation {number}
      * @return {string}
      */
     toString(identation = 0){
