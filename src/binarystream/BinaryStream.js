@@ -464,8 +464,10 @@ class BinaryStream {
 		return this;
 	}
 
+	//TODO: test fix.
 	readLLong(){
-		return this.buffer.readUInt32LE(0) + (buffer.readUInt32LE(4) << 8);
+		//return this.buffer.readUInt32LE(0) + (buffer.readUInt32LE(4) << 8);
+        return this.buffer.readUInt32LE(0) + (this.buffer.readUInt32LE(4) << 8);
 	}
 
 	writeLLong(v){

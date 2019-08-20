@@ -2,19 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="fae901bb-40a3-4b37-a599-b130e892034e" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dictionaries/Enrico.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dictionaries/Enrico.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pocketnode/Server.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pocketnode/Server.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pocketnode/entity/DataPropertyManager.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pocketnode/entity/DataPropertyManager.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pocketnode/entity/Entity.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pocketnode/entity/Entity.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pocketnode/item/Item.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pocketnode/item/Item.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pocketnode/item/ItemFactory.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pocketnode/item/ItemFactory.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pocketnode/nbt/LittleEndianNBTStream.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pocketnode/nbt/LittleEndianNBTStream.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/BatchPacket.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/BatchPacket.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/DataPacket.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/DataPacket.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/UpdateAttributesPacket.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/UpdateAttributesPacket.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pocketnode/player/Player.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pocketnode/player/Player.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/binarystream/BinaryStream.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/binarystream/BinaryStream.js" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -29,79 +18,26 @@
     <favorites_list name="PocketNode" />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.5">
-      <split-first>
-        <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-          <file pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/src/pocketnode/player/Player.js">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="208">
-                  <caret line="909" column="76" lean-forward="true" selection-start-line="909" selection-start-column="76" selection-end-line="909" selection-end-column="76" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-        </leaf>
-      </split-first>
-      <split-second>
-        <leaf>
-          <file pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/../PocketMine-MP-3.9.2/src/pocketmine/Player.php">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="167">
-                  <caret line="1762" column="57" lean-forward="true" selection-start-line="1762" selection-start-column="57" selection-end-line="1762" selection-end-column="57" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/../PocketMine-MP-3.9.2/src/pocketmine/entity/Entity.php">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="116">
-                  <caret line="2020" column="15" selection-start-line="2020" selection-start-column="15" selection-end-line="2020" selection-end-column="15" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/../PocketMine-MP-3.9.2/src/pocketmine/entity/Attribute.php">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="551">
-                  <caret line="61" column="41" lean-forward="true" selection-start-line="61" selection-start-column="41" selection-end-line="61" selection-end-column="41" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/../PocketMine-MP-3.9.2/src/pocketmine/entity/DataPropertyManager.php">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="551">
-                  <caret line="221" column="5" lean-forward="true" selection-start-line="221" selection-start-column="5" selection-end-line="221" selection-end-column="5" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/../PocketMine-MP-3.9.2/src/pocketmine/entity/Human.php">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="551">
-                  <caret line="315" selection-start-line="315" selection-end-line="315" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/../PocketMine-MP-3.9.2/src/pocketmine/entity/Living.php">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="551">
-                  <caret line="522" column="54" selection-start-line="522" selection-start-column="54" selection-end-line="522" selection-end-column="54" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-        </leaf>
-      </split-second>
-    </splitter>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/pocketnode/player/Player.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="109">
+              <caret line="822" column="4" lean-forward="true" selection-start-line="822" selection-start-column="4" selection-end-line="822" selection-end-column="4" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/pocketnode/network/RakNetAdapter.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="381">
+              <caret line="76" column="42" lean-forward="true" selection-start-line="76" selection-start-column="42" selection-end-line="76" selection-end-column="42" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -112,10 +48,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>server</find>
-      <find>:</find>
-      <find>chec</find>
-      <find>checkC</find>
       <find>Chunk</find>
       <find>getId</find>
       <find>this-&gt;chunk =</find>
@@ -129,7 +61,6 @@
       <find>sendAt</find>
       <find>sendA</find>
       <find>getMin</find>
-      <find>sendAttr</find>
       <find>this.logged</find>
       <find>onUp</find>
       <find>this._just</find>
@@ -142,6 +73,11 @@
       <find>getId()</find>
       <find>entityBase</find>
       <find>gamemode</find>
+      <find>sendAttr</find>
+      <find>readLo</find>
+      <find>writeStr</find>
+      <find>readShort</find>
+      <find>Disconne</find>
     </findStrings>
     <replaceStrings>
       <replace>static get</replace>
@@ -208,7 +144,6 @@
         <option value="$PROJECT_DIR$/src/pocketnode/permission/Permissible.js" />
         <option value="$PROJECT_DIR$/src/pocketnode/permission/ServerOperator.js" />
         <option value="$PROJECT_DIR$/src/pocketnode/form/Form.js" />
-        <option value="$PROJECT_DIR$/src/binarystream/BinaryStream.js" />
         <option value="$PROJECT_DIR$/src/pocketnode/nbt/tag/StringTag.js" />
         <option value="$PROJECT_DIR$/src/pocketnode/nbt/tag/NamedTag.js" />
         <option value="$PROJECT_DIR$/src/pocketnode/nbt/NBTStream.js" />
@@ -227,6 +162,7 @@
         <option value="$PROJECT_DIR$/src/pocketnode/nbt/LittleEndianNBTStream.js" />
         <option value="$PROJECT_DIR$/src/pocketnode/item/ItemFactory.js" />
         <option value="$PROJECT_DIR$/src/pocketnode/player/Player.js" />
+        <option value="$PROJECT_DIR$/src/binarystream/BinaryStream.js" />
       </list>
     </option>
   </component>
@@ -239,7 +175,7 @@
   <component name="PackageJsonUpdateNotifier">
     <dismissed value="$PROJECT_DIR$/package.json" />
   </component>
-  <component name="ProjectFrameBounds" extendedState="7">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="-7" />
     <option name="width" value="697" />
     <option name="height" value="735" />
@@ -252,6 +188,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -263,6 +200,12 @@
               <item name="PocketNodeX" type="b2602c69:ProjectViewProjectNode" />
               <item name="PocketNodeX" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="PocketNodeX" type="b2602c69:ProjectViewProjectNode" />
+              <item name="PocketNodeX" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="binarystream" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="PocketNodeX" type="b2602c69:ProjectViewProjectNode" />
@@ -319,7 +262,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -423,18 +365,19 @@
       <workItem from="1566242469130" duration="3283000" />
       <workItem from="1566288709523" duration="1197000" />
       <workItem from="1566309486709" duration="2000" />
-      <workItem from="1566314883036" duration="8335000" />
+      <workItem from="1566314883036" duration="10212000" />
+      <workItem from="1566334699091" duration="1815000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="353119000" />
+    <option name="totallyTimeSpent" value="356811000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
+    <frame x="-8" y="-8" width="1382" height="744" extended-state="7" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.4973913" visible="true" weight="0.1633888" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4973913" visible="true" weight="0.18305598" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="npm" order="2" side_tool="true" />
       <window_info id="Favorites" order="3" sideWeight="0.5026087" side_tool="true" weight="0.31259483" />
@@ -460,7 +403,6 @@
     <option name="version" value="1" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/pocketnode/level/GlobalBlockPalette.js" />
     <entry file="file://$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/types/RuntimeBlockMapping.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="204">
@@ -530,13 +472,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/binarystream/BinaryStream.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="187">
-          <caret line="11" lean-forward="true" selection-start-line="11" selection-end-line="11" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/pocketnode/entity/Skin.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-9">
@@ -581,13 +516,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/pocketnode/network/mcpe/NetworkBinaryStream.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="9" column="7" lean-forward="true" selection-start-line="9" selection-start-column="7" selection-end-line="9" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/pocketnode/network/PlayerNetworkSessionAdapter.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="535">
@@ -599,13 +527,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="306">
           <caret line="28" column="28" selection-start-line="28" selection-start-column="28" selection-end-line="28" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/pocketnode/network/RakNetAdapter.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="205">
-          <caret line="79" column="36" selection-start-line="79" selection-start-column="36" selection-end-line="79" selection-end-column="36" />
         </state>
       </provider>
     </entry>
@@ -776,10 +697,45 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$APPLICATION_CONFIG_DIR$/javascript/nodejs/10.16.0/node-typings/node_modules/@types/node/globals.d.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="192">
+          <caret line="423" column="4" selection-start-line="423" selection-start-column="4" selection-end-line="423" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../PocketMine-MP-3.9.2/src/pocketmine/Player.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="167">
+          <caret line="1762" column="57" selection-start-line="1762" selection-start-column="57" selection-end-line="1762" selection-end-column="57" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../PocketMine-MP-3.9.2/src/pocketmine/entity/Attribute.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1037">
+          <caret line="61" column="41" selection-start-line="61" selection-start-column="41" selection-end-line="61" selection-end-column="41" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/../PocketMine-MP-3.9.2/src/pocketmine/entity/DataPropertyManager.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="551">
-          <caret line="221" column="5" lean-forward="true" selection-start-line="221" selection-start-column="5" selection-end-line="221" selection-end-column="5" />
+        <state relative-caret-position="3757">
+          <caret line="221" column="5" selection-start-line="221" selection-start-column="5" selection-end-line="221" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../PocketMine-MP-3.9.2/src/pocketmine/entity/Human.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="5355">
+          <caret line="315" selection-start-line="315" selection-end-line="315" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../PocketMine-MP-3.9.2/src/pocketmine/entity/Living.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="8874">
+          <caret line="522" column="54" selection-start-line="522" selection-start-column="54" selection-end-line="522" selection-end-column="54" />
         </state>
       </provider>
     </entry>
@@ -790,38 +746,31 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../PocketMine-MP-3.9.2/src/pocketmine/entity/Human.php">
+    <entry file="file://$PROJECT_DIR$/src/binarystream/BinaryStream.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="551">
-          <caret line="315" selection-start-line="315" selection-end-line="315" />
+        <state relative-caret-position="327">
+          <caret line="481" column="5" lean-forward="true" selection-start-line="481" selection-start-column="5" selection-end-line="481" selection-end-column="5" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../PocketMine-MP-3.9.2/src/pocketmine/entity/Living.php">
+    <entry file="file://$PROJECT_DIR$/src/pocketnode/network/mcpe/NetworkBinaryStream.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="551">
-          <caret line="522" column="54" selection-start-line="522" selection-start-column="54" selection-end-line="522" selection-end-column="54" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../PocketMine-MP-3.9.2/src/pocketmine/entity/Attribute.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="551">
-          <caret line="61" column="41" lean-forward="true" selection-start-line="61" selection-start-column="41" selection-end-line="61" selection-end-column="41" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../PocketMine-MP-3.9.2/src/pocketmine/Player.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="167">
-          <caret line="1762" column="57" lean-forward="true" selection-start-line="1762" selection-start-column="57" selection-end-line="1762" selection-end-column="57" />
+        <state relative-caret-position="-2396">
+          <caret line="19" column="55" lean-forward="true" selection-start-line="19" selection-start-column="55" selection-end-line="19" selection-end-column="55" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/pocketnode/player/Player.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="208">
-          <caret line="909" column="76" lean-forward="true" selection-start-line="909" selection-start-column="76" selection-end-line="909" selection-end-column="76" />
+        <state relative-caret-position="109">
+          <caret line="822" column="4" lean-forward="true" selection-start-line="822" selection-start-column="4" selection-end-line="822" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/pocketnode/network/RakNetAdapter.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="381">
+          <caret line="76" column="42" lean-forward="true" selection-start-line="76" selection-start-column="42" selection-end-line="76" selection-end-column="42" />
         </state>
       </provider>
     </entry>
