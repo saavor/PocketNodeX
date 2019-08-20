@@ -81,6 +81,7 @@ class BatchPacket extends DataPacket {
                 pk.setBuffer(buf, 1);
                 session.handleDataPacket(pk);
             }else{
+                //logger.debug("Got unhandled packet: 0x"+buf.slice(0, 1).toString("hex"));
                 logger.debug("Got unhandled packet: 0x"+buf.slice(0, 1).toString("hex"));
             }
         });

@@ -12,8 +12,6 @@ class UpdateAttributesPacket extends DataPacket {
     }
 
     _decodePayload() {
-        console.log("UpdateAttributesPacket called!");
-
         this.entityRuntimeId = this.getEntityRuntimeId();
         this.entries = this.readAttributeList();
     }

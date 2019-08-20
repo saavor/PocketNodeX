@@ -13,6 +13,8 @@
 const ItemIds = require("./ItemIds");
 
 const CompoundTag = require("../nbt/tag/CompoundTag");
+const LittleEndianNBTStream  = require("../nbt/LittleEndianNBTStream");
+const ItemFactory = require("../item/ItemFactory");
 
 class Item extends ItemIds{
     static get TAG_ENCH() {return "ench"};

@@ -1,3 +1,5 @@
+//TODO: new software name can be Jukebox?
+
 const ProtocolInfo = require("./network/mcpe/Info");
 const Config = require("./utils/Config");
 

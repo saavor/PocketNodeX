@@ -11,52 +11,52 @@
 */
 
 const NBTStream = require("../nbt/NBTStream");
-const Binary = require("../../../src/binarystream/BinaryStream");
+// const Binary = require("../../../src/thisstream/thisStream");
 
 class LittleEndianNBTStream extends NBTStream{
 
-    getShort() : number{
-        return Binary.readLShort(this.get(2));
+    getShort() {
+        return this.readLShort(this.get(2));
     }
 
-    getSignedShort() : number{
-        Binary.readSignedLShort(this.get(2));
+    getSignedShort() {
+        this.readSignedLShort(this.get(2));
     }
 
-    putShort(v): void {
-        this.put(Binary.writeLShort(v));
+    putShort(v) {
+        this.put(this.writeLShort(v));
     }
 
-    getInt() : number{
-        return Binary.readLInt(this.get(4));
+    getInt() {
+        return this.readLInt(this.get(4));
     }
 
-    putInt(v) : void{
-        this.put(Binary.writeLInt(v));
+    putInt(v) {
+        this.put(this.writeLInt(v));
     }
 
-    getLong() : number{
-        return Binary.readLLong(this.get(8));
+    getLong() {
+        return this.readLLong(this.get(8));
     }
 
     putLong(v){
-        this.put(Binary.writeLLong(v));
+        this.put(this.writeLLong(v));
     }
 
     getFloat() {
-        return Binary.readLFloat(this.get(4));
+        return this.readLFloat(this.get(4));
     }
 
     putFloat(v){
-        this.put(Binary.writeLFloat(v));
+        this.put(this.writeLFloat(v));
     }
 
     getDouble(){
-        return Binary.readLDouble(this.get(8));
+        return this.readLDouble(this.get(8));
     }
 
     putDouble(v){
-        this.put(Binary.writeLDouble(v));
+        this.put(this.writeLDouble(v));
     }
 
 

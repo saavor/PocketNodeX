@@ -16,6 +16,7 @@ const CompoundTag = require("../nbt/tag/CompoundTag");
 const Level = require("../level/Level");
 // const Chunk = require("../level/format/Chunk");
 const Location = require("../level/Location");
+// const AddActorPacket = require("../network/mcpe/protocol/AddActorPacket");
 
 const Attribute = require("./Attribute");
 const AttributeMap = require("./AttributeMap");
@@ -519,7 +520,13 @@ class Entity extends Location {
             this.setMotion(this.temporalVector.setComponents(motion)); //TODO: function setMotion()
         }*/
         this._propertyManager = new DataPropertyManager();
-        // this._propertyManager.
+        //TODO: finish
+        this._propertyManager.setShort(Entity.DATA_MAX_AIR, 0);
+        this._propertyManager.setString(Entity.DATA_NAMETAG, "");
+        this._propertyManager.setFloat(Entity.DATA_SCALE, 1);
+        this._propertyManager.setFloat(Entity.DATA_BOUNDING_BOX_WIDTH, this.width);
+        this._propertyManager.setFloat(Entity.DATA_BOUNDING_BOX_HEIGHT, this.height);
+
         this.setGenericFlag(Entity.DATA_FLAG_AFFECTED_BY_GRAVITY, true);
         this.setGenericFlag(Entity.DATA_FLAG_HAS_COLLISION, true);
 
@@ -680,7 +687,7 @@ class Entity extends Location {
         this._motion = Object.assign({}, motion); //might not work, test purpose clone
 
         if (this._justCreated){
-            //this.updateMovement();
+            // this.updateMovement();
         }
 
         return true;
@@ -743,6 +750,31 @@ class Entity extends Location {
         console.log("SetEntityDataPacket sent (Main)!");
         console.log("SendData step 3 done");
     }*/
+
+   /*sendSpawnPacket(player){
+       let pk = new AddActorPacket();
+       pk.entityRuntimeId = this._id;
+       pk.type = this.getId();
+       pk.position = this.asVector3();
+       pk.motion = this._motion;
+       pk.yaw = this.yaw;
+       pk.headYaw = this.yaw;
+       pk.pitch = this.pitch;
+       pk.attributes = [];
+       pk.metadata = this._propertyManager.getAll();
+
+       player.dataPacket(pk);
+   }*/
+
+   entityBaseTick(tickDiff = 1){
+       //TODO: check vehicles
+
+       this._justCreated = false;
+
+       //TODO
+       // let changedProperties = this._propertyManager.getDirty();
+
+   }
 
     isSprinting(){
         return false; //TODO

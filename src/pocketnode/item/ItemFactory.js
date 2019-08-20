@@ -40,22 +40,22 @@ class ItemFactory{
         self.list[self.getListOffset(id)] = Object.assign( Object.create( Object.getPrototypeOf(item)), item);
     }
 
-    static isRegistered(id) : boolean{
+    static isRegistered(id) {
         if (id < 256){
             //return BlockFactory.isRegistered(id); TODO
         }
         return self.list[self.getListOffset(id)] !== null;
     }
 
-    static getListOffset(id) : number{
+    static getListOffset(id) {
         if (id < -0x8000 || id > 0x7fff){
             console.log("ID must be in range " + -0x8000 + " - " + 0x7fff);
         }
         return id & 0xffff;
     }
 
-    get(id, meta = 0, count = 1, tags = null) : Item{
-        if (!tags.isString() && !(tags instanceof CompoundTag) && tags !== null){
+    get(id, meta = 0, count = 1, tags = null) {
+        if (!typeof tags === 'string' && !(tags instanceof CompoundTag) && tags !== null){
             //TODO: better debug :)
             console.log("`tags` argument must be a string or CompoundTag instance, . (is_object($tags) ? instance of  get_class($tags) : gettype($tags)) . given DEBUG NOT COMPLETE... TEST PURPOSE");
         }

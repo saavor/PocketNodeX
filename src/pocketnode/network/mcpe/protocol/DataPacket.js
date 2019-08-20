@@ -1,6 +1,8 @@
 const BinaryStream = require("../NetworkBinaryStream");
 const Vector3 = require("../../../math/Vector3");
 
+const Attribute = require("../../../entity/Attribute");
+
 class DataPacket extends BinaryStream {
 
     static getId(){
@@ -164,6 +166,47 @@ class DataPacket extends BinaryStream {
         });
 
         return this;
+    }
+
+    /**
+     * @return {Attribute[]}
+     */
+    readAttributeList(){
+        let list = [];
+        let count = this.readUnsignedVarInt();
+
+        for (let i = 0; i < count; ++i){
+            let min = this.readLFloat();
+            let max = this.readLFloat();
+            let current = this.readLFloat();
+            let def = this.readLFloat();
+            let name = this.readString();
+
+            let attr = Attribute.getAttributeByName(name);
+            if (attr !== null){
+                attr.setMinValue(min);
+                attr.setMinValue(max);
+                attr.setMinValue(current);
+                attr.setMinValue(def);
+
+                list.push(attr);
+            }else {
+                console.log(`Unknown attribute type "${name}"`);
+            }
+        }
+
+        return list;
+    }
+
+    writeAttributeList(...attributes){
+        this.writeUnsignedVarInt(attributes.length);
+        attributes[0].forEach(attribute => {
+            this.writeLFloat(attribute.minValue);
+            this.writeLFloat(attribute.maxValue);
+            this.writeLFloat(attribute.currentValue);
+            this.writeLFloat(attribute.defaultValue);
+            this.writeString(attribute.name);
+        });
     }
 
     handle(session){

@@ -16,6 +16,7 @@ const AvailableActorIdentifiersPacket = require("../network/mcpe/protocol/Availa
 //const EventManager = require("event/EventManager");
 // const AttributeMap = require("../entity/AttributeMap");
 
+const Attribute = require("../entity/Attribute");
 const ResourcePackClientResponsePacket = require("../network/mcpe/protocol/ResourcePackClientResponsePacket");
 const ResourcePackDataInfoPacket = require("../network/mcpe/protocol/ResourcePackDataInfoPacket");
 const ResourcePackStackPacket = require("../network/mcpe/protocol/ResourcePackStackPacket");
@@ -524,9 +525,9 @@ class Player extends Human {
     handleLogin(packet) {
         CheckTypes([LoginPacket, packet]);
 
-        // if (this.loggedIn) {
-        //     return false;
-        // }
+        if (this.loggedIn) {
+            return false;
+        }
 
         /*if(packet.protocol] !== mcpeInfo.PROTOCOL){
             if(packet.protocol < mcpeInfo.PROTOCOL){
@@ -993,7 +994,7 @@ class Player extends Human {
 
         //this.sendData(this);
 
-        //this.sendAttributes(true);
+        this.sendAttributes(true);
         this.sendCommandData();
 
         this.server.addOnlinePlayer(this);
@@ -1219,6 +1220,9 @@ class Player extends Human {
     }
 
     onUpdate(currentTick){
+        if (!this.loggedIn){
+            return false;
+        }
 
         let tickDiff = currentTick - this.lastUpdate;
 
@@ -1227,15 +1231,40 @@ class Player extends Human {
         }
 
         this.messageCounter = 2;
+
         this.lastUpdate = currentTick;
 
-        //this.sendAttributes();
+        this.sendAttributes();
         this.processMovement();
         //this.processChunkRrquest();
     }
 
+    //Bypass Attribute class problems
+    //TODO: find another way. this is just a workaround!
     sendAttributes(sendAll = false){
-        let entries = sendAll ? this.attributeMap.getAll() : this.attributeMap.needSend();
+        // let entries = sendAll ? this.attributeMap.getAll() : this.attributeMap.needSend();
+        //TODO: test.
+        let pk = new UpdateAttributesPacket();
+        pk.entityRuntimeId = this.id;
+        pk.entries = [
+            new Attribute(0, "minecraft:absorption", 0.00, 340282346638528859811704183484516925440.00, 0.00, true),
+            new Attribute(1, "minecraft:player.saturation", 0.00, 20.0, 20.0, true),
+            new Attribute(2, "minecraft:player.exhaustion", 0.00, 5.00, 0.0, false),
+            new Attribute(3, "minecraft:knockback_resistance", 0.00, 1.00, 0.00, true),
+            new Attribute(4, "minecraft:health", 0.00, 20.00, 20.00, true),
+            new Attribute(5, "minecraft:movement", 0.00, 340282346638528859811704183484516925440.00, 0.10, true),
+            new Attribute(6, "minecraft:follow_range", 0.00, 2048.00, 16.00, false),
+            new Attribute(7, "minecraft:player.hunger", 0.00, 20.00, 20.00, true),
+            new Attribute(8, "minecraft:attack_damage", 0.00, 340282346638528859811704183484516925440.00, 1.00, false),
+            new Attribute(9, "minecraft:player.level", 0.00, 24791.00, 0.00, true),
+            new Attribute(10, "minecraft:player.experience", 0.00, 1.00, 0.00, true),
+            new Attribute(11, "minecraft:underwater_movement", 0.0, 340282346638528859811704183484516925440.0, 0., true),
+            new Attribute(12, "minecraft:luck", -1024.0, 1024.0, 0.0, true),
+            new Attribute(13, "minecraft:fall_damage", 0.0, 340282346638528859811704183484516925440.0, 1.0, true),
+            new Attribute(14, "minecraft:horse.jump_strength", 0.0, 2.0, 0.7, true),
+            new Attribute(15, "minecraft:zombie.spawn_reinforcements", 0.0, 1.0, 0.0)
+        ];
+        this.dataPacket(pk);
 
         /*if (entries.length > 0){
             let pk = new UpdateAttributesPacket();
@@ -1248,13 +1277,13 @@ class Player extends Human {
         }*/
 
         //TODO: fix Attribute class and call attribute.init to make it working
-        let pk = new UpdateAttributesPacket();
-        pk.entityRuntimeId = this.id;
-        pk.entries = entries;
-        this.dataPacket(pk);
-        entries.forEach(entry => {
-            entry.markSynchronized();
-        });
+        // let pk = new UpdateAttributesPacket();
+        // pk.entityRuntimeId = this.id;
+        // pk.entries = entries;
+        // this.dataPacket(pk);
+        // entries.forEach(entry => {
+        //     entry.markSynchronized();
+        // });
     }
 
     sendPosition(pos, yaw = null, pitch = null, mode = MovePlayerPacket.MODE_NORMAL, targets = null){
