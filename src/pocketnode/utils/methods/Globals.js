@@ -20,6 +20,33 @@ global.raknet = function(path){
     return require(Path.normalize(__dirname + "/../../../raknet/" + path));
 };
 
+// By Jackx
+global.multiple = function(baseClass, ...mixins){
+    class base extends baseClass {
+        constructor (...args) {
+            super(...args);
+            for(let y = 0; y < mixins.length; ++y){
+                let mixin = mixins[y];
+                copyProps(this, (new mixin));
+            }
+        }
+    }
+    let copyProps = (target, source) => {
+        let props = Object.getOwnPropertyNames(source).concat(Object.getOwnPropertySymbols(source));
+        for(let z = 0; z < props.length; ++z){
+            let prop = props[z];
+            if (!prop.match(/^(?:constructor|prototype|arguments|caller|name|bind|call|apply|toString|length)$/))
+                Object.defineProperty(target, prop, Object.getOwnPropertyDescriptor(source, prop));
+        }
+    };
+    for(let x = 0; x < mixins.length; ++x){
+        let mixin = mixins[x];
+        copyProps(base.prototype, mixin.prototype);
+        copyProps(base, mixin);
+    }
+    return base;
+};
+
 global.atob = require("atob");
 
 // By Jackx

@@ -21,22 +21,14 @@ class Attribute{
     static get ZOMBIE_SPAWN_REINFORCEMENTS() {return 15};
 
     initVars(){
-        /** @private */
-        this.id = -1;
-        /** @protected */
-        this.minValue = -1;
-        /** @protected */
-        this.maxValue = -1;
-        /** @protected */
-        this.defaultValue = -1;
-        /** @protected */
-        this.currentValue = -1;
-        /** @protected */
-        this.name = "";
-        /** @protected */
-        this.shouldSend = false;
 
-        /** @protected */
+        this.id = -1;
+        this.minValue = -1;
+        this.maxValue = -1;
+        this.defaultValue = -1;
+        this.currentValue = -1;
+        this.name = "";
+        this.shouldSend = false;
         this.desynchronized = true;
 
         /**

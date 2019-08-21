@@ -201,7 +201,19 @@ class PlayerNetworkSessionAdapter{
         return false;
     }
 
+    handleDisconnect(packet){
+        return false;
+    }
+
     handleRemoveActor(packet){
+        return false;
+    }
+
+    handleExplode(packet){
+        return false;
+    }
+
+    handleLevelSoundEventPacketV1(packet){
         return false;
     }
 

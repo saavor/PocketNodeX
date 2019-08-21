@@ -1,4 +1,4 @@
-const Many = require("extends-classes");
+// const Many = require("extends-classes");
 
 const Creature = require("./Creature");
 const ProjectileSource = require("./projectile/ProjectileSource");
@@ -11,22 +11,13 @@ const UUID = require("../utils/UUID");
 const Level = require("../level/Level");
 const StringTag = require("../nbt/tag/StringTag");
 
-class Human extends Many(Creature, ProjectileSource, InventoryHolder)  /*implements ProjectileSource, InventoryHolder*/{
+class Human extends multiple(Creature, ProjectileSource, InventoryHolder)  /*implements ProjectileSource, InventoryHolder*/{
 
     initVars() {
 
-        //TODO: PlayerInventory
-        /** @protected */
         this._inventory = null;
-
-        //TODO: EnderChestInventory
-        /** @protected */
         this._enderChestInventory = null;
 
-        /**
-         * @type {UUID}
-         * @protected
-         */
         this._uuid = null;
         this._rawUUID = null;
 
@@ -34,23 +25,14 @@ class Human extends Many(Creature, ProjectileSource, InventoryHolder)  /*impleme
         this.height = 1.8;
         this.eyeHeight = 1.62;
 
-        /**
-         * @type {Skin}
-         * @protected
-         */
         this._skin = null;
 
-        /** @protected */
         this._foodTickTimer = 0;
 
-        /** @protected */
         this._totalXp = 0;
-        /** @protected */
         this._xpSeed = 0;
-        /** @protected */
         this._xpCooldown = 0;
 
-        /** @protected */
         this._baseOffset = 1.62;
     }
 
@@ -118,7 +100,7 @@ class Human extends Many(Creature, ProjectileSource, InventoryHolder)  /*impleme
 
     /**
      * Returns a Skin object containing information about this human's skin.
-     * @return {Skin}
+     * @returns {Skin}
      */
     getSkin(){
         return this._skin;

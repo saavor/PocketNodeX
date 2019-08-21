@@ -5,7 +5,7 @@
     "language" : "Setting language to en (English)",
     "starting-pocketnode" : "Starting {{name}}, a Minecraft: Bedrock Edition server for version {{version}}",
     "loading-properties" : "Loading server properties...",
-    "starting-server" : "Starting mcpe: PE server on {{ip}}:{{port}}",
+    "starting-server" : "Starting Minecraft: PE server on {{ip}}:{{port}}",
     "loading-plugin" : "Loading {{plugin}}",
     "enabling-plugin" : "Enabling {{plugin}}",
     "server-info" : "This server is running {{name}} version {{version}} \"{{version-name}}\" (API {{api}})",

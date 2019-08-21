@@ -9,29 +9,17 @@ class Living extends Entity /*implements Damageable*/{
 
     initVars() {
 
-        /** @protected */
         this._gravity = 0.08;
-        /** @protected */
         this._drag = 0.02;
 
-        /** @protected */
         this._attackTime = 0;
 
         this.deadTicks = 0;
-        /**
-         * @type {number}
-         * @protected
-         */
         this._maxDeadTicks = 25;
 
-        /** @protected */
         this._jumpVelocity = 0.42;
-
-        //TODO: EffectInstance
-        /** @protected */
         this._effects = [];
 
-        /** @type {ArmorInventory} */
         this._armorInventory = null;
     }
 

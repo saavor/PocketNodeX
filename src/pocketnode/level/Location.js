@@ -34,8 +34,8 @@ class Location extends Position {
      */
 	constructor(x = 0, y = 0, z = 0, yaw = 0.0, pitch = 0.0, level = null){
         super(x, y, z, level);
-		this.yaw = yaw;
-		this.pitch = pitch;
+		this._yaw = yaw;
+		this._pitch = pitch;
 	}
 
     /**
@@ -56,24 +56,24 @@ class Location extends Position {
     * @return {Location}
     */
     asLocation(){
-        return new Location(this.x, this.y, this.z, this.yaw, this.pitch, this.level);
+        return new Location(this.x, this.y, this.z, this._yaw, this._pitch, this.level);
     }
 
     getYaw(){
-        return this.yaw;
+        return this._yaw;
     }
 
     getPitch(){
-        return this.pitch;
+        return this._pitch;
     }
 
     toString(){
-        return "Location (level=" + (this.isValid() ? this.getLevel().getName() : "null") + ", x=" + this.x + ", y=" + this.y + ", z=" + this.z + ", yaw=" + this.yaw + ", pitch=" + this.pitch + ")";
+        return "Location (level=" + (this.isValid() ? this.getLevel().getName() : "null") + ", x=" + this.x + ", y=" + this.y + ", z=" + this.z + ", yaw=" + this._yaw + ", pitch=" + this._pitch + ")";
     }
     
     equals(v){
         if(v instanceof Location){
-            return super.equals(v) && v.yaw === this.yaw && v.pitch === this.pitch;
+            return super.equals(v) && v.yaw === this._yaw && v.pitch === this._pitch;
         }
         return super.equals(v);
     }

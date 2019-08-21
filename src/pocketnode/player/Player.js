@@ -1,36 +1,30 @@
-// const UUID = require("../utils/UUID");
-const PlayerSessionAdapter = require("../network/PlayerNetworkSessionAdapter");
-// const Level = require("../level/Level");
-// const PlayerPreLoginEvent = require("../event/player/PlayerPreLoginEvent");
-// const PlayerJoinEvent = require("../event/player/PlayerJoinEvent");
+/* Utils */
+const UUID = require("../utils/UUID");
+const Isset = require("../utils/methods/Isset");
+const TextFormat = require("../utils/TextFormat");
+const Base64 = require("../utils/Base64");
 
-//const SetEntityDataPacket = require("network/mcpe/protocol/SetEntityDataPacket");
+/* Events */
+const PlayerJoinEvent = require("../event/player/PlayerJoinEvent");
+const PlayerQuitEvent = require("../event/player/PlayerQuitEvent");
 
-const BiomeDefinitionListPacket = require("../network/mcpe/protocol/BiomeDefinitionListPacket");
-const AvailableActorIdentifiersPacket = require("../network/mcpe/protocol/AvailableActorIdentifiersPacket");
-
-// const PlayerJumpEvent = require("../event/player/PlayerJumpEvent");
-// const PlayerAnimationEvent = require("../event/player/PlayerAnimationEvent");
-// const PlayerInteractEvent = require("../event/player/PlayerInteractEvent");
-
-//const EventManager = require("event/EventManager");
-// const AttributeMap = require("../entity/AttributeMap");
-
+/* Attributes */
 const Attribute = require("../entity/Attribute");
+
+/* Packets */
 const ResourcePackClientResponsePacket = require("../network/mcpe/protocol/ResourcePackClientResponsePacket");
 const ResourcePackDataInfoPacket = require("../network/mcpe/protocol/ResourcePackDataInfoPacket");
 const ResourcePackStackPacket = require("../network/mcpe/protocol/ResourcePackStackPacket");
-// const ResourcePackChunkRequestPacket = pocketnode("network/mcpe/protocol/ResourcePackChunkRequestPacket");
-
+const PlayerSessionAdapter = require("../network/PlayerNetworkSessionAdapter");
 const DataPacket = require("../network/mcpe/protocol/DataPacket");
-// const BatchPacket = require("../network/mcpe/protocol/BatchPacket");
 const AnimatePacket = require("../network/mcpe/protocol/AnimatePacket");
+const BiomeDefinitionListPacket = require("../network/mcpe/protocol/BiomeDefinitionListPacket");
+const AvailableActorIdentifiersPacket = require("../network/mcpe/protocol/AvailableActorIdentifiersPacket");
 const InteractPacket = require("../network/mcpe/protocol/InteractPacket");
 const PlayerActionPacket = require("../network/mcpe/protocol/PlayerActionPacket");
 const LoginPacket = require("../network/mcpe/protocol/LoginPacket");
 const PlayStatusPacket = require("../network/mcpe/protocol/PlayStatusPacket");
 const UpdateAttributesPacket = require("../network/mcpe/protocol/UpdateAttributesPacket");
-// const PlayerPreLoginEvent = require("event/player/PlayerPreLoginEvent");
 const DisconnectPacket = require("../network/mcpe/protocol/DisconnectPacket");
 const MovePlayerPacket = require("../network/mcpe/protocol/MovePlayerPacket");
 const ResourcePacksInfoPacket = require("../network/mcpe/protocol/ResourcePacksInfoPacket");
@@ -41,42 +35,33 @@ const LevelChunkPacket =  require("../network/mcpe/protocol/LevelChunkPacket");
 const SetPlayerGameTypePacket =  require("../network/mcpe/protocol/SetPlayerGameTypePacket");
 const AvailableCommandsPacket = require("../network/mcpe/protocol/AvailableCommandsPacket");
 const SetTitlePacket = require("../network/mcpe/protocol/SetTitlePacket");
-// const DataPacketSendEvent = require("../event/server/DataPacketSendEvent");
 
-const GameRule = require("../level/GameRule");
-const AxisAlignedBB = require("../math/AxisAlignedBB");
-
+/* Commands */
 const CommandData = require("../network/mcpe/protocol/types/CommandData");
 const CommandParameter = require("../network/mcpe/protocol/types/CommandParameter");
 const CommandEnum = require("../network/mcpe/protocol/types/CommandEnum");
+const CommandSender = require("../command/CommandSender");
 
+/* Level */
+const GameRule = require("../level/GameRule");
+
+/* Math */
 const Vector3 = require("../math/Vector3");
-const Position = require("../level/Position");
+const AxisAlignedBB = require("../math/AxisAlignedBB");
 
-const Isset = require("../utils/methods/Isset");
-
+/* Entity */
 const Human = require("../entity/Human");
 const Skin = require("../entity/Skin");
 
-const Inventory = require("../inventory/Inventory");
-
-const Form = require("../form/Form");
-// const Position = require("../level/Position");
-
+/* NBT */
 const CompoundTag = require("../nbt/tag/CompoundTag");
+
 const ResourcePack = require("../resourcepacks/ResourcePack");
-const TextFormat = require("../utils/TextFormat");
-const Base64 = require("../utils/Base64");
-
-const PlayerJoinEvent = require("../event/player/PlayerJoinEvent");
-const PlayerQuitEvent = require("../event/player/PlayerQuitEvent");
-
-// const Async = require("../utils/Async");
 
 /**
  * Main class that handles networking, recovery, and packet sending to the server part
  */
-class Player extends Human {
+class Player extends multiple(Human, CommandSender) {
 
     static get SURVIVAL(){return 0}
     static get CREATIVE(){return 1}
@@ -103,265 +88,59 @@ class Player extends Human {
 
         //TODO: /** @type {SourceInterface} */
         this._interface = null;
-
-        /**
-         * TODO: remove this once player and network are divorced properly
-         *
-         * @type {PlayerSessionAdapter}
-         * @protected
-         */
         this._sessionAdapter = null;
-
-        /**
-         * @type {string}
-         * @protected
-         */
         this._ip = "";
-        /**
-         * @type {string}
-         * @protected
-         */
         this._port = 0;
-
-        /**
-         * @type {boolean[]}
-         * @private
-         */
         this._needACK = {};
-
-        /**
-         * @type {DataPacket[]}
-         * @private
-         */
         this._batchedPackets = [];
-
-        /**
-         * @type {number}
-         * @protected
-         * Last measurement of player's latency in milliseconds.
-         */
         this._lastPingMeasure = 1;
-
-        /** @type {number} */
         this.creationTime = 0;
-
-        /** @type {boolean} */
         this.loggedIn = false;
-
-        /** @type {boolean} */
         this.spawned = false;
-
-        /**
-         * @type {string}
-         * @protected
-         */
         this._username = "";
-        /**
-         * @type {string}
-         * @protected
-         */
         this._iusername = "";
-        /**
-         * @type {string}
-         * @protected
-         */
         this._displayName = "";
-        /**
-         * @type {number}
-         * @protected
-         */
         this._randomClientId = -1;
-        /**
-         * @type {string}
-         * @protected
-         */
         this._xuid = "";
-
-        /**
-         * @type {number}
-         * @protected
-         */
         this._windowCnt = 2;
-        /**
-         * @type {number[]}
-         * @protected
-         */
         this._windows = [];
-        /**
-         * @type {Inventory[]}
-         * @protected
-         */
         this._windowIndex = [];
-        /**
-         * @type {boolean[]}
-         * @protected
-         */
         this._permanentWindows = [];
-        //TODO: PlayerCursorInventory.
-        /** @protected */
         this._cursorInventory = null;
-        //TODO: CraftingGrid
-        /** @protected */
         this._craftingGrid = null;
-        //TODO: CraftingTransaction
-        /** @protected */
         this._craftingTransaction = null;
-
-        /**
-         * @type {number}
-         * @protected
-         */
         this._messageCounter = 2;
-        /**
-         * @type {boolean}
-         * @protected
-         */
         this._removeFormat = true;
-
-        /**
-         * @type {boolean[]}
-         * @protected
-         */
         this._achievements = [];
-        /**
-         * @type {boolean}
-         * @protected
-         */
         this._playedBefore = false;
-        /**
-         * @type {number}
-         * @protected
-         */
         this._gamemode = 0;
-
-        /**
-         * @type {number}
-         * @private
-         */
         this._loaderId = 0;
-
-        /** @type {boolean[]} chunkHash => bool (true = sent, false = needs sending) */
         this.usedChunks = {};
-        /**
-         * @type {boolean[]}
-         * @protected
-         * chunkHash => dummy
-         */
         this._loadQueue = {};
-        /**
-         * @type {number}
-         * @protected
-         */
         this._nextChunkOrderRun = 5;
-
-        /**
-         * @type {boolean[]}
-         * @protected
-         * map: raw UUID (string) => bool
-         */
         this._hiddenPlayers = {};
-
-        /**
-         * @type {Vector3|null}
-         * @protected
-         */
         this._newPosition = null;
-        /**
-         * @type {boolean}
-         * @protected
-         */
         this._isTeleporting = false;
-        /**
-         * @type {number}
-         * @protected
-         */
         this._isAirTicks = 0;
-        /**
-         * @type {number}
-         * @protected
-         */
         this._stepHeight = 0.6;
-        /**
-         * @type {boolean}
-         * @protected
-         */
         this._allowMovementCheats = false;
-
-        /**
-         * @type {Vector3|null}
-         * @protected
-         */
         this._sleeping = null;
-        /**
-         * @type {Position|null}
-         * @private
-         */
         this._spawnPosition = null;
-
-        //TODO: Abilities
-        /**
-         * @type {boolean}
-         * @protected
-         */
         this._autoJump = true;
-        /**
-         * @type {boolean}
-         * @protected
-         */
         this._allowFlight = false;
-        /**
-         * @type {boolean}
-         * @protected
-         */
         this._flying = false;
 
-
-        //TODO: /** @type {PermissibleBase} */
         this._perm = null;
 
-        /**
-         * @type {number|null}
-         * @protected
-         */
         this._lineHeight = null;
-        /**
-         * @type {string}
-         * @private
-         */
         this._locale = "en_US";
 
-        /**
-         * @type {number}
-         * @protected
-         */
         this._startAction = -1;
-        /**
-         * @type {number[]}
-         * @private
-         * ID => ticks map
-         */
         this._usedItemsCooldown = {};
 
-        /**
-         * @type {number}
-         * @protected
-         */
         this._formIdCounter = 0;
-        /**
-         * @type {Form[]}
-         * @private
-         */
         this._forms = [];
-
-        /**
-         * @type {number}
-         * @protected
-         */
         this._lastRightClickTime = 0.0;
-        /**
-         * @type {Vector3|null}
-         * @protected
-         */
         this._lastRightClickPos = null;
     }
 
@@ -481,7 +260,7 @@ class Player extends Human {
         this.level = server.getDefaultLevel();
 
         // this.namedtag = new CompoundTag();
-        // this._boundingBox = new AxisAlignedBB(0, 0, 0, 0, 0, 0, 0);
+        this._boundingBox = new AxisAlignedBB(0, 0, 0, 0, 0, 0, 0);
         //
         // this._uuid = null;
         // this._rawUUID = null;
@@ -500,10 +279,8 @@ class Player extends Human {
         return this._sessionAdapter !== null;
     }
 
-
-
     hasPlayedBefore(){
-        return this.playedBefore;
+        return this._playedBefore;
     }
 
     getName(){
@@ -529,8 +306,8 @@ class Player extends Human {
             return false;
         }
 
-        /*if(packet.protocol] !== mcpeInfo.PROTOCOL){
-            if(packet.protocol < mcpeInfo.PROTOCOL){
+        /*if(packet.protocol] !== MinecraftInfo.PROTOCOL){
+            if(packet.protocol < MinecraftInfo.PROTOCOL){
                 this.sendPlayStatus(PlayStatusPacket.LOGIN_FAILED_CLIENT, true);
             }else{
                 this.sendPlayStatus(PlayStatusPacket.LOGIN_FAILED_SERVER, true);
@@ -576,7 +353,7 @@ class Player extends Human {
             return true;
         }
 
-        this._skin = skin; //todo: function setSkin()
+        this.setSkin(skin);
 
         // let ev = new PlayerPreLoginEvent(this, "Test");
         // this.server.getPluginManager().callEvent(ev);
@@ -618,7 +395,7 @@ class Player extends Human {
 
 
     onVerifyCompleted(packet, error, signedByMojang){
-        // if(this.closed) return;
+        if(this.closed) return;
         
         if (error !== null) {
             this.close("", "Invalid Session");
@@ -683,7 +460,6 @@ class Player extends Human {
     sendPlayStatus(status, immediate = false){
         let pk = new PlayStatusPacket();
         pk.status = status;
-        //pk.protocol = this._protocol;
         if(immediate){
             this.directDataPacket(pk);
         }else{
@@ -826,7 +602,8 @@ class Player extends Human {
                 if(notify && reason.length > 0){
                     let pk = new DisconnectPacket();
                     pk.message = reason;
-                    this.directDataPacket(pk);
+                    this.dataPacket(pk);
+                    //TODO: fix. this.directDataPacket(pk);
                 }
 
                 this._sessionAdapter = null;
@@ -1108,6 +885,7 @@ class Player extends Human {
     }
 
     handleMovePlayer(packet){
+
         let newPos = packet.position.subtract(0, this._baseOffset, 0);
         
         /*if (newPos.distanceSquared(this) > 1) {
@@ -1215,8 +993,8 @@ class Player extends Human {
         //let dz = newPos.getZ() - this.newPosition.getZ();
 
         //this.move(dx, dy, dz);
-
-        this.setPosition(newPos);
+        //TODO
+        // this.setPosition(newPos);
     }
 
     onUpdate(currentTick){

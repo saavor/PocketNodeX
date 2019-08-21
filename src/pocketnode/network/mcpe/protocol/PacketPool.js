@@ -11,7 +11,7 @@ const LevelSoundEventPacket = require("./LevelSoundEventPacket");
 const SubClientLoginPacket = require("./SubClientLoginPacket");
 const PlayerSkinPacket = require("./PlayerSkinPacket");
 const BlockEventPacket = require("./BlockEventPacket");
-// const UpdateAttributesPacket = require("./UpdateAttributesPacket");
+const UpdateAttributesPacket = require("./UpdateAttributesPacket");
 const StructureBlockUpdatePacket = require("./StructureBlockUpdatePacket");
 const ResourcePackClientResponsePacket = require("./ResourcePackClientResponsePacket");
 const ResourcePackStackPacket = require("./ResourcePackStackPacket");
@@ -43,6 +43,9 @@ const TakeItemActorPacket = require("./TakeItemActorPacket");
 const MoveActorAbsolutePacket = require("./MoveActorAbsolutePacket");
 const RiderJumpPacket = require("./RiderJumpPacket");
 const UpdateBlockPacket = require("./UpdateBlockPacket");
+const SetTitlePacket = require("./SetTitlePacket");
+const ExplodePacket = require("./ExplodePacket");
+const LevelSoundEventPacketV1 = require("./LevelSoundEventPacketV1");
 
 class PacketPool {
 
@@ -85,12 +88,12 @@ class PacketPool {
         this.registerPacket(RiderJumpPacket);
         this.registerPacket(UpdateBlockPacket);
         this.registerPacket(AddPaintingPacket);
-        //todo: explode pk
-        //todo: level sound event pk v1
+        this.registerPacket(ExplodePacket);
+        this.registerPacket(LevelSoundEventPacketV1);
         this.registerPacket(LevelSoundEventPacket);
         this.registerPacket(PlayerActionPacket);
         this.registerPacket(ActorEventPacket);
-        // this.registerPacket(UpdateAttributesPacket);
+        this.registerPacket(UpdateAttributesPacket);
         this.registerPacket(InteractPacket);
         this.registerPacket(UpdateSoftEnumPacket);
         this.registerPacket(AnimatePacket);
@@ -111,6 +114,7 @@ class PacketPool {
         this.registerPacket(CommandRequestPacket);
         this.registerPacket(AvailableCommandsPacket);
         this.registerPacket(AutomationClientConnectPacket);
+        this.registerPacket(SetTitlePacket);
     }
 }
 

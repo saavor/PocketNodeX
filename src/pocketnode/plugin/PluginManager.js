@@ -92,7 +92,7 @@ class PluginManager {
                         let manifest = loader.getPluginManifest(file);
                         if(manifest instanceof PluginManifest){
                             let name = manifest.getName();
-                            if(name.indexOf("pocketnode") !== -1 || name.indexOf("mcpe") !== -1 || name.indexOf("mojang") !== -1){
+                            if(name.indexOf("pocketnode") !== -1 || name.indexOf("minecraft") !== -1 || name.indexOf("mojang") !== -1){
                                 this.server.getLogger().error("Plugin name contains invalid keyword!");
                                 return;
                             }else if(name.indexOf(" ") !== -1){

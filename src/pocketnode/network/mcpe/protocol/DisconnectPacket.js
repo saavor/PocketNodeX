@@ -23,7 +23,9 @@ class DisconnectPacket extends DataPacket {
 
     _decodePayload(){
         this.hideDisconnectionScreen = this.readBool();
-        this.message = this.readString();
+        if (!this.hideDisconnectionScreen){
+            this.message = this.readString();
+        }
     }
 
     _encodePayload(){
@@ -31,6 +33,10 @@ class DisconnectPacket extends DataPacket {
         if(!this.hideDisconnectionScreen){
             this.writeString(this.message);
         }
+    }
+
+    handle(session){
+        return session.handleDisconnect(this);
     }
 }
 

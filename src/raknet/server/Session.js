@@ -325,9 +325,9 @@ class Session {
                 this.disconnect("client disconnect"); //supposed to send ack
                 break;
 
-            case MessageIdentifiers.mcpe_HEADER:
+            case MessageIdentifiers.MINECRAFT_HEADER:
                 this.packetBatches.add(packet);
-                this.sessionManager.getLogger().debug("Got a mcpe packet");
+                this.sessionManager.getLogger().debug("Got a Minecraft packet");
                 break;
 
             default:

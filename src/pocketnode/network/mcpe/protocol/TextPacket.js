@@ -2,6 +2,7 @@ const DataPacket = require("./DataPacket");
 const ProtocolInfo = require("../Info");
 
 class TextPacket extends DataPacket {
+
     static getId(){
         return ProtocolInfo.TEXT_PACKET;
     }
@@ -38,7 +39,6 @@ class TextPacket extends DataPacket {
         switch(this.type){
             case TextPacket.TYPE_CHAT:
             case TextPacket.TYPE_WHISPER:
-            /** @noinspection */
             case TextPacket.TYPE_ANNOUNCEMENT:
                 this.sourceName = this.readString();
             case TextPacket.TYPE_RAW:
@@ -47,7 +47,6 @@ class TextPacket extends DataPacket {
             case TextPacket.TYPE_JSON:
                 this.message = this.readString();
                 break;
-
             case TextPacket.TYPE_TRANSLATION:
             case TextPacket.TYPE_POPUP:
             case TextPacket.TYPE_JUKEBOX_POPUP:
@@ -69,7 +68,6 @@ class TextPacket extends DataPacket {
         switch(this.type){
             case TextPacket.TYPE_CHAT:
             case TextPacket.TYPE_WHISPER:
-            /** @noinspection */
             case TextPacket.TYPE_ANNOUNCEMENT:
                 this.writeString(this.sourceName);
             case TextPacket.TYPE_RAW:
@@ -78,7 +76,6 @@ class TextPacket extends DataPacket {
             case TextPacket.TYPE_JSON:
                 this.writeString(this.message);
                 break;
-
             case TextPacket.TYPE_TRANSLATION:
             case TextPacket.TYPE_POPUP:
             case TextPacket.TYPE_JUKEBOX_POPUP:

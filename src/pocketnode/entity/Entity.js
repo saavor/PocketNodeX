@@ -252,222 +252,76 @@ class Entity extends Location {
 
     initVars(){
 
-        /** @static */
         this.entityCount = 1;
-        /**
-         * @type {Entity[]}
-         * @private
-         * @static
-         */
         this._knownEntities = [];
-        /**
-         * @type {string[][]}
-         * @private
-         * @static
-         */
         this._saveNames = [];
 
-        /**
-         * @type {Player[]}
-         * @protected
-         */
         this._hasSpawned = [];
 
-        /**
-         * @type {number}
-         * @protected
-         */
         this._id = -1;
 
-        /**
-         * @type {DataPropertyManager}
-         * @protected
-         */
         this._propertyManager = null;
 
-        /** @type {Chunk|null}*/
         this.chunk = null;
-
-        //TODO: EntityDamageEvent|null
-        /** @protected */
         this._lastDamageCause = null;
 
-        //TODO: Block[]
-        /** @protected */
         this._blocksAround = [];
 
-        /** @type {number} */
         this.lastX = null;
-        /** @type {number} */
         this.lastY = null;
-        /** @type {number} */
         this.lastZ = null;
 
-        /**
-         * @type {Vector3}
-         * @protected
-         */
         this._motion = null;
-        /**
-         * @type {Vector3}
-         * @protected
-         */
         this._lastMotion = null;
-        /**
-         * @type {boolean}
-         * @protected
-         */
         this._forceMovementUpdate = false;
 
-        /**
-         * @type {Vector3}
-         */
         this.temporalVector = null;
 
-        /** @type {number} */
         this.lastYaw = 0.0;
-        /** @type {number} */
         this.lastPitch = 0.0;
 
-        /** @type {AxisAlignedBB} */
         this.boundingBox = null;
-        /** @type {boolean} */
         this.onGround = false;
 
-        /** @type {number} */
         this.eyeHeight = null;
 
-        /** @type {number} */
         this.height = 4.0;
-        /** @type {number} */
         this.width = 0.0;
 
-        /**
-         * @type {number}
-         * @protected
-         */
         this._baseOffset = 0.0;
 
-        /**
-         * @type {number}
-         * @private
-         */
         this._health = 20.0;
-        /**
-         * @type {number}
-         * @private
-         */
         this._maxHealth = 20;
 
-        /**
-         * @type {number}
-         * @protected
-         */
         this._ySize = 0.0;
-        /**
-         * @type {number}
-         * @protected
-         */
         this._stepHeight = 0.0;
-        /** @type {boolean} */
         this.keepMovement = false;
 
-        /** @type {number} */
         this.fallDistance = 0.0;
-        /** @type {boolean} */
         this.ticksLived = 0;
-        /** @type {boolean} */
         this.lastUpdate = -1;
-        /** @type {boolean} */
         this._fireTicks = 0;
-        /** @type {CompoundTag} */
         this.namedtag = null;
-        /** @type {boolean} */
         this.canCollide = true;
 
-        /**
-         * @type {boolean}
-         * @protected
-         */
         this._isStatic = false;
-
-        /**
-         * @type {boolean}
-         * @private
-         */
         this._savedWithChunks = true;
 
-        /** @type {boolean} */
         this.isCollided = false;
-        /** @type {boolean} */
         this.isCollidedHorizontally = false;
-        /** @type {boolean} */
         this.isCollidedVertically = false;
 
-        /** @type {number} */
         this.noDamageTicks = 0;
-        /**
-         * @type {boolean}
-         * @protected
-         */
         this._justCreated = true;
-        /**
-         * @type {boolean}
-         * @private
-         */
         this._invulnerable = false;
-
-        /**
-         * @type {AttributeMap}
-         * @protected
-         */
         this._attributeMap = null;
-
-        /**
-         * @type {number}
-         * @protected
-         */
         this._gravity = 0.0;
-        /**
-         * @type {number}
-         * @protected
-         */
         this._drag = 0.0;
-
-        /**
-         * @type {Server}
-         * @protected
-         */
         this._server = null;
-
-        /**
-         * @type {boolean}
-         * @protected
-         */
         this._closed = false;
-        /**
-         * @type {boolean}
-         * @private
-         */
         this._needsDespawn = false;
-
-        //TODO: TimingsHandler
-        /**
-         * @type {null}
-         * @protected
-         */
         this._timings = null;
-
-        /**
-         * @type {boolean}
-         * @protected
-         */
         this._constructed = false;
-
-        /**
-         * @type {boolean}
-         * @private
-         */
         this._closeInFlight = false;
     }
 
