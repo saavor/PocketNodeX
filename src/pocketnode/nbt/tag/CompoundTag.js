@@ -51,11 +51,10 @@ class CompoundTag extends NamedTag {
      * @return {NamedTag}
      */
     getTag(name, expectedClass = NamedTag){
-        //CheckTypes([NamedTag, expectedClass]);
         let tag = this.value[name];
         if (tag !== null && !(tag instanceof expectedClass)){
             //TODO: finish debug.. test purpose atm
-            console.log(`Expected a tag of type ${expectedClass}, got " . getclass($tag) TO FINISH DEBUG TEXT, UNCOMPLETED`);
+            console.log(`Expected a tag of type ${expectedClass.constructor.name}, got ${tag}`);
         }
         return tag;
     }

@@ -1,16 +1,17 @@
-const assert = require('assert');
+// const assert = require('assert');
 
 const Isset = require("../utils/methods/Isset");
-//const SetEntityDataPacket = pocketnode("network/mcpe/protocol/SetEntityDataPacket");
+// const SetActorDataPacket = require("../network/mcpe/protocol/SetActorDataPacket");
 
 const AxisAlignedBB = require("../math/AxisAlignedBB");
 const Vector3 = require("../math/Vector3");
 
-const Server = require("../Server");
+// const Server = require("../Server");
 
 // const EventManager = require("../event/EventManager");
 
-const ListTag = require("../nbt/tag/ListTag");
+// const ListTag = require("../nbt/tag/ListTag");
+const StringTag = require("../nbt/tag/StringTag");
 const CompoundTag = require("../nbt/tag/CompoundTag");
 
 const Level = require("../level/Level");
@@ -19,7 +20,7 @@ const Location = require("../level/Location");
 // const AddActorPacket = require("../network/mcpe/protocol/AddActorPacket");
 
 const Attribute = require("./Attribute");
-const AttributeMap = require("./AttributeMap");
+// const AttributeMap = require("./AttributeMap");
 const DataPropertyManager = require("./DataPropertyManager");
 
 //const Player = require("../player/Player");
@@ -384,6 +385,9 @@ class Entity extends Location {
         this.setGenericFlag(Entity.DATA_FLAG_AFFECTED_BY_GRAVITY, true);
         this.setGenericFlag(Entity.DATA_FLAG_HAS_COLLISION, true);
 
+        this._initEntity();
+        this._propertyManager.cleanDirtyProperties();
+
         // this.chunk.addEntity(this);
         //TODO: same on level
         this.lastUpdate = this._server.getTick();
@@ -524,6 +528,14 @@ class Entity extends Location {
         return this._id;
     }
 
+    _initEntity(){
+        assert(this.namedtag instanceof CompoundTag);
+
+        if (this.namedtag.hasTag("CustomName", StringTag)){
+            // TODO: this.setNameTag
+        }
+    }
+
     /**
      *
      * @param motion {Vector3}
@@ -538,7 +550,7 @@ class Entity extends Location {
             // }
         }
 
-        this._motion = Object.assign({}, motion); //might not work, test purpose clone
+        this._motion = Object.assign({}, motion);
 
         if (this._justCreated){
             // this.updateMovement();
@@ -569,7 +581,8 @@ class Entity extends Location {
         }
     }
 
-   /* sendData(player, data = null){
+    //TODO: fix
+   /*sendData(player, data = null){
 
         console.log("SendData step 1 done");
 
@@ -577,33 +590,23 @@ class Entity extends Location {
             player = [player];
         }
 
-        let pk = new SetEntityDataPacket();
-        pk.entityRuntimeId = this._id;
-
-        if (data){
-            pk.metadata = data
-        } else {
-            pk.metadata = this._propertyManager.getAll();
-        }
+        let pk = new SetActorDataPacket();
+        pk.entityRuntimeId = this.getId();
+        pk.metadata = data || this._propertyManager.getAll();
 
         console.log("SendData step 2 done");
 
         player.forEach(p => {
            if (p === this){
-               //continue; TODO: ok..
+               console.log("EMH..");
            }
-           p.dataPacket(pk); // TODO: clone is needed?
-            console.log("SetEntityDataPacket sent (All)!");
+           p.dataPacket(clone(pk));
         });
 
-        /*if (this instanceof Player){
-            this.dataPacket(pk);
-            console.log("")
-        }
         this.dataPacket(pk);
         console.log("SetEntityDataPacket sent (Main)!");
-        console.log("SendData step 3 done");
     }*/
+
 
    /*sendSpawnPacket(player){
        let pk = new AddActorPacket();

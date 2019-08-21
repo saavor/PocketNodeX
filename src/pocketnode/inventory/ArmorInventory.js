@@ -12,6 +12,7 @@
 
 const BaseInventory = require("./BaseInventory");
 
+const Living = require("../entity/Living");
 const Item = require("../item/Item");
 
 class ArmorInventory extends BaseInventory{
@@ -21,23 +22,20 @@ class ArmorInventory extends BaseInventory{
     static get SLOT_FEET() {return 3};
 
     initVars(){
-
-        //instance of living
         this._holder = null;
     }
 
+    /**
+     * @param holder {Living}
+     */
     constructor(holder) {
         super();
         this.initVars();
 
-        CheckTypes([Living, holder]);
         this._holder = holder;
-
-        this.constructor.call(); // should be parent
     }
 
     /**
-     *
      * @return {Living}
      */
     getHolder(){
@@ -45,7 +43,6 @@ class ArmorInventory extends BaseInventory{
     }
 
     /**
-     *
      * @return {string}
      */
     getName(){
@@ -61,7 +58,6 @@ class ArmorInventory extends BaseInventory{
     }
 
     /**
-     *
      * @return {Item}
      */
     getHelmet(){

@@ -1,5 +1,3 @@
-const Round = require("./Round");
-
 class BinaryStream {
 	/**
 	 * @param buffer {Buffer|null}
@@ -36,20 +34,7 @@ class BinaryStream {
 	 * @return {Buffer}
 	 */
 	read(len){
-
-		if (len === 0){
-			return "";
-		}
-
-		if (len < 0){
-			console.log("Length must be positive");
-		}
-
-		let remaining = this.buffer.length - this.offset;
-		if (remaining < len){
-			console.log(`Not enough bytes left in buffer: need ${len}, have ${remaining}`);
-		}
-		return len === 1 ? this.buffer[this.offset++] : this.buffer.slice(this.offset, this.increaseOffset(len, true));
+		return this.buffer.slice(this.offset, this.increaseOffset(len, true));
 	}
 
 	/**
@@ -136,13 +121,9 @@ class BinaryStream {
 	 * @return {Buffer}
 	 */
 	readRemaining(){
-		let str = this.buffer.slice(this.offset);
-
-		if (str === false){
-			console.log("No bytes left to read");
-		}
+		let buf = this.buffer.slice(this.offset);
 		this.offset = this.buffer.length;
-		return str;
+		return buf;
 	}
 
 	/**
@@ -362,7 +343,7 @@ class BinaryStream {
 	 * @return {number}
 	 */
 	readRoundedFloat(accuracy){
-		return Round(this.readFloat(), accuracy);
+		return Math.round_php(this.readFloat(), accuracy);
 	}
 
 	/**
@@ -389,7 +370,7 @@ class BinaryStream {
 	 * @return {number}
 	 */
 	readRoundedLFloat(accuracy){
-		return Round(this.readLFloat(), accuracy);
+		return Math.round_php(this.readLFloat(), accuracy);
 	}
 
 	/**
@@ -464,10 +445,8 @@ class BinaryStream {
 		return this;
 	}
 
-	//TODO: test fix.
 	readLLong(){
-		//return this.buffer.readUInt32LE(0) + (buffer.readUInt32LE(4) << 8);
-        return this.buffer.readUInt32LE(0) + (this.buffer.readUInt32LE(4) << 8);
+		return this.buffer.readUInt32LE(0) + (this.buffer.readUInt32LE(4) << 8);
 	}
 
 	writeLLong(v){
@@ -644,7 +623,7 @@ class BinaryStream {
 	 */
 	writeString(v){
 		this.append(Buffer.from(v, "utf8"));
-		return this;
+
 	}
 
 	flip(){

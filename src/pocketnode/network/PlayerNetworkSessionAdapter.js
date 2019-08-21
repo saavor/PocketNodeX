@@ -40,7 +40,7 @@ class PlayerNetworkSessionAdapter{
             this.server.getLogger().debug("Still "+ remains.length + " bytes unread in " + packet.getName() + ": 0x" + remains.toString("hex"));
         }
 
-        console.log("Got "+packet.getName()+" from "+this);
+        //console.log("Got "+packet.getName()+" from "+this);
 
         packet.handle(this);
 
@@ -278,6 +278,10 @@ class PlayerNetworkSessionAdapter{
     }
 
     handleSetTitle(packet){
+        return false;
+    }
+
+    handleMobEffect(packet){
         return false;
     }
 

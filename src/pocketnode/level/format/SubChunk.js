@@ -54,6 +54,19 @@ class SubChunk extends SubChunkInterface {
         return this._blockIds[SubChunk.getIdIndex(x, y, z)];
     }
 
+    //TODO: to fix.. will never work atm.
+    setBlock(x, y, z, id = null, data = null){
+        let i = (x << 8) | (z << 4) | y;
+        let changed = false;
+        if (id !== null){
+            let block = String.fromCharCode(id);
+            if (this._blockIds !== block){
+                this._blockIds = block;
+                changed = true;
+            }
+        }
+    }
+
     setBlockId(x, y, z, id){
         this._blockIds[SubChunk.getIdIndex(x, y, z)] = id;
         return true;

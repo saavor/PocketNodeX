@@ -17,6 +17,7 @@ class SubChunkInterface {
         let methods = [
             "isEmpty",
             "getBlockId",
+            "setBlock",
             "setBlockId",
             "getBlockData",
             "setBlockData",

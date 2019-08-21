@@ -43,3 +43,4 @@ class StringTag extends NamedTag{
         this.value = nbt.getString();
     }
 }
+module.exports = StringTag;

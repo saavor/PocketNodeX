@@ -12,12 +12,14 @@
 
 const Inventory = require("./Inventory");
 const InventoryEventProcessor = require("./InventoryEventProcessor");
+const Isset = require("../utils/methods/Isset");
+const Item = require("../item/Item");
+
 
 class BaseInventory extends Inventory{
 
-    static get maxStackSize() {return Inventory.MAX_STACK};
-
     initVars(){
+        this._maxStackSize = Inventory.MAX_STACK;
         this._name = "";
         this._title = "";
         this._slots = [];
@@ -26,46 +28,54 @@ class BaseInventory extends Inventory{
     }
 
     constructor(items = [], size = null, title = null) {
-
         super();
-
-        let sizeVal;
-        if (size){
-            sizeVal = size;
-        } else {
-            sizeVal = this.getDefaultSize();
-        }
-
-       this._slots = new Array(sizeVal);
-
-        if (title !== null){
-            this._title = title;
-        } else {
-            this._title = this.getName();
-        }
+        this.initVars();
+        this._slots = new Array(size || this.getDefaultSize());
+        this._title = title || this.getName();
 
         this.setContents(items, false);
     }
 
+    /**
+     * @return {string}
+     */
     getName(){};
 
     getTitle(){
         return this._title;
     }
 
+    /**
+     * Returns the size of the inventory.
+     * @return {number}
+     */
     getSize(){
-        return this._slots.getSize();
+        return this._slots.length;
+    }
+
+    /**
+     * Sets the new size of the inventory.
+     * WARNING: If the size is smaller, any items past the new size will be lost.
+     *
+     * @param size {number}
+     */
+    setSize(size){
+        this._slots.length = size;
     }
 
     getDefaultSize(){};
 
+    getMaxStackSize() {
+        return this._maxStackSize;
+    }
+
     setContents(items, send = true){
         if (items.length > this.getSize()){
-            let items = items.slice(0, this.getSize()); //might not work... need to be tested
+            let items = items.slice(0, this.getSize());
         }
         
         for (let i = 0, size = this.getSize(); i < size; ++i){
-            if (Isset(items[i])){
+            if (!Isset(items[i])){
                 if (this._slots[i] !== null) {
                     this.clear(i, false);
                 }

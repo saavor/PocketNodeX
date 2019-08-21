@@ -25,7 +25,6 @@ class Item extends ItemIds{
     static get TAG_DISPLAY_LORE() {return "Lore"};
 
     initVars(){
-        //little endian
         this.cachedParser = null;
 
         this._id = -1;

@@ -12,6 +12,7 @@ const PlayerQuitEvent = require("../event/player/PlayerQuitEvent");
 const Attribute = require("../entity/Attribute");
 
 /* Packets */
+const AdventureSettingsPacket = require("../network/mcpe/protocol/AdventureSettingsPacket");
 const ResourcePackClientResponsePacket = require("../network/mcpe/protocol/ResourcePackClientResponsePacket");
 const ResourcePackDataInfoPacket = require("../network/mcpe/protocol/ResourcePackDataInfoPacket");
 const ResourcePackStackPacket = require("../network/mcpe/protocol/ResourcePackStackPacket");
@@ -259,7 +260,7 @@ class Player extends multiple(Human, CommandSender) {
         this.creationTime = Date.now();
         this.level = server.getDefaultLevel();
 
-        // this.namedtag = new CompoundTag();
+        //this.namedtag = new CompoundTag();
         this._boundingBox = new AxisAlignedBB(0, 0, 0, 0, 0, 0, 0);
         //
         // this._uuid = null;
@@ -269,11 +270,7 @@ class Player extends multiple(Human, CommandSender) {
 
         this._sessionAdapter = new PlayerSessionAdapter(this);
         this.lastUpdate = this.server.getTick();
-
-        //Entity.constructor.call(this.level, this.namedtag);
     }
-
-
 
     isConnected(){
         return this._sessionAdapter !== null;
@@ -729,55 +726,21 @@ class Player extends multiple(Human, CommandSender) {
         this.sendDataPacket(new AvailableActorIdentifiersPacket());
         this.sendDataPacket(new BiomeDefinitionListPacket());
 
-        /*pk.generator = 2;
-        pk.levelGamemode = 1;
+        // this.level.sendTime(this);
 
-        pk.isMultiplayerGame = true;
-        pk.hasXboxLiveBroadcast = false;
-        pk.hasLANBroadcast = true;
-        pk.commandsEnabled = true;
-        pk.gameRules = [];
-        pk.hasBonusChestEnabled = false;
-        pk.hasStartWithMapEnabled = false;
-        pk.hasTrustPlayersEnabled = true;
-        pk.xboxLiveBroadcastMode = 0;
-        pk.currentTick = this.server.getCurrentTick();
-        pk.enchantmentSeed = 123456;
-        pk.time = 0;
-        pk.hasAchievementsDisabled = true;
-        //pk.gameRules = this.getServer().getDefaultLevel().getGameRules();
-        pk.gameRules = [
-            new GameRule(GameRule.COMMAND_BLOCK_OUTPUT, true),
-            new GameRule(GameRule.DO_DAYLIGHT_CYCLE, true),
-            new GameRule(GameRule.DO_ENTITY_DROPS, true),
-            new GameRule(GameRule.DO_FIRE_TICK, true),
-            new GameRule(GameRule.DO_MOB_LOOT, true),
-            new GameRule(GameRule.DO_MOB_SPAWNING, true),
-            new GameRule(GameRule.DO_TILE_DROPS, true),
-            new GameRule(GameRule.DO_WEATHER_CYCLE, true),
-            new GameRule(GameRule.DROWNING_DAMAGE, true),
-            new GameRule(GameRule.FALL_DAMAGE, true),
-            new GameRule(GameRule.FIRE_DAMAGE, true),
-            new GameRule(GameRule.KEEP_INVENTORY, false),
-            new GameRule(GameRule.MOB_GRIEFING, true),
-            new GameRule(GameRule.NATURAL_REGENERATION, true),
-            new GameRule(GameRule.PVP, true),
-            new GameRule(GameRule.SEND_COMMAND_FEEDBACK, true),
-            new GameRule(GameRule.SHOW_COORDINATES, true),
-            new GameRule(GameRule.RANDOM_TICK_SPEED, 3),
-            new GameRule(GameRule.TNT_EXPLODES, true)
-        ];
-        this.dataPacket(pk);*/
-
-        //this.sendData(this);
+        //TODO: this.sendData(this);
 
         this.sendAttributes(true);
         this.sendCommandData();
+        this.sendSettings();
+        this.sendPotionEffects(this);
+
+        this._sendAllInventories();
 
         this.server.addOnlinePlayer(this);
         this.server.onPlayerCompleteLoginSequence(this);
 
-        let ev = new PlayerJoinEvent(this, "A Player Joined!");
+        let ev = new PlayerJoinEvent(this, TextFormat.YELLOW + this.getName() + " Joined the game!");
         this.server.getEventSystem().callEvent(ev);
         if(ev.getJoinMessage().length > 0){
             this.server.broadcastMessage(ev.getJoinMessage());
@@ -878,6 +841,10 @@ class Player extends multiple(Human, CommandSender) {
         return true;*/
     }
 
+    handleAdventureSettings(packet){
+
+    }
+
     handleLevelSoundEvent(packet){
         //this.server.getDefaultLevel().addChunkPacket  //TODO: send packet to all players in chunk radius
         this.dataPacket(packet);
@@ -909,27 +876,26 @@ class Player extends multiple(Human, CommandSender) {
             return true;
         }
 
-        console.log("AnimatePacket handled!");
-
-        let ev = new PlayerAnimationEvent(this, packet.action);
-        this.server.getPluginManager().callEvent(ev);
-        if(ev.isCancelled()){
-            return true;
-        }
+        // let ev = new PlayerAnimationEvent(this, packet.action);
+        // this.server.getPluginManager().callEvent(ev);
+        // if(ev.isCancelled()){
+        //     return true;
+        // }
 
         let pk = new AnimatePacket();
         pk.entityRuntimeId = this.getId();
-        pk.action = ev.getAnimationType();
+        pk.action = 1; //TODO
+        // pk.action = ev.getAnimationType();
         //TODO: edit method of all players and get just this.getViewers();
         this.server.broadcastPackets(this.server.getOnlinePlayers(), pk);
     }
 
     handleResourcePackClientResponse(packet){
 
-        console.log("Got a new resource pack response with status: " + packet.status);
+        // console.log("Got a new resource pack response with status: " + packet.status);
 
         let pk, manager;
-        console.log("Status:", ResourcePackClientResponsePacket.STATUS(packet.status));
+        // console.log("Status:", ResourcePackClientResponsePacket.STATUS(packet.status));
 
         switch(packet.status){
             case ResourcePackClientResponsePacket.STATUS_REFUSED:
@@ -1111,7 +1077,39 @@ class Player extends multiple(Human, CommandSender) {
     }
 
     sendSettings(){
+        let pk = new AdventureSettingsPacket();
 
+        pk.setFlag(AdventureSettingsPacket.WORLD_IMMUTABLE, this.isSpectator());
+        pk.setFlag(AdventureSettingsPacket.NO_PVP, this.isSpectator());
+        pk.setFlag(AdventureSettingsPacket.AUTO_JUMP, this._autoJump);
+        pk.setFlag(AdventureSettingsPacket.ALLOW_FLIGHT, this._allowFlight);
+        pk.setFlag(AdventureSettingsPacket.NO_CLIP, this.isSpectator());
+        pk.setFlag(AdventureSettingsPacket.FLYING, this._flying);
+
+        //TODO Op system.
+        pk.commandPermission = AdventureSettingsPacket.PERMISSION_NORMAL;
+        pk.playerPermission = 1; //TODO: PlayerPermission
+        pk.entityUniqueId = this.getId();
+
+        this.dataPacket(pk);
+    }
+
+    _sendAllInventories(){
+        this._windowIndex.forEach(id => {
+            for (let inventory in id){
+                if (id.hasOwnProperty(inventory)){
+                    inventory.sendContents(this);
+                }
+            }
+        });
+    }
+
+
+    /**
+     * @return {boolean}
+     */
+    isSpectator(){
+        return this._gamemode === Player.SPECTATOR;
     }
 
     static getClientFriendlyGamemode(gamemode){

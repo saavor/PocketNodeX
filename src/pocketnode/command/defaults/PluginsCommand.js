@@ -2,6 +2,7 @@ const Command = require("../Command");
 const TextFormat = require("../../utils/TextFormat");
 
 class PluginsCommand extends Command {
+
     constructor(){
         super("plugins", "List the plugins you have enabled on your server.", "pocketnode.command.plugins", ["pl"]);
     }

@@ -2,6 +2,7 @@ const INT32_MIN = -0x80000000;
 const INT32_MAX = 0x7fffffff;
 
 const Isset = require("../utils/methods/Isset");
+const Position = require("./Position");
 
  class Level {
 
@@ -14,6 +15,7 @@ const Isset = require("../utils/methods/Isset");
      static get DIFFICULTY_HARD() {return 3};
      
     initVars(){
+        this._temporalPosition = new Position();
         this._levelIdCounter = 1;
         this._chunkLoaderCounter = 1;
 
@@ -163,6 +165,33 @@ const Isset = require("../utils/methods/Isset");
 
     getBlock(pos, cached = true, addToCache = true){
         return this.getBlockAt(Number(Math.floor(pos.x)), Number(Math.floor(pos.y)), Number(Math.floor(pos.z)), cached, addToCache);
+    }
+
+    setBlock(pos, block, direct = false, update = true){
+        // pos = pos.floor(); todo
+        
+        if (this.getChunkAtPosition(pos, true).setBlock(pos.x & 0xf, pos.y, pos.z & 0xf, block.getId(), block.getDamage())){
+            if (!(pos instanceof Position)){
+                pos = this._temporalPosition.setComponents(pos.x, pos.y, pos.z);
+            }
+
+            block = clone(block);
+
+            block.position(pos);
+            block.clearCaches();
+
+            let chunkHash = Level.chunkHash(pos.x >> 4, pos.z >> 4);
+            let relativeBlockHash = Level.chunkBlockHash(pos.x, pos.y, pos.z);
+
+            // this is to unset.
+            let index = this._blockCache.indexOf(this._blockCache[chunkHash][relativeBlockHash]);
+            this._blockCache.splice(index, 1);
+
+            if (direct){
+                //TODO: finish here
+            }
+
+        }
     }
 
 

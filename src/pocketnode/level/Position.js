@@ -43,11 +43,14 @@ class Position extends Vector3 {
     }
 
     /**
+     * Returns the target Level, or null if the target is not valid.
+     * If a reference exists to a Level which is closed, the reference will be destroyed and null will be returned.
+     *
      * @return {Level|null}
      */
     getLevel(){
         if(this.level !== null && this.level.isClosed()){
-            MainLogger.getLogger().debug("Position was holding a reference to an unloaded Level");
+            // MainLogger.getLogger().debug("Position was holding a reference to an unloaded Level");
             this.level = null;
         }
 

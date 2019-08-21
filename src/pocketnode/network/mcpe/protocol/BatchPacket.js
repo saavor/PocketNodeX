@@ -27,7 +27,10 @@ class BatchPacket extends DataPacket {
 
     _decodeHeader(){
         let pid = this.readByte();
-        assert(pid === this.getId());
+        if(pid !== this.getId()){
+            throw new Error("Received "+pid+" as the id, expected "+this.getId());
+        }
+        //assert(pid === this.getId());
     }
 
     _decodePayload(){
@@ -81,7 +84,6 @@ class BatchPacket extends DataPacket {
                 pk.setBuffer(buf, 1);
                 session.handleDataPacket(pk);
             }else{
-                //logger.debug("Got unhandled packet: 0x"+buf.slice(0, 1).toString("hex"));
                 logger.debug("Got unhandled packet: 0x"+buf.slice(0, 1).toString("hex"));
             }
         });

@@ -254,12 +254,14 @@ class Server {
         //this.forceShutdown();
     }
 
+    //By twsited & jackx, this hack is nice.
     registerDefaultCommands(){
-        this.getCommandMap().registerCommand(new HelpCommand());
-        this.getCommandMap().registerCommand(new StopCommand());
-        this.getCommandMap().registerCommand(new PluginsCommand());
-        this.getCommandMap().registerCommand(new VersionCommand());
-        this.getCommandMap().registerCommand(new TitleCommand());
+        let dir = __dirname + '/command/defaults';
+        const commands = SFS.readDir(dir);
+        commands.forEach(defaultCommand => {
+            defaultCommand = require(dir + '/' + defaultCommand);
+            this.getCommandMap().registerCommand(new defaultCommand());
+        });
     }
 
     /**

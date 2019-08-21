@@ -1,6 +1,6 @@
 const LoginPacket = require("./LoginPacket");
 const AnimatePacket = require("./AnimatePacket");
-// const SetEntityDataPacket = require("./SetEntityDataPacket");
+const SetActorDataPacket = require("./SetActorDataPacket");
 const PlayStatusPacket = require("./PlayStatusPacket");
 const DisconnectPacket = require("./DisconnectPacket");
 const MovePlayerPacket = require("./MovePlayerPacket");
@@ -99,7 +99,7 @@ class PacketPool {
         this.registerPacket(AnimatePacket);
         this.registerPacket(PlayerSkinPacket);
         this.registerPacket(SetScoreboardIdentityPacket);
-        // this.registerPacket(SetEntityDataPacket);
+        this.registerPacket(SetActorDataPacket);
         this.registerPacket(BlockEventPacket);
         this.registerPacket(SetLocalPlayerAsInitializedPacket);
         this.registerPacket(SetDefaultGameTypePacket);

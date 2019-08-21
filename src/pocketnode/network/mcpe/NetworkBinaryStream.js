@@ -18,7 +18,11 @@ class NetworkBinaryStream extends require("../../../binarystream/BinaryStream") 
      */
     writeString(v){
         this.writeUnsignedVarInt(Buffer.byteLength(v));
-        this.append(v);
+        if(v.length === 0){
+            return this;
+        }
+        this.append(Buffer.from(v, "utf8"));
+        return this;
     }
 
     /**
@@ -136,12 +140,13 @@ class NetworkBinaryStream extends require("../../../binarystream/BinaryStream") 
         });
     }
 
-    readByteRotation(){
-        return (this.readByte() * (360 / 256));
+    writeByteRotation(rotation){
+        this.writeByte(Math.floor(rotation / (360/256)));
+        return this;
     }
 
-    writeByteRotation(rotation){
-        this.writeByte((rotation / (360 / 256)));
+    readByteRotation(){
+        return (this.readByte() * (360/256));
     }
 
     readEntityLink(){
@@ -160,7 +165,7 @@ class NetworkBinaryStream extends require("../../../binarystream/BinaryStream") 
         result.type = this.readUnsignedVarInt();
         result.uuid = this.readUUID();
         result.requestId = this.readString();
-        
+
         if (result.type === CommandOriginData.ORIGIN_DEV_CONSOLE || result.type === CommandOriginData.ORIGIN_TEST) {
             result.varlong1 = this.readVarLong();
         }
@@ -168,8 +173,26 @@ class NetworkBinaryStream extends require("../../../binarystream/BinaryStream") 
         return result;
     }
 
+    writeGameRules(rules){
+        this.writeUnsignedVarInt(rules.length);
+        rules.forEach(rule => {
+            this.writeString(rule.getName());
+            if(typeof rule.getValue() === "boolean") {
+                this.writeByte(1);
+                this.writeBool(rule.getValue());
+            }else if(Number.isInteger(rule.getValue())){
+                this.writeByte(2);
+                this.writeUnsignedVarInt(rule.getValue());
+            }else if(typeof rule.getValue() === "number" && !Number.isInteger(rule.getValue())){
+                this.writeByte(3);
+                this.writeLFloat(rule.getValue());
+            }
+        });
+
+        return this;
+    }
+
     /**
-     *
      * @param data {CommandOriginData}
      */
     putCommandOriginData(data) {

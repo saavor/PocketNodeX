@@ -25,6 +25,10 @@ class EmptySubChunk extends SubChunkInterface {
         return 0;
     }
 
+    setBlock(){
+        return false;
+    }
+
     setBlockId(){
         return false;
     }

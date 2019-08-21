@@ -57,6 +57,10 @@ class SimpleFileSystem {
         return fs.readFileSync(p);
     }
 
+    static readDir(d){
+        return fs.readdirSync(d);
+    }
+
     static readFileAsStream(p){
         return fs.createReadStream(p);
     }

@@ -147,6 +147,14 @@ class Chunk {
         return this.getSubChunk(y >> 4).getBlockId(x, y & 0x0f, z);
     }
 
+    setBlock(x, y, z, blockId, meta){
+        if(this.getSubChunk(y >> 4, true).setBlock(x, y & 0x0f, z, blockId !== null ? (blockId & 0xff) : null, meta !== null ? (meta & 0x0f) : null)){
+            this._hasChanged = true;
+            return true;
+        }
+        return  false;
+    }
+
     setBlockId(x, y, z, blockId){
         if(this.getSubChunk(y >> 4, true).setBlockId(x, y & 0x0f, z, blockId)){
             this._hasChanged = true;

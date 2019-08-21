@@ -63,3 +63,4 @@ class LittleEndianNBTStream extends NBTStream{
     //TODO: finish array values.
 
 }
+module.exports = LittleEndianNBTStream;

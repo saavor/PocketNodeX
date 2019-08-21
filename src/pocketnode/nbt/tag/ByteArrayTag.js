@@ -52,3 +52,4 @@ class ByteArrayTag extends NamedTag{
         return this.value;
     }
 }
+module.exports = ByteArrayTag;

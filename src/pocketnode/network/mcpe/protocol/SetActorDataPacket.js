@@ -1,9 +1,10 @@
 const DataPacket = require("./DataPacket");
 const ProtocolInfo = require("../Info");
 
-class SetEntityDataPacket extends DataPacket {
+class SetActorDataPacket extends DataPacket {
+
     static getId() {
-        return ProtocolInfo.SET_ENTITY_DATA_PACKET;
+        return ProtocolInfo.SET_ACTOR_DATA_PACKET;
     }
 
     initVars(){
@@ -14,8 +15,6 @@ class SetEntityDataPacket extends DataPacket {
     constructor(){
         super();
         this.initVars();
-        //this.entityRuntimeId = entityRuntimeId;
-        //this.metadata = metadata;
     }
 
     _decodePayload() {
@@ -32,4 +31,4 @@ class SetEntityDataPacket extends DataPacket {
         return session.handleSetEntityData(this);
     }
 }
-module.exports = SetEntityDataPacket;
+module.exports = SetActorDataPacket;
