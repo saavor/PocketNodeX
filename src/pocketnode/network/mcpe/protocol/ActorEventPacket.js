@@ -75,13 +75,13 @@ class ActorEventPacket extends DataPacket{
 
     _decodePayload() {
         this.entityRuntimeId = this.getEntityRuntimeId();
-        this.event = this.read(1).charCodeAt(0); // it should be ord();
+        this.event = this.readByte();
         this.data = this.readVarInt();
     }
 
     _encodePayload() {
         this.writeEntityRuntimeId(this.entityRuntimeId);
-        this.writeByte(this.event); // isn't this.buffer.put(this.writeByte(this.event)); ?
+        this.writeByte(this.event);
         this.writeVarInt(this.data);
     }
 

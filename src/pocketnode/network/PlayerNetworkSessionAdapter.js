@@ -79,6 +79,10 @@ class PlayerNetworkSessionAdapter{
         return true; // Not used
     }
 
+    handleLevelEvent(packet){
+        return false;
+    }
+
     handleActorPickRequest(packet){
         //CheckTypes([ActorPickRequestPacket, packet]);
         return false; // TODO

@@ -46,6 +46,8 @@ const UpdateBlockPacket = require("./UpdateBlockPacket");
 const SetTitlePacket = require("./SetTitlePacket");
 const ExplodePacket = require("./ExplodePacket");
 const LevelSoundEventPacketV1 = require("./LevelSoundEventPacketV1");
+const LevelEventPacket = require("./LevelEventPacket");
+const MobEffectPacket = require("./MobEffectPacket");
 
 class PacketPool {
 
@@ -90,17 +92,23 @@ class PacketPool {
         this.registerPacket(AddPaintingPacket);
         this.registerPacket(ExplodePacket);
         this.registerPacket(LevelSoundEventPacketV1);
+        this.registerPacket(LevelEventPacket);
+        this.registerPacket(BlockEventPacket);
+        this.registerPacket(ActorEventPacket);
+        this.registerPacket(MobEffectPacket);
+        this.registerPacket(UpdateAttributesPacket);
+
         this.registerPacket(LevelSoundEventPacket);
         this.registerPacket(PlayerActionPacket);
-        this.registerPacket(ActorEventPacket);
-        this.registerPacket(UpdateAttributesPacket);
+
+
         this.registerPacket(InteractPacket);
         this.registerPacket(UpdateSoftEnumPacket);
         this.registerPacket(AnimatePacket);
         this.registerPacket(PlayerSkinPacket);
         this.registerPacket(SetScoreboardIdentityPacket);
         this.registerPacket(SetActorDataPacket);
-        this.registerPacket(BlockEventPacket);
+
         this.registerPacket(SetLocalPlayerAsInitializedPacket);
         this.registerPacket(SetDefaultGameTypePacket);
         this.registerPacket(SetPlayerGameTypePacket);

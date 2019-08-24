@@ -36,6 +36,7 @@ const LevelChunkPacket =  require("../network/mcpe/protocol/LevelChunkPacket");
 const SetPlayerGameTypePacket =  require("../network/mcpe/protocol/SetPlayerGameTypePacket");
 const AvailableCommandsPacket = require("../network/mcpe/protocol/AvailableCommandsPacket");
 const SetTitlePacket = require("../network/mcpe/protocol/SetTitlePacket");
+const ActorEventPacket = require("../network/mcpe/protocol/ActorEventPacket");
 
 /* Commands */
 const CommandData = require("../network/mcpe/protocol/types/CommandData");
@@ -732,7 +733,7 @@ class Player extends multiple(Human, CommandSender) {
 
         this.sendAttributes(true);
         this.sendCommandData();
-        this.sendSettings();
+        // this.sendSettings();
         this.sendPotionEffects(this);
 
         this._sendAllInventories();
@@ -776,7 +777,7 @@ class Player extends multiple(Human, CommandSender) {
                    if (aliases.length !== 0) {
                        if (aliases.indexOf(data.commandName) === -1) {
                            //work around a client bug which makes the original name not show when aliases are used
-                           aliases = data.commandName;
+                           aliases.push(data.commandName);
                        }
                        data.aliases = new CommandEnum();
                        data.aliases.enumName = command.getName().charAt(0).toUpperCase() + command.getName().substring(1) + "Aliases";
@@ -792,6 +793,30 @@ class Player extends multiple(Human, CommandSender) {
     }
 
     chat(message){
+        message = TextFormat.clean(message, false);//this._removeFormat);
+
+        message = message.split("\n");
+        for(let i in message){
+            let messagePart = message[i];
+            if(messagePart.trim() !== "" && messagePart.length <= 255){// && this.messageCounter-- > 0){
+                if(messagePart.startsWith("./")){
+                    messagePart = messagePart.substr(1);
+                }
+
+                if(messagePart.startsWith("/")){
+                    this.server.getCommandMap().dispatchCommand(this, messagePart.substr(1));
+                }else{
+                    let msg = "<:player> :message".replace(":player", this.getName()).replace(":message", messagePart);
+                    this.server.getLogger().info(msg);
+                    this.server.broadcastMessage(msg);
+                }
+            }
+        }
+
+        return true;
+    }
+
+    /*chat(message){
         
         // if(this.spawned === false || !this.isAlive()){
         //     console.log("Player nto spawned or alive");
@@ -817,32 +842,10 @@ class Player extends multiple(Human, CommandSender) {
                }
            }
         });
-        
-        /*message = message.split("\n");
-        for(let i in message){
-            if (message.hasOwnProperty(i)) {
-                let messagePart = message[i];
-                if (messagePart.trim() !== "" && messagePart.length <= 255) {// && this.messageCounter-- > 0){
-                    if (messagePart.startsWith("./")) {
-                        messagePart = messagePart.substr(1);
-                    }
-
-                    if (messagePart.startsWith("/")) {
-                        this.server.getCommandMap().dispatchCommand(this, messagePart.substr(1));
-                    } else {
-                        let msg = "<:player> :message".replace(":player", this.getName()).replace(":message", messagePart);
-                        this.server.getLogger().info(msg);
-                        this.server.broadcastMessage(msg);
-                    }
-                }
-            }
-        }
-
-        return true;*/
-    }
+    }*/
 
     handleAdventureSettings(packet){
-
+        //TODO
     }
 
     handleLevelSoundEvent(packet){
@@ -946,6 +949,29 @@ class Player extends multiple(Human, CommandSender) {
             default:
                 return false;
         }
+        return true;
+    }
+
+    handleEntityEvent(packet){
+        if (!this.spawned) { //|| !this.isAlive()
+            return true;
+        }
+
+        //TODO: this.doCloseInventory();
+
+        switch (packet.event) {
+            case ActorEventPacket.EATING_ITEM:
+                if (packet.data === 0){
+                    return false;
+                }
+
+                this.dataPacket(packet);
+                //TODO this.server.broadcastPacket();
+                break;
+            default:
+                return true;
+        }
+
         return true;
     }
 
