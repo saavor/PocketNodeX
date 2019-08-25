@@ -1,117 +1,117 @@
-const BinaryStream = binarystream("BinaryStream");
+const BinaryStream = require("../../binarystream/BinaryStream");
 
 const PacketReliability = require("./PacketReliability");
 
 class EncapsulatedPacket {
-    initVars(){
-        this.reliability = 0;
-        this.hasSplit = false;
+	constructor(){
+		this.initVars();
+	}
 
-        this.messageIndex = null;
+	static fromBinary(stream){
+		let packet = new EncapsulatedPacket();
 
-        this.orderIndex = null;
-        this.orderChannel = null;
+		let flags = stream.readByte();
+		packet.reliability = ((flags & 0xe0) >> 5);
+		packet.hasSplit = (flags & 0x10) > 0;
 
-        this.splitCount = null;
-        this.splitId = null;
-        this.splitIndex = null;
+		packet.length = Math.ceil(stream.readShort() / 8);
 
-        this.stream = new BinaryStream();
-        this.length = 0;
+		if(packet.isReliable()){
+			packet.MessageIndex = stream.readLTriad();
+		}
 
-        this.needACK = false;
-    }
+		if(packet.isSequenced()){
+			packet.OrderIndex = stream.readLTriad();
+			packet.OrderChannel = stream.readByte();
+		}
 
-    constructor(){
-        this.initVars();
-    }
+		if(packet.hasSplit){
+			packet.splitCount = stream.readInt();
+			packet.splitId = stream.readShort();
+			packet.splitIndex = stream.readInt();
+		}
 
-    static fromBinary(stream){
-        let packet = new EncapsulatedPacket();
+		packet.stream = new BinaryStream(stream.buffer.slice(stream.offset, stream.offset + packet.length));
+		stream.offset += packet.length;
 
-        let flags = stream.readByte();
-        packet.reliability = ((flags & 0xe0) >> 5);
-        packet.hasSplit = (flags & 0x10) > 0;
+		return packet;
+	}
 
-        packet.length = Math.ceil(stream.readShort() / 8);
+	initVars(){
+		this.reliability = 0;
+		this.hasSplit = false;
 
-        if(packet.isReliable()){
-            packet.MessageIndex = stream.readLTriad();
-        }
+		this.messageIndex = null;
 
-        if(packet.isSequenced()) {
-            packet.OrderIndex = stream.readLTriad();
-            packet.OrderChannel = stream.readByte();
-        }
+		this.orderIndex = null;
+		this.orderChannel = null;
 
-        if(packet.hasSplit){
-            packet.splitCount = stream.readInt();
-            packet.splitId = stream.readShort();
-            packet.splitIndex = stream.readInt();
-        }
+		this.splitCount = null;
+		this.splitId = null;
+		this.splitIndex = null;
 
-        packet.stream = new BinaryStream(stream.buffer.slice(stream.offset, stream.offset+packet.length));
-        stream.offset += packet.length;
+		this.stream = new BinaryStream();
+		this.length = 0;
 
-        return packet;
-    }
+		this.needACK = false;
+	}
 
-    toBinary(){
-        let stream = new BinaryStream();
+	toBinary(){
+		let stream = new BinaryStream();
 
-        stream.writeByte((this.reliability << 5) | (this.hasSplit ? 0x10 : 0));
-        stream.writeShort(this.getBuffer().length << 3);
+		stream.writeByte((this.reliability << 5) | (this.hasSplit ? 0x10 : 0));
+		stream.writeShort(this.getBuffer().length << 3);
 
-        if(this.isReliable()){
-            stream.writeLTriad(this.messageIndex);
-        }
+		if(this.isReliable()){
+			stream.writeLTriad(this.messageIndex);
+		}
 
-        if(this.isSequenced()){
-            stream.writeLTriad(this.orderIndex);
-            stream.writeByte(this.orderChannel);
-        }
+		if(this.isSequenced()){
+			stream.writeLTriad(this.orderIndex);
+			stream.writeByte(this.orderChannel);
+		}
 
-        if(this.hasSplit){
-            stream.writeInt(this.splitCount);
-            stream.writeShort(this.splitId);
-            stream.writeInt(this.splitIndex);
-        }
+		if(this.hasSplit){
+			stream.writeInt(this.splitCount);
+			stream.writeShort(this.splitId);
+			stream.writeInt(this.splitIndex);
+		}
 
-        stream.append(this.getBuffer());
+		stream.append(this.getBuffer());
 
-        return stream.buffer.toString("hex");
-    }
+		return stream.buffer.toString("hex");
+	}
 
-    isReliable(){
-        return (
-            this.reliability === PacketReliability.RELIABLE ||
-            this.reliability === PacketReliability.RELIABLE_ORDERED ||
-            this.reliability === PacketReliability.RELIABLE_SEQUENCED ||
-            this.reliability === PacketReliability.RELIABLE_WITH_ACK_RECEIPT ||
-            this.reliability === PacketReliability.RELIABLE_ORDERED_WITH_ACK_RECEIPT
-        );
-    }
+	isReliable(){
+		return (
+			this.reliability === PacketReliability.RELIABLE ||
+			this.reliability === PacketReliability.RELIABLE_ORDERED ||
+			this.reliability === PacketReliability.RELIABLE_SEQUENCED ||
+			this.reliability === PacketReliability.RELIABLE_WITH_ACK_RECEIPT ||
+			this.reliability === PacketReliability.RELIABLE_ORDERED_WITH_ACK_RECEIPT
+		);
+	}
 
-    isSequenced(){
-        return (
-            this.reliability === PacketReliability.UNRELIABLE_SEQUENCED ||
-            this.reliability === PacketReliability.RELIABLE_ORDERED ||
-            this.reliability === PacketReliability.RELIABLE_SEQUENCED ||
-            this.reliability === PacketReliability.RELIABLE_ORDERED_WITH_ACK_RECEIPT
-        );
-    }
+	isSequenced(){
+		return (
+			this.reliability === PacketReliability.UNRELIABLE_SEQUENCED ||
+			this.reliability === PacketReliability.RELIABLE_ORDERED ||
+			this.reliability === PacketReliability.RELIABLE_SEQUENCED ||
+			this.reliability === PacketReliability.RELIABLE_ORDERED_WITH_ACK_RECEIPT
+		);
+	}
 
-    getLength(){
-        return 3 + this.getBuffer().length + (this.messageIndex !== null ? 3 : 0) + (this.orderIndex !== null ? 4 : 0) + (this.hasSplit ? 10 : 0);
-    }
+	getLength(){
+		return 3 + this.getBuffer().length + (this.messageIndex !== null ? 3 : 0) + (this.orderIndex !== null ? 4 : 0) + (this.hasSplit ? 10 : 0);
+	}
 
-    getStream(){
-        return this.stream;
-    }
+	getStream(){
+		return this.stream;
+	}
 
-    getBuffer(){
-        return this.stream.buffer;
-    }
+	getBuffer(){
+		return this.stream.buffer;
+	}
 }
 
 module.exports = EncapsulatedPacket;

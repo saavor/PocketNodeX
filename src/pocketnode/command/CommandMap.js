@@ -127,7 +127,7 @@ class CommandMap {
                     if(sender instanceof CommandSender || sender instanceof Player || sender instanceof ConsoleCommandSender){
                         command.execute(sender, args);
                     } else {
-                        throw new InvalidParameterError("Sender is not instance of CommandSender/Player/ConsoleCommandSender.");
+                        throw new InvalidParameterError("Sender was not of type CommandSender/Player/ConsoleCommandSender.");
                     }
                 }else{
                     sender.sendMessage(command.getUsage());
@@ -136,7 +136,7 @@ class CommandMap {
                 if(sender instanceof CommandSender || sender instanceof Player || sender instanceof ConsoleCommandSender){
                     command.execute(sender, args);
                 } else {
-                    throw new InvalidParameterError("Sender is not instance of CommandSender/Player/ConsoleCommandSender.");
+                    throw new InvalidParameterError("Sender was not of type CommandSender/Player/ConsoleCommandSender.");
                 }
             }
         }else if(this.aliases.has(cmd)){
@@ -146,7 +146,7 @@ class CommandMap {
                     if(sender instanceof CommandSender || sender instanceof Player || sender instanceof ConsoleCommandSender){
                         command.execute({sender: sender, args: args});
                     } else {
-                        throw new InvalidParameterError("Sender is not instance of CommandSender/Player/ConsoleCommandSender.");
+                        throw new InvalidParameterError("Sender was not of type CommandSender/Player/ConsoleCommandSender.");
                     }
                 }else{
                     sender.sendMessage(command.getUsage());
@@ -155,7 +155,7 @@ class CommandMap {
                 if(sender instanceof CommandSender || sender instanceof Player || sender instanceof ConsoleCommandSender){
                     command.execute({sender: sender, args: args});
                 } else {
-                    throw new InvalidParameterError("Sender is not instance of CommandSender/Player/ConsoleCommandSender.");
+                    throw new InvalidParameterError("Sender was not of type CommandSender/Player/ConsoleCommandSender.");
                 }
             }
         }else{

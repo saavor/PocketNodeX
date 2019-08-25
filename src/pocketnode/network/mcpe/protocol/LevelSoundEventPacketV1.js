@@ -31,7 +31,7 @@ class LevelSoundEventPacketV1 extends DataPacket {
 
     _decodePayload() {
         this.sound = this.readByte();
-        this.position = this.getVector3Obj();
+        this.position = this.readVector3();
         this.extraData = this.readVarInt();
         this.entityType = this.readVarInt();
         this.isBabyMob = this.readBool();
@@ -40,7 +40,7 @@ class LevelSoundEventPacketV1 extends DataPacket {
 
     _encodePayload() {
         this.writeByte(this.sound);
-        this.writeVector3Obj(this.position);
+        this.writeVector3(this.position);
         this.writeVarInt(this.extraData);
         this.writeVarInt(this.entityType);
         this.writeBool(this.isBabyMob);

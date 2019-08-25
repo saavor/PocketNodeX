@@ -41,14 +41,14 @@ class MovePlayerPacket extends DataPacket {
 
         //console.log("MovePlayerPacket got called!");
 
-        this.entityRuntimeId = this.getEntityRuntimeId();
-        this.position = this.getVector3Obj();
+        this.entityRuntimeId = this.readEntityRuntimeId();
+        this.position = this.readVector3();
         this.pitch = this.readLFloat();
         this.yaw = this.readLFloat();
         this.headYaw = this.readLFloat();
         this.mode = this.readByte();
         this.onGround = this.readBool();
-        this.ridingEid = this.getEntityRuntimeId();
+        this.ridingEid = this.readEntityRuntimeId();
         if (this.mode === MovePlayerPacket.MODE_TELEPORT) {
             this.teleportCause = this.readLInt();
             this.teleportItem = this.readLInt();
@@ -57,7 +57,7 @@ class MovePlayerPacket extends DataPacket {
 
     _encodePayload() {
         this.writeEntityRuntimeId(this.entityRuntimeId);
-        this.writeVector3Obj(this.position);
+        this.writeVector3(this.position);
         this.writeLFloat(this.pitch);
         this.writeLFloat(this.yaw);
         this.writeLFloat(this.headYaw); //TODO

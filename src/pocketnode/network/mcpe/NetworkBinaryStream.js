@@ -4,12 +4,13 @@ const Entity = require("../../entity/Entity");
 
 const CommandOriginData = require("./protocol/types/CommandOriginData");
 
+
 class NetworkBinaryStream extends require("../../../binarystream/BinaryStream") {
     /**
      * @return {string}
      */
     readString(){
-        return this.read(this.readUnsignedVarInt().toString());
+        return this.read(this.readUnsignedVarInt()).toString();
     }
 
     /**
@@ -39,12 +40,51 @@ class NetworkBinaryStream extends require("../../../binarystream/BinaryStream") 
      * @return {NetworkBinaryStream}
      */
     writeUUID(uuid){
-       this.writeLInt(uuid.getPart(1))
-           .writeLInt(uuid.getPart(0))
-           .writeLInt(uuid.getPart(3))
-           .writeLInt(uuid.getPart(2));
+        this.writeLInt(uuid.getPart(1))
+            .writeLInt(uuid.getPart(0))
+            .writeLInt(uuid.getPart(3))
+            .writeLInt(uuid.getPart(2));
 
-       return this;
+        return this;
+    }
+
+    readEntityUniqueId(){
+        return this.readVarLong();
+    }
+
+    writeEntityUniqueId(eid){
+        this.writeVarLong(eid);
+        return this;
+    }
+
+    readEntityRuntimeId(){
+        return this.readUnsignedVarLong();
+    }
+
+    writeEntityRuntimeId(eid){
+        this.writeUnsignedVarLong(eid);
+        return this;
+    }
+
+    readVector3(){
+        return new Vector3(
+            this.readRoundedLFloat(4),
+            this.readRoundedLFloat(4),
+            this.readRoundedLFloat(4)
+        );
+    }
+
+    writeVector3(vector){
+        if(vector === null){
+            this.writeLFloat(0.0);
+            this.writeLFloat(0.0);
+            this.writeLFloat(0.0);
+            return this;
+        }
+        this.writeLFloat(vector.x);
+        this.writeLFloat(vector.y);
+        this.writeLFloat(vector.z);
+        return this;
     }
 
     readEntityMetadata(types = true){
@@ -76,13 +116,13 @@ class NetworkBinaryStream extends require("../../../binarystream/BinaryStream") 
                     break;
                 case Entity.DATA_TYPE_POS:
                     value = new Vector3();
-                    this.getSignedBlockPosition(value.x, value.y, value.z);
+                    this.readSignedBlockPosition(value.x, value.y, value.z);
                     break;
                 case Entity.DATA_TYPE_LONG:
                     value = this.readVarInt();
                     break;
                 case Entity.DATA_TYPE_VECTOR3F:
-                    value = this.getVector3Obj();
+                    value = this.readVector3();
                     break;
                 default:
                     console.log(`Invalid data type " . ${type}`);
@@ -97,46 +137,46 @@ class NetworkBinaryStream extends require("../../../binarystream/BinaryStream") 
         return data;
     }
 
-    //TODO: idk if works
-    writeEntityMetadata(metadata){
+    writeEntityMetadata(metadata) {
         this.writeUnsignedVarInt(metadata.length);
         metadata.forEach(key => {
-            key.forEach(d => {
-                this.writeUnsignedVarInt(key);
-                this.writeUnsignedVarInt(d[0]);
-                switch (d[0]) {
-                    case Entity.DATA_TYPE_BYTE:
-                        this.writeByte(d[1]);
-                        break;
-                    case Entity.DATA_TYPE_SHORT:
-                        this.writeLShort(d[1]);
-                        break;
-                    case Entity.DATA_TYPE_INT:
-                        this.writeVarInt(d[1]);
-                        break;
-                    case Entity.DATA_TYPE_FLOAT:
-                        this.writeLFloat(d[1]);
-                        break;
-                    case Entity.DATA_TYPE_STRING:
-                        this.writeString(d[1]);
-                        break;
-                    case Entity.DATA_TYPE_SLOT:
-                        //TODO: this.writeSlot(d[1]);
-                        break;
-                    case Entity.DATA_TYPE_POS:
-                        let v = d[1];
-                        if (v !== null) {
-                            //TODO: here ahead
-                        }
-                        break;
-                    case Entity.DATA_TYPE_LONG:
-                        this.writeVarInt(d[1]);
-                        break;
-                    case Entity.DATA_TYPE_VECTOR3F:
-                        this.writeVector3Obj(d[1]); //TODO: make nullable
-
+            for (let d in key) {
+                if (key.hasOwnProperty(d)) {
+                    this.writeUnsignedVarInt(key);
+                    this.writeUnsignedVarInt(d[0]);
+                    switch (d[0]) {
+                        case Entity.DATA_TYPE_BYTE:
+                            this.writeByte(d[1]);
+                            break;
+                        case Entity.DATA_TYPE_SHORT:
+                            this.writeLShort(d[1]);
+                            break;
+                        case Entity.DATA_TYPE_INT:
+                            this.writeVarInt(d[1]);
+                            break;
+                        case Entity.DATA_TYPE_FLOAT:
+                            this.writeLFloat(d[1]);
+                            break;
+                        case Entity.DATA_TYPE_STRING:
+                            this.writeString(d[1]);
+                            break;
+                        case Entity.DATA_TYPE_SLOT:
+                            //TODO: this.writeSlot(d[1]);
+                            break;
+                        case Entity.DATA_TYPE_POS:
+                            let v = d[1];
+                            if (v !== null) {
+                                //TODO: here ahead
+                            }
+                            break;
+                        case Entity.DATA_TYPE_LONG:
+                            this.writeVarInt(d[1]);
+                            break;
+                        case Entity.DATA_TYPE_VECTOR3F:
+                            this.writeVector3(d[1]); //TODO: make nullable
+                    }
                 }
-            });
+            }
         });
     }
 
@@ -149,28 +189,89 @@ class NetworkBinaryStream extends require("../../../binarystream/BinaryStream") 
         return (this.readByte() * (360/256));
     }
 
-    readEntityLink(){
+    readSlot(){
+        //TODO
+        let id = this.readVarInt();
+        if(id === 0){
+            return null; //Change to AIR.
+        }
+        console.error("readSlot used but not implemented.");
+    }
+
+    writeSlot(data){
+        console.error("writeSlot used but not implemented.");
+        return this;
         //TODO
     }
 
-    getSignedBlockPosition(x, y, z){
-        x = this.readVarInt();
-        y = this.readVarInt();
-        z = this.readVarInt();
+    readEntityLink(){
+        // let link = new EntityLink();
+        // link.fromEntityUniqueId = this.readEntityUniqueId();
+        // link.toEntityUniqueId = this.readEntityUniqueId();
+        // link.type = this.readByte();
+        // link.immediate = this.readBool();
+        // return link;
     }
 
-    getCommandOriginData() {
-        let result = new CommandOriginData();
+    writeEntityLink(link){
+        this.writeEntityUniqueId(link.fromEntityUniqueId);
+        this.writeEntityUniqueId(link.toEntityUniqueId);
+        this.writeByte(link.type);
+        this.writeBool(link.immediate);
+    }
 
-        result.type = this.readUnsignedVarInt();
-        result.uuid = this.readUUID();
-        result.requestId = this.readString();
+    readBlockPosition(){
+        return [
+            this.readVarInt(),
+            this.readUnsignedVarInt(),
+            this.readVarInt()
+        ];
+    }
 
-        if (result.type === CommandOriginData.ORIGIN_DEV_CONSOLE || result.type === CommandOriginData.ORIGIN_TEST) {
-            result.varlong1 = this.readVarLong();
+    writeBlockPosition(x, y, z){
+        this.writeVarInt(x)
+            .writeUnsignedVarInt(y)
+            .writeVarInt(z);
+        return this;
+    }
+
+    readSignedBlockPosition(){
+        return [
+            this.readVarInt(),
+            this.readVarInt(),
+            this.readVarInt()
+        ]
+    }
+
+    writeSignedBlockPosition(x, y, z){
+        this.writeVarInt(x);
+        this.writeVarInt(y);
+        this.writeVarInt(z);
+    }
+
+    readGameRules(){
+        let count = this.readUnsignedVarInt();
+        let rules = [];
+        for(let i = 0; i < count; ++i){
+            let name = this.readString();
+            let type = this.readUnsignedVarInt();
+            let value = null;
+            switch(type){
+                case 1:
+                    value = this.readBool();
+                    break;
+                case 2:
+                    value = this.readUnsignedVarInt();
+                    break;
+                case 3:
+                    value = this.readLFloat();
+                    break;
+            }
+
+            rules[name] = [type, value];
         }
 
-        return result;
+        return rules;
     }
 
     writeGameRules(rules){
@@ -192,6 +293,20 @@ class NetworkBinaryStream extends require("../../../binarystream/BinaryStream") 
         return this;
     }
 
+    getCommandOriginData() {
+        let result = new CommandOriginData();
+
+        result.type = this.readUnsignedVarInt();
+        result.uuid = this.readUUID();
+        result.requestId = this.readString();
+
+        if (result.type === CommandOriginData.ORIGIN_DEV_CONSOLE || result.type === CommandOriginData.ORIGIN_TEST) {
+            result.varlong1 = this.readVarLong();
+        }
+
+        return result;
+    }
+
     /**
      * @param data {CommandOriginData}
      */
@@ -204,8 +319,6 @@ class NetworkBinaryStream extends require("../../../binarystream/BinaryStream") 
             this.writeVarLong(data.varlong1);
         }
     }
-
-    // todo everything else
 }
 
 module.exports = NetworkBinaryStream;

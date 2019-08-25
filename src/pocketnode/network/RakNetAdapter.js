@@ -33,9 +33,6 @@ class RakNetAdapter {
     sendPacket(player, packet, needACK, immediate){
         if(this.players.hasPlayer(player)){
             let identifier = this.players.getPlayerIdentifier(player);
-            if (!packet.isEncoded){
-                packet.encode();
-            }
 
             if(packet instanceof BatchPacket){
                 let session;
@@ -80,9 +77,7 @@ class RakNetAdapter {
         let player;
         switch(purpose){
             case "openSession":
-
                 //TODO: call PlayerCreationEvent
-
                 player = new Player(this.server, data.clientId, data.ip, data.port);
                 this.players.addPlayer(data.identifier, player);
                 this.server.getPlayerList().addPlayer(data.identifier, player);

@@ -1,53 +1,53 @@
-const BinaryStream = binarystream("BinaryStream");
+const BinaryStream = require("../../binarystream/BinaryStream");
 
 class Packet {
-    static getId(){
-        return -1;
-    }
+	constructor(stream){
+		if(stream instanceof BinaryStream){
+			this.stream = stream;
+		}else{
+			this.stream = new BinaryStream();
+		}
+	}
 
-    getId(){
-        return this.constructor.getId();
-    }
+	static getId(){
+		return -1;
+	}
 
-    constructor(stream){
-        if(stream instanceof BinaryStream){
-            this.stream = stream;
-        }else{
-            this.stream = new BinaryStream();
-        }
-    }
+	getId(){
+		return this.constructor.getId();
+	}
 
-    encode(){
-        this.encodeHeader();
-        this.encodePayload();
-    }
+	encode(){
+		this.encodeHeader();
+		this.encodePayload();
+	}
 
-    encodeHeader(){
-        this.getStream().writeByte(this.getId());
-    }
+	encodeHeader(){
+		this.getStream().writeByte(this.getId());
+	}
 
-    encodePayload(){}
+	encodePayload(){
+	}
 
+	decode(){
+		this.decodeHeader();
+		this.decodePayload();
+	}
 
-    decode(){
-        this.decodeHeader();
-        this.decodePayload();
-    }
+	decodeHeader(){
+		this.getStream().readByte();
+	}
 
-    decodeHeader(){
-        this.getStream().readByte();
-    }
+	decodePayload(){
+	}
 
-    decodePayload(){}
+	getStream(){
+		return this.stream;
+	}
 
-
-    getStream(){
-        return this.stream;
-    }
-
-    getBuffer(){
-        return this.stream.buffer;
-    }
+	getBuffer(){
+		return this.stream.buffer;
+	}
 }
 
 module.exports = Packet;

@@ -379,7 +379,7 @@ class Player extends multiple(Human, CommandSender) {
     doFirstSpawn(){
         this.spawned = true;
 
-        this.sendPlayStatus(PlayStatusPacket.PLAYER_SPAWN);
+        //this.sendPlayStatus(PlayStatusPacket.PLAYER_SPAWN);
 
         // let ev = new PlayerJoinEvent(this, "test");
         // this.server.getPluginManager().callEvent(ev);
@@ -741,6 +741,8 @@ class Player extends multiple(Human, CommandSender) {
         this.server.addOnlinePlayer(this);
         this.server.onPlayerCompleteLoginSequence(this);
 
+        //this.sendPlayStatus(PlayStatusPacket.PLAYER_SPAWN);
+
         let ev = new PlayerJoinEvent(this, TextFormat.YELLOW + this.getName() + " Joined the game!");
         this.server.getEventSystem().callEvent(ev);
         if(ev.getJoinMessage().length > 0){
@@ -793,6 +795,8 @@ class Player extends multiple(Human, CommandSender) {
     }
 
     chat(message){
+        console.log(message);
+
         message = TextFormat.clean(message, false);//this._removeFormat);
 
         message = message.split("\n");
@@ -1246,6 +1250,18 @@ class Player extends multiple(Human, CommandSender) {
         }
     }
 
+    getWindow(windowId){
+        return this._windowIndex[windowId] || null;
+    }
+
+    handleMobEquipment(packet){
+        if (!this.spawned){
+            return true;
+        }
+
+        // let item
+    }
+
     /*getOffsetPosition(pos){
         
         //let result = this.getOffsetPosition(Vector3);
@@ -1281,6 +1297,7 @@ class Player extends multiple(Human, CommandSender) {
         
         if (this.spawned === false){
             this.doFirstSpawn();
+            console.log("Chunk");
         }
     }
     

@@ -40,7 +40,7 @@ class UpdateBlockPacket extends DataPacket {
     }
 
     _decodePayload() {
-        this.getBlockPosition(this.x, this.y, this.z);
+        this.readBlockPosition(this.x, this.y, this.z);
         this.blockRuntimeId = this.readUnsignedVarInt();
         this.flags = this.readUnsignedVarInt();
         this.dataLayerId = this.readUnsignedVarInt();

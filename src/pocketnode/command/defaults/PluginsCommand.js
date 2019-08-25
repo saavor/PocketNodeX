@@ -8,6 +8,7 @@ class PluginsCommand extends Command {
     }
 
     execute(sender, args){
+        super.execute(sender, args);
         let list = "";
         let plugins = sender.getServer().getPluginManager().getPlugins();
         plugins.forEach(plugin => {

@@ -1,289 +1,301 @@
-const Session = require("./Session");
+const Session = require("../server/Session");
 
-const BinaryStream = binarystream("BinaryStream");
+const BinaryStream = require("../../binarystream/BinaryStream");
 
 const OfflineMessage = require("../protocol/OfflineMessage");
-const OfflineMessageHandler = require("./OfflineMessageHandler");
-const Logger = require("./../../pocketnode/logger/Logger");
+const OfflineMessageHandler = require("../server/OfflineMessageHandler");
 
 const BITFLAG = require("../protocol/BitFlags");
 const ACK = require("../protocol/ACK");
 const NACK = require("../protocol/NACK");
 const Datagram = require("../protocol/Datagram");
 
-const PacketPool = require("./PacketPool");
+const PacketPool = require("../server/PacketPool");
 
 class SessionManager {
-    static get RAKNET_TPS(){return 100}
-    static get RAKNET_TICK_LENGTH(){return 1 / SessionManager.RAKNET_TPS}
+	constructor(server, socket){
+		this.initVars();
 
-    initVars(){
-        this._packetPool = new PacketPool();
+		this._server = server;
+		this._socket = socket;
 
-        this._server = null;
-        this._socket = null;
+		this._startTime = Date.now();
 
-        this._bytes = {
-            received: 0,
-            sent: 0
-        };
+		this._offlineMessageHandler = new OfflineMessageHandler(this);
 
-        this._sessions = new Map();
-        
-        this._offlineMessageHandler = null;
-        
-        this._shutdown = false;
+		this.start();
+	}
 
-        this._ticks = 0;
-        this._lastMeasure = -1;
+	static get RAKNET_TPS(){
+		return 100
+	}
 
-        this._blocked = new Map();
+	static get RAKNET_TICK_LENGTH(){
+		return 1 / SessionManager.RAKNET_TPS
+	}
 
-        this.portChecking = false;
+	static hashAddress(ip, port){
+		return `${ip}:${port}`;
+	}
 
-        this.startTime = -1;
+	initVars(){
+		this._packetPool = new PacketPool();
 
-        this._outgoingMessages = [];
-    }
+		this._server = null;
+		this._socket = null;
 
-    constructor(server, socket) {
-        this.initVars();
+		this._bytes = {
+			received: 0,
+			sent: 0
+		};
 
-        this._server = server;
-        this._socket = socket;
+		this._sessions = new Map();
 
-        this._startTime = Date.now();
+		this._offlineMessageHandler = null;
 
-        this._offlineMessageHandler = new OfflineMessageHandler(this);
+		this._shutdown = false;
 
-        this.start();
-    }
+		this._ticks = 0;
+		this._lastMeasure = -1;
 
-    start(){
-        this._socket.getSocket().on("message", (msg, rinfo) => {
-            this._bytes.received += msg.length;
+		this._blocked = new Map();
 
-            if(this._blocked.has(rinfo.address)){
-                return;
-            }
+		this.portChecking = false;
 
-            if(msg.length < 1){
-                return;
-            }
+		this.startTime = -1;
 
-            let stream = new BinaryStream(msg);
+		this._outgoingMessages = [];
+	}
 
-            let packetId = stream.getBuffer()[0];
+	start(){
+		this._socket.getSocket().on("message", (msg, rinfo) => {
+			this._bytes.received += msg.length;
 
-            //let logger = new Logger();
-            //console.log("Received", packetId, "with length of", msg.length, "from", rinfo.address + ":" + rinfo.port);
+			if(this._blocked.has(rinfo.address)){
+				return;
+			}
 
-            this.handle(packetId, stream, rinfo.address, rinfo.port);
-        });
+			if(msg.length < 1){
+				return;
+			}
 
-        this.tickProcessor();
-    }
+			let stream = new BinaryStream(msg);
 
-    getTimeSinceStart(){
-        return Date.now() - this._startTime;
-    }
+			let packetId = stream.getBuffer()[0];
 
-    getPort(){
-        return this._server.getPort();
-    }
+			//this.logger.debug("Received", packetId, "with length of", msg.length, "from", rinfo.address + ":" + rinfo.port);
 
-    getLogger(){
-        return this._server.getLogger();
-    }
+			this.handle(packetId, stream, rinfo.address, rinfo.port);
+		});
 
-    shutdown(){
-        this._shutdown = true;
-    }
+		this.tickProcessor();
+	}
 
-    tickProcessor(){
-        this._lastMeasure = Date.now();
+	getTimeSinceStart(){
+		return Date.now() - this._startTime;
+	}
 
-        let int = setInterval(() => {
-            if(!this._shutdown){
-                this.tick();
-            }else{
-                clearInterval(int);
-            }
-        }, SessionManager.RAKNET_TICK_LENGTH * 1000);
-    }
+	getPort(){
+		return this._server.getPort();
+	}
 
-    tick(){
-        let time = Date.now();
+	getLogger(){
+		return this._server.getLogger();
+	}
 
-        for(let [,session] of this._sessions){
-            session.update(time);
-        }
+	shutdown(){
+		this._shutdown = true;
+	}
 
-        if((this._ticks % SessionManager.RAKNET_TPS) === 0){
-            let diff = Math.max(0.005, time - this._lastMeasure);
-            let bandwidth = {
-                up: this._bytes.sent / diff,
-                down: this._bytes.received / diff
-            };
+	tickProcessor(){
+		this._lastMeasure = Date.now();
 
-            this._lastMeasure = time;
-            this._bytes.sent = 0;
-            this._bytes.received = 0;
+		let int = setInterval(() => {
+			if(!this._shutdown){
+				this.tick();
+			}else{
+				clearInterval(int);
+			}
+		}, SessionManager.RAKNET_TICK_LENGTH * 1000);
+	}
 
-            if(this._blocked.size > 0){
-                let now = Date.now();
-                for(let [address, timeout] of this._blocked){
-                    if(timeout <= now){
-                        this._blocked.delete(address);
-                    }else{
-                        break;
-                    }
-                }
-            }
-        }
+	tick(){
+		let time = Date.now();
 
-        ++this._ticks;
-    }
+		for(let [, session] of this._sessions){
+			session.update(time);
+		}
 
-    getId(){
-        return this._server.getId();
-    }
+		if((this._ticks % SessionManager.RAKNET_TPS) === 0){
+			let diff = Math.max(0.005, time - this._lastMeasure);
+			let bandwidth = {
+				up: this._bytes.sent / diff,
+				down: this._bytes.received / diff
+			};
 
-    getServerName(){
-        return this._server.getServerName();
-    }
+			this._lastMeasure = time;
+			this._bytes.sent = 0;
+			this._bytes.received = 0;
 
-    sendPacket(packet, address, port){
+			if(this._blocked.size > 0){
+				let now = Date.now();
+				for(let [address, timeout] of this._blocked){
+					if(timeout <= now){
+						this._blocked.delete(address);
+					}else{
+						break;
+					}
+				}
+			}
+		}
 
-        packet.encode();
-        if(address instanceof Session) this._bytes.sent += this._socket.sendBuffer(packet.getStream().getBuffer(), address.getAddress(), address.getPort());
-        else this._bytes.sent += this._socket.sendBuffer(packet.getStream().getBuffer(), address, port);
+		++this._ticks;
+	}
 
-        //this.getLogger().debug("Sent "+protocol.constructor.name+"("+protocol.stream.buffer.toString("hex")+") to "+address+":"+port);
-    }
+	getId(){
+		return this._server.getId();
+	}
 
-    createSession(address, port, clientId, mtuSize){
-        let session = new Session(this, address, port, clientId, mtuSize);
-        this._sessions.set(SessionManager.hashAddress(address, port), session);
-        this.getLogger().debug(`Created session for ${session.toString()} with MTU size ${mtuSize}`);
-        return session;
-    }
+	getServerName(){
+		return this._server.getServerName();
+	}
 
-    sessionExists(address, port){
-        if(address instanceof Session) return this._sessions.has(SessionManager.hashAddress(address.getAddress(), address.getPort()));
-        else return this._sessions.has(SessionManager.hashAddress(address, port));
-    }
+	sendPacket(packet, address, port){
 
-    removeSession(session, reason = "unknown"){
-        let id = SessionManager.hashAddress(session.getAddress(), session.getPort());
-        if(this._sessions.has(id)){
-            this._sessions.get(id).close();
-            this.removeSessionInternal(this);
-            this.sendOutgoingMessage({
-                purpose: "closeSession",
-                data: {
-                    identifier: id,
-                    reason: reason
-                }
-            });
-        }
-    }
+		packet.encode();
+		if(address instanceof Session){
+			this._bytes.sent += this._socket.sendBuffer(packet.getStream().getBuffer(), address.getAddress(), address.getPort());
+		}else{
+			this._bytes.sent += this._socket.sendBuffer(packet.getStream().getBuffer(), address, port);
+		}
 
-    removeSessionInternal(session){
-        this._sessions.delete(session.toString());
-    }
+		//this.getLogger().debug("Sent "+packet.constructor.name+"("+packet.stream.buffer.toString("hex")+") to "+address+":"+port);
+	}
 
-    getSession(address, port){
-        if(this.sessionExists(address, port)) return this._sessions.get(SessionManager.hashAddress(address, port));
-        else return null;
-    }
+	createSession(address, port, clientId, mtuSize){
+		let session = new Session(this, address, port, clientId, mtuSize);
+		this._sessions.set(SessionManager.hashAddress(address, port), session);
+		this.getLogger().debug(`Created session for ${session.toString()} with MTU size ${mtuSize}`);
+		return session;
+	}
 
-    getSessionByIdentifier(identifier){
-        return this._sessions.get(identifier);
-    }
+	sessionExists(address, port){
+		if(address instanceof Session){
+			return this._sessions.has(SessionManager.hashAddress(address.getAddress(), address.getPort()));
+		}else{
+			return this._sessions.has(SessionManager.hashAddress(address, port));
+		}
+	}
 
-    getSessions(){
-        return Array.from(this._sessions.values());
-    }
+	removeSession(session, reason = "unknown"){
+		let id = SessionManager.hashAddress(session.getAddress(), session.getPort());
+		if(this._sessions.has(id)){
+			this._sessions.get(id).close();
+			this.removeSessionInternal(this);
+			this.sendOutgoingMessage({
+				purpose: "closeSession",
+				data: {
+					identifier: id,
+					reason: reason
+				}
+			});
+		}
+	}
 
-    openSession(session){
-        this.sendOutgoingMessage({
-            purpose: "openSession",
-            data: {
-                identifier: session.toString(),
-                ip: session.getAddress(),
-                port: session.getPort(),
-                clientId: session.clientId
-            }
-        });
-    }
+	removeSessionInternal(session){
+		this._sessions.delete(session.toString());
+	}
 
-    handle(packetId, stream, ip, port){
-        let session = this.getSession(ip, port);
+	getSession(address, port){
+		if(this.sessionExists(address, port)){
+			return this._sessions.get(SessionManager.hashAddress(address, port));
+		}else{
+			return null;
+		}
+	}
 
-        //console.log("got packet!", stream);
+	getSessionByIdentifier(identifier){
+		return this._sessions.get(identifier);
+	}
 
-        if(session === null){
-            let packet = this._packetPool.getPacket(packetId);
-            if(packet !== null && (packet = new packet(stream))){
-                if(packet instanceof OfflineMessage){
-                    packet.decode();
-                    if(packet.validMagic()){
-                        if(!this._offlineMessageHandler.handle(packet, ip, port)){
-                            this.getLogger().debug("Received unhandled offline message " + packet.constructor.name + " from " + session);
-                        }
-                    }else{
-                        this.getLogger().debug("Received invalid message from " + session + ":", "0x" + packet.getBuffer().toString("hex"));
-                    }
-                }
-            }
-        }else{
-            if((packetId & BITFLAG.VALID) === 0){
-                this.getLogger().debug("Ignored non-connected message for " + session + " due to session already opened");
-            }else{
-                if(packetId & BITFLAG.ACK){
-                    session.handlePacket(new ACK(stream));
-                }else if(packetId & BITFLAG.NAK){
-                    session.handlePacket(new NACK(stream));
-                }else{
-                    session.handlePacket(new Datagram(stream));
-                }
-            }
-        }
-    }
+	getSessions(){
+		return Array.from(this._sessions.values());
+	}
 
-    blockAddress(address, timeout = 300){
-        let final = Date.now() + timeout;
-        if(!this._blocked.has(address) || timeout !== -1){
-            if(timeout === -1){
-                let final = Number.MAX_SAFE_INTEGER;
-            }else{
-                this.getLogger().notice(`Blocked ${address} for ${timeout} seconds`);
-            }
-            this._blocked.set(address, final);
-        }else if(this._blocked.get(address) < final){
-            this._blocked.set(address, final);
-        }
-    }
+	openSession(session){
+		this.sendOutgoingMessage({
+			purpose: "openSession",
+			data: {
+				identifier: session.toString(),
+				ip: session.getAddress(),
+				port: session.getPort(),
+				clientId: session.clientId
+			}
+		});
+	}
 
-    unblockAddress(address){
-        this._blocked.delete(address);
-        this.getLogger().debug(`Unblocked ${address}`);
-    }
+	handle(packetId, stream, ip, port){
+		let session = this.getSession(ip, port);
 
-    sendOutgoingMessage(message){
-        this._outgoingMessages.push(message);
-    }
+		//console.log("got packet!", stream);
 
-    readOutgoingMessages(){
-        let tmp = this._outgoingMessages;
-        this._outgoingMessages = [];
-        return tmp;
-    }
+		if(session === null){
+			let packet = this._packetPool.getPacket(packetId);
+			if(packet !== null && (packet = new packet(stream))){
+				if(packet instanceof OfflineMessage){
+					packet.decode();
+					if(packet.validMagic()){
+						if(!this._offlineMessageHandler.handle(packet, ip, port)){
+							this.getLogger().debug("Received unhandled offline message " + packet.constructor.name + " from " + session);
+						}
+					}else{
+						this.getLogger().debug("Received invalid message from " + session + ":", "0x" + packet.getBuffer().toString("hex"));
+					}
+				}
+			}
+		}else{
+			if((packetId & BITFLAG.VALID) === 0){
+				this.getLogger().debug("Ignored non-connected message for " + session + " due to session already opened");
+			}else{
+				if(packetId & BITFLAG.ACK){
+					session.handlePacket(new ACK(stream));
+				}else if(packetId & BITFLAG.NAK){
+					session.handlePacket(new NACK(stream));
+				}else{
+					session.handlePacket(new Datagram(stream));
+				}
+			}
+		}
+	}
 
-    static hashAddress(ip, port){
-        return `${ip}:${port}`;
-    }
+	blockAddress(address, timeout = 300){
+		let final = Date.now() + timeout;
+		if(!this._blocked.has(address) || timeout !== -1){
+			if(timeout === -1){
+				let final = Number.MAX_SAFE_INTEGER;
+			}else{
+				this.getLogger().notice(`Blocked ${address} for ${timeout} seconds`);
+			}
+			this._blocked.set(address, final);
+		}else if(this._blocked.get(address) < final){
+			this._blocked.set(address, final);
+		}
+	}
+
+	unblockAddress(address){
+		this._blocked.delete(address);
+		this.getLogger().debug(`Unblocked ${address}`);
+	}
+
+	sendOutgoingMessage(message){
+		this._outgoingMessages.push(message);
+	}
+
+	readOutgoingMessages(){
+		let tmp = this._outgoingMessages;
+		this._outgoingMessages = [];
+		return tmp;
+	}
 }
 
-module.exports =  SessionManager;
+module.exports = SessionManager;

@@ -48,6 +48,10 @@ const ExplodePacket = require("./ExplodePacket");
 const LevelSoundEventPacketV1 = require("./LevelSoundEventPacketV1");
 const LevelEventPacket = require("./LevelEventPacket");
 const MobEffectPacket = require("./MobEffectPacket");
+const InventoryTransactionPacket = require("./InventoryTransactionPacket");
+const MobEquipmentPacket = require("./MobEquipmentPacket");
+const MobArmorEquipmentPacket = require("./MobArmorEquipmentPacket");
+const AvailableActorIdentifiersPacket = require("./AvailableActorIdentifiersPacket");
 
 class PacketPool {
 
@@ -97,12 +101,17 @@ class PacketPool {
         this.registerPacket(ActorEventPacket);
         this.registerPacket(MobEffectPacket);
         this.registerPacket(UpdateAttributesPacket);
+        this.registerPacket(InventoryTransactionPacket);
+        this.registerPacket(MobEquipmentPacket);
+        this.registerPacket(MobArmorEquipmentPacket);
+        this.registerPacket(InteractPacket);
+
 
         this.registerPacket(LevelSoundEventPacket);
         this.registerPacket(PlayerActionPacket);
 
 
-        this.registerPacket(InteractPacket);
+
         this.registerPacket(UpdateSoftEnumPacket);
         this.registerPacket(AnimatePacket);
         this.registerPacket(PlayerSkinPacket);
@@ -122,6 +131,7 @@ class PacketPool {
         this.registerPacket(CommandRequestPacket);
         this.registerPacket(AvailableCommandsPacket);
         this.registerPacket(AutomationClientConnectPacket);
+        this.registerPacket(AvailableActorIdentifiersPacket);
         this.registerPacket(SetTitlePacket);
     }
 }

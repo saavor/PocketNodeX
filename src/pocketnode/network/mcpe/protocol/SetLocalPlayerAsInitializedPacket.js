@@ -16,7 +16,7 @@ class SetLocalPlayerAsInitializedPacket extends DataPacket {
     }
 
     _decodePayload() {
-        this.entityRuntimeId = this.getEntityRuntimeId();
+        this.entityRuntimeId = this.readEntityRuntimeId();
     }
 
     _encodePayload() {

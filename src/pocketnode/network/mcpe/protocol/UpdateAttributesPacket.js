@@ -12,13 +12,13 @@ class UpdateAttributesPacket extends DataPacket {
     }
 
     _decodePayload() {
-        this.entityRuntimeId = this.getEntityRuntimeId();
-        this.entries = this.readAttributeList();
+        this.entityRuntimeId = this.readEntityRuntimeId();
+        // this.entries = this.readAttributeList();
     }
 
     _encodePayload() {
         this.writeEntityRuntimeId(this.entityRuntimeId);
-        this.writeAttributeList(this.entries);
+        // this.writeAttributeList(this.entries);
     }
 
     handle(session) {

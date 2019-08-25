@@ -11,6 +11,8 @@ const ResourcePack = require("../resourcepacks/ResourcePack");
 
 const Async = require("../utils/Async");
 
+const PlayStatusPacket = require("./mcpe/protocol/PlayStatusPacket");
+
 class PlayerNetworkSessionAdapter{
 
     constructor(player){
@@ -156,7 +158,8 @@ class PlayerNetworkSessionAdapter{
         }.bind(this))
             .then(function(){
                 console.log("done sending chunks");
-                //this.player.sendPlayStatus(PlayStatusPacket.PLAYER_SPAWN);
+                //TODO
+                this.player.sendPlayStatus(PlayStatusPacket.PLAYER_SPAWN);
             }.bind(this));
         return true;
     }
@@ -261,6 +264,10 @@ class PlayerNetworkSessionAdapter{
         return false;
     }
 
+    handleMobEquipment(packet){
+        this.player.handleMobEquipment(packet);
+    }
+
     handleAdventureSettings(packet){
         this.player.handleAdventureSettings(packet);
     }
@@ -271,6 +278,10 @@ class PlayerNetworkSessionAdapter{
 
     handleAutomationClientConnect(packet){
         return false;
+    }
+
+    handleMobArmorEquipment(packet){
+        return true;
     }
 
     handleAvailableCommands(packet){
@@ -289,11 +300,14 @@ class PlayerNetworkSessionAdapter{
         return false;
     }
 
-    handleCommandRequest(packet) {
-        this.player.chat(packet.command);
+    handleCommandRequest(packet){
+        return this.player.chat(packet.command);
     }
 
     handleText(packet){
+
+        console.log(packet);
+
         if(packet.type === TextPacket.TYPE_CHAT){
             return this.player.chat(packet.message);
         }

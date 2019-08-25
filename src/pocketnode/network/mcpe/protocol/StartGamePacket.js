@@ -2,7 +2,6 @@ const DataPacket = require("./DataPacket");
 const ProtocolInfo = require("../Info");
 const RuntimeBlockMapping = require("./types/RuntimeBlockMapping");
 const NetworkBinaryStream = require("../NetworkBinaryStream");
-const BinaryStream = require("../../../../binarystream/BinaryStream");
 
 class StartGamePacket extends DataPacket {
     static getId(){
@@ -19,7 +18,7 @@ class StartGamePacket extends DataPacket {
         });
         console.log("item palette sent!");
 
-        let stream = new BinaryStream();
+        let stream = new NetworkBinaryStream();
 
         return stream.getBuffer();
     }
@@ -35,7 +34,7 @@ class StartGamePacket extends DataPacket {
         });
         console.log("block palette sent!");
 
-        let stream = new BinaryStream();
+        let stream = new NetworkBinaryStream();
 
         return stream.getBuffer();
     }
@@ -118,11 +117,11 @@ class StartGamePacket extends DataPacket {
     }
 
     _decodePayload(){
-        this.entityUniqueId = this.getEntityUniqueId();
-        this.entityRuntimeId = this.getEntityRuntimeId();
+        this.entityUniqueId = this.readEntityUniqueId();
+        this.entityRuntimeId = this.readEntityRuntimeId();
         this.playerGamemode = this.readVarInt();
 
-        this.playerPosition = this.getVector3Obj();
+        this.playerPosition = this.readVector3();
 
         this.pitch = this.readLFloat();
         this.yaw = this.readLFloat();
@@ -147,7 +146,7 @@ class StartGamePacket extends DataPacket {
         this.platformBroadcastMode = this.readVarInt();
         this.commandsEnabled = this.readBool();
         this.isTexturePacksRequired = this.readBool();
-        this.gameRules = this.getGameRules();
+        this.gameRules = this.readGameRules();
         this.hasBonusChestEnabled = this.readBool();
         this.hasStartWithMapEnabled = this.readBool();
         this.defaultPlayerPermission = this.readVarInt();
@@ -191,7 +190,7 @@ class StartGamePacket extends DataPacket {
         this.writeEntityRuntimeId(this.entityRuntimeId);
         this.writeVarInt(this.playerGamemode);
 
-        this.writeVector3Obj(this.playerPosition);
+        this.writeVector3(this.playerPosition);
 
         this.writeLFloat(this.pitch);
         this.writeLFloat(this.yaw);
@@ -236,8 +235,8 @@ class StartGamePacket extends DataPacket {
         this.writeVarInt(this.enchantmentSeed);
 
         //TODO: see why it crashes server
-        //this.append(this.BLOCK_DATA_PALETTE());
-        //this.append(this.ITEM_DATA_PALETTE());
+        // this.append(this.BLOCK_DATA_PALETTE());
+        // this.append(this.ITEM_DATA_PALETTE());
 
         this.writeString(this.multiplayerCorrelationId);
     }

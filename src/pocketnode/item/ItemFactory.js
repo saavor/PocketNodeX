@@ -33,7 +33,7 @@ class ItemFactory{
     static registerItem(item, override = false){
         CheckTypes([Item,  item]);
         let id = item.getId();
-        if (!override && self.isRegistered(id)) {
+        if (!override && ItemFactory.isRegistered(id)) {
             console.log("Trying to overwrite an already registered item");
         }
 

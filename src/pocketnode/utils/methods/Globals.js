@@ -20,7 +20,7 @@ global.raknet = function(path){
     return require(Path.normalize(__dirname + "/../../../raknet/" + path));
 };
 
-global.clone = function(src) {
+/*global.clone = function(src) {
     function mixin(dest, source, copyFunc) {
         let name, s, i, empty = {};
         for(name in source){
@@ -70,6 +70,10 @@ global.clone = function(src) {
     }
     return mixin(r, src, clone);
 
+};*/
+
+global.clone = function(src){
+    return Object.assign({}, src);
 };
 
 // By Jackx

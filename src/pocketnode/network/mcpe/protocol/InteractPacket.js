@@ -27,7 +27,7 @@ class InteractPacket extends DataPacket {
 
     _decodePayload() {
         this.action = this.readByte();
-        this.target = this.getEntityRuntimeId();
+        this.target = this.readEntityRuntimeId();
 
         if (this.action === InteractPacket.ACTION_MOUSEOVER){
             //TODO: should this be a vector3?

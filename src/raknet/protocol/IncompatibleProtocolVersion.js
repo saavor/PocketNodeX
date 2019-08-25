@@ -2,27 +2,27 @@ const OfflineMessage = require("./OfflineMessage");
 const MessageIdentifiers = require("./MessageIdentifiers");
 
 class IncompatibleProtocolVersion extends OfflineMessage {
-    static getId(){
-        return MessageIdentifiers.ID_INCOMPATIBLE_PROTOCOL_VERSION;
-    }
+	constructor(){
+		super();
+		this.initVars();
+	}
 
-    initVars(){
-        this.protocolVersion = -1;
-        this.serverId = -1;
-    }
+	static getId(){
+		return MessageIdentifiers.ID_INCOMPATIBLE_PROTOCOL_VERSION;
+	}
 
-    constructor(){
-        super();
-        this.initVars();
-    }
+	initVars(){
+		this.protocolVersion = -1;
+		this.serverId = -1;
+	}
 
-    encodePayload(){
-        this.getStream().writeByte(this.protocolVersion);
+	encodePayload(){
+		this.getStream().writeByte(this.protocolVersion);
 
-        this.writeMagic();
+		this.writeMagic();
 
-        this.getStream().writeLong(this.serverId);
-    }
+		this.getStream().writeLong(this.serverId);
+	}
 }
 
 module.exports = IncompatibleProtocolVersion;
