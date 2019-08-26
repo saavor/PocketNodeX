@@ -52,6 +52,9 @@ const InventoryTransactionPacket = require("./InventoryTransactionPacket");
 const MobEquipmentPacket = require("./MobEquipmentPacket");
 const MobArmorEquipmentPacket = require("./MobArmorEquipmentPacket");
 const AvailableActorIdentifiersPacket = require("./AvailableActorIdentifiersPacket");
+const ActorFallPacket = require("./ActorFallPacket");
+const PlayerInputPacket = require("./PlayerInputPacket");
+const LevelChunkPacket = require("./LevelChunkPacket");
 
 class PacketPool {
 
@@ -109,6 +112,9 @@ class PacketPool {
 
         this.registerPacket(LevelSoundEventPacket);
         this.registerPacket(PlayerActionPacket);
+        this.registerPacket(ActorFallPacket);
+        this.registerPacket(PlayerInputPacket);
+        this.registerPacket(LevelChunkPacket);
 
 
 

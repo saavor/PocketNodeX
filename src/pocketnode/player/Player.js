@@ -795,7 +795,7 @@ class Player extends multiple(Human, CommandSender) {
     }
 
     chat(message){
-        console.log(message);
+        //console.log(message);
 
         message = TextFormat.clean(message, false);//this._removeFormat);
 
@@ -819,34 +819,6 @@ class Player extends multiple(Human, CommandSender) {
 
         return true;
     }
-
-    /*chat(message){
-        
-        // if(this.spawned === false || !this.isAlive()){
-        //     console.log("Player nto spawned or alive");
-        //     return false;
-        // }
-
-        //this.resetCraftingGridType();
-
-        message = TextFormat.clean(message, false);//this._removeFormat);
-        
-        message.split("\n").forEach(messagePart => {
-           if (messagePart.trim() !== "" && messagePart.length <= 255 && this.messageCounter-- > 0 ){
-               if (messagePart.startsWith("./")) {
-                   messagePart = messagePart.substr(1);
-               }
-
-               if (messagePart.startsWith("/")) {
-                   this.server.getCommandMap().dispatchCommand(this, messagePart.substr(1));
-               }else {
-                   let msg = "<:player> :message".replace(":player", this.getName()).replace(":message", messagePart);
-                   this.server.getLogger().info(msg);
-                   this.server.broadcastMessage(msg);
-               }
-           }
-        });
-    }*/
 
     handleAdventureSettings(packet){
         //TODO
@@ -1165,10 +1137,11 @@ class Player extends multiple(Human, CommandSender) {
                     break;
                 }
 
-                let target = this.server.getDefaultLevel().getBlock(pos);
+                //TODO
+                // let target = this.server.getDefaultLevel().getBlock(pos);
 
-                let ev = new PlayerInteractEvent(this, null, target, packet.face, PlayerInteractEvent.LEFT_CLICK_BLOCK);
-                this.server.getPluginManager().callEvent(ev);
+                // let ev = new PlayerInteractEvent(this, null, target, packet.face, PlayerInteractEvent.LEFT_CLICK_BLOCK);
+                // this.server.getPluginManager().callEvent(ev);
 
             case PlayerActionPacket.ACTION_ABORT_BREAK:
             case PlayerActionPacket.ACTION_STOP_BREAK:

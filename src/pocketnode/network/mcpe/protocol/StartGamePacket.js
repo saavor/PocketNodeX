@@ -28,9 +28,11 @@ class StartGamePacket extends DataPacket {
 
         this.writeUnsignedVarInt(Object.values(block_ids).length);
         Object.values(block_ids).forEach(entry => {
-            this.writeString(entry.name);
-            this.writeLShort(entry.data);
-            this.writeLShort(entry.id);
+            if (entry.name !== null && entry.data !== null && entry.id !== null) {
+                this.writeString(entry.name);
+                this.writeLShort(entry.data);
+                this.writeLShort(entry.id);
+            }
         });
         console.log("block palette sent!");
 
@@ -132,7 +134,7 @@ class StartGamePacket extends DataPacket {
         this.generator = this.readVarInt();
         this.levelGamemode = this.readVarInt();
         this.difficulty = this.readVarInt();
-        [this.spawnX, this.spawnY, this.spawnZ] = this.getBlockPosition();
+        [this.spawnX, this.spawnY, this.spawnZ] = this.readBlockPosition();
         this.hasAchievementsDisabled = this.readBool();
         this.time = this.readVarInt();
         this.eduMode = this.readBool();

@@ -85,6 +85,10 @@ class PlayerNetworkSessionAdapter{
         return false;
     }
 
+    handlePlayerInput(packet){
+        return false; //TODO
+    }
+
     handleActorPickRequest(packet){
         //CheckTypes([ActorPickRequestPacket, packet]);
         return false; // TODO
@@ -298,6 +302,11 @@ class PlayerNetworkSessionAdapter{
 
     handleMobEffect(packet){
         return false;
+    }
+
+    //TODO
+    handleBlockPickRequest(packet){
+        this.player.handleBlockPickRequest(packet);
     }
 
     handleCommandRequest(packet){

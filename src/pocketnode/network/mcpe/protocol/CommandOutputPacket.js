@@ -1,6 +1,5 @@
 const DataPacket = require("./DataPacket");
 const ProtocolInfo = require("../Info");
-
 const CommandOutputMessage = require("./types/CommandOutputMessage");
 
 class CommandOutputPacket extends DataPacket {
@@ -11,14 +10,15 @@ class CommandOutputPacket extends DataPacket {
 
     initVars() {
         this.originData = null;
-
         this.outputType = -1;
-
         this.successCount = -1;
-
         this.messages = [];
-
         this.unknownString = "";
+    }
+
+    constructor(){
+        super();
+        this.initVars();
     }
 
     _decodePayload() {
@@ -35,19 +35,13 @@ class CommandOutputPacket extends DataPacket {
         }
     }
 
-    /**
-     * @return {CommandOutputMessage}
-     */
     getCommandMessage() {
         let message = new CommandOutputMessage();
-
         message.isInternal = this.readBool();
         message.messageId = this.readString();
-
         for (let i = 0, size = this.readUnsignedVarInt(); i < size; ++i) {
             message.parameters.push(this.readString());
         }
-
         return message;
     }
 
@@ -66,9 +60,6 @@ class CommandOutputPacket extends DataPacket {
         }
     }
 
-    /**
-     * @param message {CommandOutputMessage}
-     */
     putCommandMessage(message) {
         this.writeBool(message.isInternal);
         this.writeString(message.messageId);

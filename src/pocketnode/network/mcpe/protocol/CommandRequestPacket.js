@@ -1,8 +1,6 @@
 const DataPacket = require("./DataPacket");
 const ProtocolInfo = require("../Info");
 
-const CommandOriginData = require("./types/CommandOriginData");
-
 class CommandRequestPacket extends DataPacket {
 
     getId() {
@@ -10,11 +8,8 @@ class CommandRequestPacket extends DataPacket {
     }
 
     initVars() {
-        /** @type {string} */
         this.command = "";
-        /** @type {CommandOriginData} */
         this.originData = null;
-        /** @type {boolean} */
         this.isInternal = false;
     }
 

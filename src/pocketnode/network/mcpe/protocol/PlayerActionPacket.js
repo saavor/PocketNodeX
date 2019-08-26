@@ -48,9 +48,9 @@ class PlayerActionPacket extends DataPacket {
     }
 
     _decodePayload() {
-        this.entityRuntimeId = this.getEntityRuntimeId();
+        this.entityRuntimeId = this.readEntityRuntimeId();
         this.action = this.readVarInt();
-        this.getBlockPosition(this.x, this.y, this.z);
+        this.readBlockPosition(this.x, this.y, this.z);
         this.face = this.readVarInt();
     }
 

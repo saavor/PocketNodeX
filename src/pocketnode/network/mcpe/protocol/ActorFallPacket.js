@@ -8,11 +8,8 @@ class ActorFallPacket extends DataPacket {
     }
 
     initVars(){
-        /** @type {number} */
         this.entityRuntimeId = -1;
-        /** @type {number} */
         this.fallDistance = -1;
-        /** @type {boolean} */
         this.isInVoid = false;
     }
 
@@ -22,7 +19,7 @@ class ActorFallPacket extends DataPacket {
     }
 
     _decodePayload() {
-        this.entityRuntimeId = this.getEntityRuntimeId();
+        this.entityRuntimeId = this.readEntityRuntimeId();
         this.fallDistance = this.readLFloat();
         this.isInVoid = this.readBool();
     }

@@ -20,7 +20,7 @@ class BlockEventPacket extends DataPacket {
     }
 
     _decodePayload() {
-        this.getBlockPosition(this.x, this.y, this.z);
+        this.readBlockPosition(this.x, this.y, this.z);
         this.eventType = this.readVarInt();
         this.eventData = this.readVarInt();
     }

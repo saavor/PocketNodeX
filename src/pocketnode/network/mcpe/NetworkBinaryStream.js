@@ -235,7 +235,7 @@ class NetworkBinaryStream extends require("../../../binarystream/BinaryStream") 
         return this;
     }
 
-    readSignedBlockPosition(){
+    readSignedBlockPosition(x, y, z){
         return [
             this.readVarInt(),
             this.readVarInt(),

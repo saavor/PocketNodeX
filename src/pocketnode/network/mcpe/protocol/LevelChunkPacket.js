@@ -4,7 +4,7 @@ const ProtocolInfo = require("../Info");
 class LevelChunkPacket extends DataPacket {
 
     static getId(){
-        return ProtocolInfo.FULL_CHUNK_DATA_PACKET;
+        return ProtocolInfo.LEVEL_CHUNK_PACKET;
     }
 
     initVars(){
@@ -26,7 +26,6 @@ class LevelChunkPacket extends DataPacket {
         this.chunkZ = this.readVarInt();
         this.subChunkCount = this.readUnsignedVarInt();
         this.cacheEnabled = this.readBool();
-        let count;
         if (this.cacheEnabled){
             for (let i = 0, count = this.readUnsignedVarInt(); i < count; ++i){
                 this.usedBlobHashes.push(this.readLLong());
