@@ -6,7 +6,10 @@ PocketNodeX is a server software for Minecraft: Bedrock written in node.js, basi
 ## Telegram
 [Click Here](https://t.me/PocketNodeX)
 
-## We need contributors
+## Some pictures
+![Chunks](https://user-images.githubusercontent.com/34418030/63705464-7eec2700-c82d-11e9-8a3e-19fe78459816.png)
+![Chat](https://user-images.githubusercontent.com/34418030/63705467-80b5ea80-c82d-11e9-921e-0e0eb4bb5822.png)
+
 
 ## Missing features
 - [ ] New chunk format (NEED CONTRIBUTION).
