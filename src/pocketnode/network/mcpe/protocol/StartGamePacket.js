@@ -63,7 +63,7 @@ class StartGamePacket extends DataPacket {
         this.spawnZ = 0;
         this.hasAchievementsDisabled = true;
         this.time = 0;
-        this.eduMode = false;
+        this.eduEditionOffer = false;
         this.hasEduFeatureEnabled = false;
 
         this.rainLevel = 0.0;
@@ -100,6 +100,7 @@ class StartGamePacket extends DataPacket {
 
         this.premiumWorldTemplateId = "";
         this.isTrial = false;
+        this.isMovementServerAuthoritative = false;
         this.currentTick = 0;
         this.enchantmentSeed = 0;
         this.multiplayerCorrelationId = "";
@@ -109,7 +110,8 @@ class StartGamePacket extends DataPacket {
 
         this._blockTableCache = null;
         this._itemTableCache = null;
-        //this.onlySpawnV1Villagers = false;
+        this.onlySpawnV1Villagers = false;
+        this.vanillaVersion = "";
         //this.runtimeIdTable = null;
     }
 
@@ -137,7 +139,7 @@ class StartGamePacket extends DataPacket {
         [this.spawnX, this.spawnY, this.spawnZ] = this.readBlockPosition();
         this.hasAchievementsDisabled = this.readBool();
         this.time = this.readVarInt();
-        this.eduMode = this.readBool();
+        this.eduEditionOffer = this.readInt();
         this.hasEduFeatureEnabled = this.readBool();
         this.rainLevel = this.readLFloat();
         this.lightningLevel = this.readLFloat();
@@ -160,22 +162,27 @@ class StartGamePacket extends DataPacket {
         this.isFromWorldTemplate = this.readBool();
         this.isWorldTemplateOptionLocked = this.readBool();
 
+        this.vanillaVersion = this.readString();
+
         this.levelId = this.readString();
         this.levelName = this.readString();
         this.premiumWorldTemplateId = this.readString();
         this.isTrial = this.readBool();
+        this.isMovementServerAuthoritative = this.readBool();
         this.currentTick = this.readLLong();
 
         this.enchantmentSeed = this.readVarInt();
 
-        this.blockTable = [];
-        for (let i = 0, count = this.readUnsignedVarInt(); i < count; ++i){
-            let id = this.readString();
-            let data = this.readSignedLShort();
-            let unknown = this.readSignedLShort();
+        this.multiplayerCorrelationId = this.readString();
 
-            this.blockTable[i] = {"name": id, "data": data, "legacy_id": unknown};
-        }
+        // this.blockTable = [];
+        // for (let i = 0, count = this.readUnsignedVarInt(); i < count; ++i){
+        //     let id = this.readString();
+        //     let data = this.readSignedLShort();
+        //     let unknown = this.readSignedLShort();
+        //
+        //     this.blockTable[i] = {"name": id, "data": data, "legacy_id": unknown};
+        // }
         /*this.itemTable = [];
         for (let i = 0, count = this.readUnsignedVarInt(); i < count; ++i){
             let id = this.readString();
@@ -205,7 +212,7 @@ class StartGamePacket extends DataPacket {
         this.writeBlockPosition(this.spawnX, this.spawnY, this.spawnZ);
         this.writeBool(this.hasAchievementsDisabled);
         this.writeVarInt(this.time);
-        this.writeBool(this.eduMode);
+        this.writeVarInt(this.eduEditionOffer);
         this.writeBool(this.hasEduFeatureEnabled);
         this.writeLFloat(this.rainLevel);
         this.writeLFloat(this.lightningLevel);
@@ -227,11 +234,14 @@ class StartGamePacket extends DataPacket {
         this.writeBool(this.useMsaGamertagsOnly);
         this.writeBool(this.isFromWorldTemplate);
         this.writeBool(this.isWorldTemplateOptionLocked);
+        this.writeBool(this.onlySpawnV1Villagers);
 
+        this.writeString(this.vanillaVersion);
         this.writeString(this.levelId);
         this.writeString(this.levelName);
         this.writeString(this.premiumWorldTemplateId);
         this.writeBool(this.isTrial);
+        this.writeBool(this.isMovementServerAuthoritative);
         this.writeLLong(this.currentTick);
 
         this.writeVarInt(this.enchantmentSeed);

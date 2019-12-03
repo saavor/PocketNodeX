@@ -26,7 +26,7 @@ class MobEffectPacket extends DataPacket {
     }
 
     _decodePayload() {
-        this.entityRuntimeId = this.getEntityRuntimeId();
+        this.entityRuntimeId = this.readEntityRuntimeId();
         this.eventId = this.readByte();
         this.effectId = this.readVarInt();
         this.amplifier = this.readVarInt();

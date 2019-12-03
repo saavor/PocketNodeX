@@ -3,6 +3,8 @@ const UUID = require("../utils/UUID");
 const Isset = require("../utils/methods/Isset");
 const TextFormat = require("../utils/TextFormat");
 const Base64 = require("../utils/Base64");
+const SkinAnimation = require("../utils/SkinAnimation");
+const SerializedImage = require("../utils/SerializedImage");
 
 /* Events */
 const PlayerJoinEvent = require("../event/player/PlayerJoinEvent");
@@ -338,12 +340,23 @@ class Player extends multiple(Human, CommandSender) {
         //this._uuid = UUID.fromString(packet.clientUUID);
         //this._rawUUID = this._uuid.toBinary();
 
+        let animations = [];
+        packet.clientData["AnimatedImageData"].forEach(animatedData => {
+            animations.push(new SkinAnimation(new SerializedImage(animatedData["ImageWidth"], animatedData["ImageHeight"], Base64.decode(animatedData["Image"])), animatedData["Type"], animatedData["Frames"]));
+        });
+
         let skin = new Skin(
             packet.clientData["SkinId"],
-            Base64.decode(packet.clientData["SkinData"] ? packet.clientData["SkinData"] : ""),
-            Base64.decode(packet.clientData["CapeData"] ? packet.clientData["CapeData"] : ""),
-            packet.clientData["SkinGeometryName"],
-            Base64.decode(packet.clientData["SkinGeometry"] ? packet.clientData["SkinGeometry"] : "")
+            Base64.decode(packet.clientData["SkinResourcePatch"] || ""),
+            new SerializedImage(packet.clientData["SkinImageHeight"], packet.clientData["SkinImageWidth"], Base64.decode(packet.clientData["SkinData" || ""])),
+            animations,
+            new SerializedImage(packet.clientData["CapeImageHeight"], packet.clientData["CapeImageWidth"], Base64.decode(packet.clientData["CapeData"] || "")),
+            Base64.decode(packet.clientData["SkinGeometryData"] || ""),
+            Base64.decode(packet.clientData["SkinAnimationData"] || ""),
+            packet.clientData["PremiumSkin"] || false,
+            packet.clientData["PersonaSkin"] || false,
+            packet.clientData["CapeOnClassicSkin"] || false,
+            packet.clientData["CapeId"] || ""
         );
 
         if(!skin.isValid()){
@@ -695,7 +708,7 @@ class Player extends multiple(Human, CommandSender) {
         [pk.spawnX, pk.spawnY, pk.spawnZ] = [0, 6.5, 0];
         pk.hasAchievementsDisabled = true;
         pk.time = 0;
-        pk.eduMode = false;
+        pk.eduEditionOffer = 0;
         pk.rainLevel = 0;
         pk.lightningLevel = 0;
         pk.commandsEnabled = true;

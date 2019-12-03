@@ -58,7 +58,8 @@ class InventoryTransactionPacket extends DataPacket {
             this.actions.push(new NetworkInventoryAction().read(this));
         }
 
-        this.trData = new this();
+        //TODO
+        // this.trData = new InventoryTransactionPacket();
         
         switch (this.transactionType) {
             //TODO

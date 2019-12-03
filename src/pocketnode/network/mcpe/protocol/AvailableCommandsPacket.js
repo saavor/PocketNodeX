@@ -23,26 +23,26 @@ class AvailableCommandsPacket extends DataPacket {
      * Basic parameter types. These must be combined with the ARG_FLAG_VALID constant.
      * ARG_FLAG_VALID | (type const)
      */
-    static get ARG_TYPE_INT            () {return 0x01};
-    static get ARG_TYPE_FLOAT          () {return 0x02};
-    static get ARG_TYPE_VALUE          () {return 0x03};
-    static get ARG_TYPE_WILDCARD_INT   () {return 0x04};
-    static get ARG_TYPE_OPERATOR       () {return 0x05};
-    static get ARG_TYPE_TARGET         () {return 0x06};
+    static get ARG_TYPE_INT() {return 0x01};
+    static get ARG_TYPE_FLOAT() {return 0x02};
+    static get ARG_TYPE_VALUE() {return 0x03};
+    static get ARG_TYPE_WILDCARD_INT() {return 0x04};
+    static get ARG_TYPE_OPERATOR() {return 0x05};
+    static get ARG_TYPE_TARGET() {return 0x06};
 
     static get ARG_TYPE_FILEPATH() {return 0x0e};
 
-    static get ARG_TYPE_STRING  () {return 0x1b};
+    static get ARG_TYPE_STRING() {return 0x1b};
 
     static get ARG_TYPE_POSITION() {return 0x1d};
 
-    static get ARG_TYPE_MESSAGE () {return 0x20};
+    static get ARG_TYPE_MESSAGE() {return 0x20};
 
-    static get ARG_TYPE_RAWTEXT () {return 0x22};
+    static get ARG_TYPE_RAWTEXT() {return 0x22};
 
-    static get ARG_TYPE_JSON    () {return 0x25};
+    static get ARG_TYPE_JSON() {return 0x25};
 
-    static get ARG_TYPE_COMMAND () {return 0x2c};
+    static get ARG_TYPE_COMMAND() {return 0x2c};
 
     /**
      * Enums are a little different: they are composed as follows:
@@ -205,6 +205,7 @@ class AvailableCommandsPacket extends DataPacket {
         retval.aliases = this.enums[this.readLInt()] || null;
 
         for(let overloadIndex = 0, overloadCount = this.readUnsignedVarInt(); overloadIndex < overloadCount; ++overloadIndex){
+            retval.overloads[overloadIndex] = [];
             for(let paramIndex = 0, paramCount = this.readUnsignedVarInt(); paramIndex < paramCount; ++paramIndex){
                 let parameter = new CommandParameter();
                 parameter.paramName = this.readString();

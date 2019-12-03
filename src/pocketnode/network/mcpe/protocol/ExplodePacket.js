@@ -29,24 +29,24 @@ class ExplodePacket extends DataPacket {
     }
 
     _decodePayload() {
-        this.position = this.getVector3Obj();
+        this.position = this.readVector3();
         this.radius = (this.readVarInt() / 32);
         let count = this.readUnsignedVarInt();
         for (let i = 0; i < count; ++i){
             let x, y, z;
             x = y = z = null;
-            this.getSignedBlockPosition(x, y, z);
+            this.readSignedBlockPosition(x, y, z);
             this.records[i] = new Vector3(x, y, z);
         }
     }
 
     _encodePayload() {
-        this.writeVector3Obj(this.position);
+        this.readVector3(this.position);
         this.writeVarInt(this.radius * 32);
         this.writeUnsignedVarInt(this.records.length);
         if (this.records.length > 0){
             this.records.forEach(record => {
-               this.getSignedBlockPosition(record.x, record.y, record.z);
+               this.readSignedBlockPosition(record.x, record.y, record.z);
             });
         }
     }
