@@ -2,25 +2,18 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="fae901bb-40a3-4b37-a599-b130e892034e" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/BlockPickRequestPacket.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/PlayerInputPacket.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pocketnode/utils/SerializedImage.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pocketnode/utils/SkinAnimation.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pocketnode/network/PlayerNetworkSessionAdapter.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pocketnode/network/PlayerNetworkSessionAdapter.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pocketnode/network/mcpe/NetworkBinaryStream.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pocketnode/network/mcpe/NetworkBinaryStream.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/ActorFallPacket.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/ActorFallPacket.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/BlockEventPacket.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/BlockEventPacket.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/CommandOutputPacket.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/CommandOutputPacket.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/CommandRequestPacket.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/CommandRequestPacket.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/LevelChunkPacket.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/LevelChunkPacket.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/PacketPool.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/PacketPool.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/PlayerActionPacket.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/PlayerActionPacket.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pocketnode/entity/Skin.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pocketnode/entity/Skin.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/AvailableCommandsPacket.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/AvailableCommandsPacket.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/ExplodePacket.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/ExplodePacket.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/InventoryTransactionPacket.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/InventoryTransactionPacket.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/MobEffectPacket.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/MobEffectPacket.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/StartGamePacket.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/StartGamePacket.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pocketnode/player/Player.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pocketnode/player/Player.js" afterDir="false" />
     </list>
-    <ignored path="$PROJECT_DIR$/.tmp/" />
-    <ignored path="$PROJECT_DIR$/temp/" />
-    <ignored path="$PROJECT_DIR$/tmp/" />
-    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -29,19 +22,6 @@
   <component name="FavoritesManager">
     <favorites_list name="PocketNode" />
   </component>
-  <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/StartGamePacket.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="364">
-              <caret line="222" column="51" lean-forward="true" selection-start-line="222" selection-start-column="51" selection-end-line="222" selection-end-column="51" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
-  </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
@@ -49,128 +29,8 @@
       </list>
     </option>
   </component>
-  <component name="FindInProjectRecents">
-    <findStrings>
-      <find>A player j</find>
-      <find>sendDa</find>
-      <find>sendData</find>
-      <find>setLoc</find>
-      <find>sendGa</find>
-      <find>autojum</find>
-      <find>status</find>
-      <find>sendS</find>
-      <find>sendA</find>
-      <find>StringTag</find>
-      <find>Compoun</find>
-      <find>sendSe</find>
-      <find>TODO</find>
-      <find>setBlock</find>
-      <find>Command</find>
-      <find>return9</find>
-      <find>actorEv</find>
-      <find>sendSett</find>
-      <find>;</find>
-      <find>Biom</find>
-      <find>commandReq</find>
-      <find>command</find>
-      <find>Bina</find>
-      <find>writeGameRules</find>
-      <find>writeStr</find>
-      <find>write</find>
-      <find>PLAYER_S</find>
-      <find>Plays</find>
-      <find>interac</find>
-      <find>chat</find>
-    </findStrings>
-    <replaceStrings>
-      <replace>static get</replace>
-      <replace>() {return</replace>
-      <replace>}</replace>
-      <replace>} static get</replace>
-      <replace>}; static get</replace>
-      <replace>list</replace>
-      <replace>{}</replace>
-      <replace>=</replace>
-      <replace>_attributes</replace>
-      <replace>self</replace>
-      <replace>thi</replace>
-      <replace>write</replace>
-      <replace>);</replace>
-      <replace>;</replace>
-      <replace>./</replace>
-      <replace>.</replace>
-      <replace>ACTOR</replace>
-      <replace>Info.</replace>
-      <replace>mcpe</replace>
-      <replace>minecraft</replace>
-      <replace>};</replace>
-      <replace>require</replace>
-      <replace>Attribute</replace>
-      <replace>this</replace>
-      <replace>req</replace>
-      <replace>re</replace>
-      <replace>return 9</replace>
-    </replaceStrings>
-  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
-  </component>
-  <component name="IdeDocumentHistory">
-    <option name="CHANGED_PATHS">
-      <list>
-        <option value="$PROJECT_DIR$/src/pocketnode/item/Tool.js" />
-        <option value="$PROJECT_DIR$/src/pocketnode/block/BlockToolType.js" />
-        <option value="$PROJECT_DIR$/src/pocketnode/item/Shovel.js" />
-        <option value="$PROJECT_DIR$/src/pocketnode/level/Position.js" />
-        <option value="$PROJECT_DIR$/src/pocketnode/block/Block.js" />
-        <option value="$PROJECT_DIR$/src/pocketnode/level/format/Chunk.js" />
-        <option value="$PROJECT_DIR$/src/pocketnode/level/format/SubChunkInterface.js" />
-        <option value="$PROJECT_DIR$/src/pocketnode/level/Level.js" />
-        <option value="$PROJECT_DIR$/src/pocketnode/level/format/SubChunk.js" />
-        <option value="$PROJECT_DIR$/src/pocketnode/level/format/EmptySubChunk.js" />
-        <option value="$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/LevelEventPacket.js" />
-        <option value="$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/ActorEventPacket.js" />
-        <option value="$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/AdventureSettingsPacket.js" />
-        <option value="$PROJECT_DIR$/src/pocketnode/utils/methods/Globals.js" />
-        <option value="$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/InventoryTransactionPacket.js" />
-        <option value="$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/types/NetworkInventoryAction.js" />
-        <option value="$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/MobEquipmentPacket.js" />
-        <option value="$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/MobArmorEquipmentPacket.js" />
-        <option value="$PROJECT_DIR$/src/pocketnode/inventory/transaction/action/SlotChangeAction.js" />
-        <option value="$PROJECT_DIR$/src/pocketnode/inventory/transaction/action/InventoryAction.js" />
-        <option value="$PROJECT_DIR$/src/pocketnode/command/defaults/PluginsCommand.js" />
-        <option value="$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/AvailableActorIdentifiersPacket.js" />
-        <option value="$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/BiomeDefinitionListPacket.js" />
-        <option value="$PROJECT_DIR$/../PocketNode-1-e5fe4f63c49e374b8e93861b7eeb251596318a12/src/pocketnode/network/minecraft/protocol/types/ChunkCacheBlob.js" />
-        <option value="$PROJECT_DIR$/src/pocketnode/command/CommandMap.js" />
-        <option value="$PROJECT_DIR$/src/pocketnode/network/RakNetAdapter.js" />
-        <option value="$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/DataPacket.js" />
-        <option value="$PROJECT_DIR$/src/pocketnode/item/ItemFactory.js" />
-        <option value="$PROJECT_DIR$/src/binarystream/BinaryStream.js" />
-        <option value="$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/TextPacket.js" />
-        <option value="$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/InteractPacket.js" />
-        <option value="$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/MovePlayerPacket.js" />
-        <option value="$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/SetLocalPlayerAsInitializedPacket.js" />
-        <option value="$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/LevelSoundEventPacket.js" />
-        <option value="$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/LevelSoundEventPacketV1.js" />
-        <option value="$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/UpdateBlockPacket.js" />
-        <option value="$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/UpdateAttributesPacket.js" />
-        <option value="$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/CommandRequestPacket.js" />
-        <option value="$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/CommandOutputPacket.js" />
-        <option value="$PROJECT_DIR$/src/pocketnode/network/mcpe/NetworkBinaryStream.js" />
-        <option value="$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/BlockEventPacket.js" />
-        <option value="$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/BlockPickRequestPacket.js" />
-        <option value="$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/ActorFallPacket.js" />
-        <option value="$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/PlayerInputPacket.js" />
-        <option value="$PROJECT_DIR$/src/pocketnode/network/PlayerNetworkSessionAdapter.js" />
-        <option value="$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/LevelChunkPacket.js" />
-        <option value="$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/PacketPool.js" />
-        <option value="$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/PlayerActionPacket.js" />
-        <option value="$PROJECT_DIR$/src/pocketnode/player/Player.js" />
-        <option value="$PROJECT_DIR$/src/pocketnode/resources/runtimeid_table.json" />
-        <option value="$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/StartGamePacket.js" />
-      </list>
-    </option>
   </component>
   <component name="JsFlowSettings">
     <service-enabled>true</service-enabled>
@@ -181,108 +41,32 @@
   <component name="PackageJsonUpdateNotifier">
     <dismissed value="$PROJECT_DIR$/package.json" />
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-8" />
-    <option name="y" value="-8" />
-    <option name="width" value="1936" />
-    <option name="height" value="1056" />
-  </component>
+  <component name="ProjectId" id="1UUFkTBvJhVgepNilE9ciAClb3S" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="2" id="Add" />
   </component>
-  <component name="ProjectView">
-    <navigator proportions="" version="1">
-      <foldersAlwaysOnTop value="true" />
-    </navigator>
-    <panes>
-      <pane id="ProjectPane">
-        <subPane>
-          <expand>
-            <path>
-              <item name="PocketNodeX" type="b2602c69:ProjectViewProjectNode" />
-              <item name="PocketNodeX" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="PocketNodeX" type="b2602c69:ProjectViewProjectNode" />
-              <item name="PocketNodeX" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="PocketNodeX" type="b2602c69:ProjectViewProjectNode" />
-              <item name="PocketNodeX" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="binarystream" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="PocketNodeX" type="b2602c69:ProjectViewProjectNode" />
-              <item name="PocketNodeX" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="pocketnode" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="PocketNodeX" type="b2602c69:ProjectViewProjectNode" />
-              <item name="PocketNodeX" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="pocketnode" type="462c0819:PsiDirectoryNode" />
-              <item name="network" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="PocketNodeX" type="b2602c69:ProjectViewProjectNode" />
-              <item name="PocketNodeX" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="pocketnode" type="462c0819:PsiDirectoryNode" />
-              <item name="network" type="462c0819:PsiDirectoryNode" />
-              <item name="mcpe" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="PocketNodeX" type="b2602c69:ProjectViewProjectNode" />
-              <item name="PocketNodeX" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="pocketnode" type="462c0819:PsiDirectoryNode" />
-              <item name="network" type="462c0819:PsiDirectoryNode" />
-              <item name="mcpe" type="462c0819:PsiDirectoryNode" />
-              <item name="protocol" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="PocketNodeX" type="b2602c69:ProjectViewProjectNode" />
-              <item name="PocketNodeX" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="pocketnode" type="462c0819:PsiDirectoryNode" />
-              <item name="network" type="462c0819:PsiDirectoryNode" />
-              <item name="mcpe" type="462c0819:PsiDirectoryNode" />
-              <item name="protocol" type="462c0819:PsiDirectoryNode" />
-              <item name="types" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="PocketNodeX" type="b2602c69:ProjectViewProjectNode" />
-              <item name="PocketNodeX" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="pocketnode" type="462c0819:PsiDirectoryNode" />
-              <item name="player" type="462c0819:PsiDirectoryNode" />
-            </path>
-          </expand>
-          <select />
-        </subPane>
-      </pane>
-      <pane id="Scope" />
-    </panes>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="editor.config.ad.shown" value="true" />
-    <property name="javascript.nodejs.core.library.configured.version" value="10.16.0" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../PocketNode-stable" />
+    <property name="javascript.nodejs.core.library.configured.version" value="12.13.1" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/start.js" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
     <property name="node.js.path.for.package.tslint" value="project" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
+    <property name="nodejs_interpreter_path" value="C:/Program Files/nodejs/node" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="nodejs_package_manager_path" value="npm" />
-    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
+    <property name="settings.editor.selected.configurable" value="vcs.Git" />
     <property name="ts.external.directory.path" value="C:\Program Files\JetBrains\WebStorm 2019.1.3\plugins\JavaScriptLanguage\jsLanguageServicesImpl\external" />
   </component>
   <component name="RecentsManager">
@@ -297,15 +81,20 @@
       <recent name="C:\Users\Enrico\Desktop\PocketNode\src\pocketnode\block" />
     </key>
   </component>
-  <component name="RunDashboard">
-    <option name="ruleStates">
+  <component name="RunManager">
+    <configuration name="start.js" type="NodeJSConfigurationType" nameIsGenerated="true" path-to-js-file="start.js" working-dir="$PROJECT_DIR$">
+      <method v="2" />
+    </configuration>
+  </component>
+  <component name="ServiceViewManager">
+    <option name="viewStates">
       <list>
-        <RuleState>
-          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
-        </RuleState>
-        <RuleState>
-          <option name="name" value="StatusDashboardGroupingRule" />
-        </RuleState>
+        <serviceView>
+          <treeState>
+            <expand />
+            <select />
+          </treeState>
+        </serviceView>
       </list>
     </option>
   </component>
@@ -376,381 +165,45 @@
       <workItem from="1566728803774" duration="19460000" />
       <workItem from="1566826339197" duration="1909000" />
       <workItem from="1566832726879" duration="3059000" />
+      <workItem from="1575403420362" duration="4850000" />
     </task>
     <servers />
-  </component>
-  <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="418277000" />
-  </component>
-  <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
-    <editor active="true" />
-    <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.4973913" visible="true" weight="0.17910448" />
-      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info id="npm" order="2" side_tool="true" />
-      <window_info id="Favorites" order="3" sideWeight="0.5026087" side_tool="true" weight="0.31259483" />
-      <window_info anchor="bottom" id="TypeScript" order="0" />
-      <window_info anchor="bottom" id="Message" order="1" />
-      <window_info anchor="bottom" id="Find" order="2" weight="0.3289689" />
-      <window_info anchor="bottom" id="Run" order="3" weight="0.3262295" />
-      <window_info anchor="bottom" id="Debug" order="4" weight="0.4" />
-      <window_info anchor="bottom" id="Cvs" order="5" weight="0.25" />
-      <window_info anchor="bottom" id="Inspection" order="6" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="7" />
-      <window_info anchor="bottom" id="Docker" order="8" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" weight="0.32876712" />
-      <window_info anchor="bottom" id="Version Control" order="10" weight="0.3295082" />
-      <window_info anchor="bottom" id="Terminal" order="11" weight="0.3294509" />
-      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
-      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
-      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-      <window_info anchor="right" id="Codota" order="3" weight="0.32980332" />
-    </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
   </component>
-  <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/AvailableCommandsPacket.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-5304" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/AvailableActorIdentifiersPacket.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="299">
-          <caret line="23" lean-forward="true" selection-start-line="23" selection-end-line="23" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/pocketnode/command/defaults/PluginsCommand.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="170">
-          <caret line="10" column="18" lean-forward="true" selection-start-line="10" selection-start-column="18" selection-end-line="10" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/pocketnode/command/Command.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="364">
-          <caret line="94" column="6" lean-forward="true" selection-start-line="94" selection-start-column="6" selection-end-line="94" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/pocketnode/command/CommandMap.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="178">
-          <caret line="118" column="50" lean-forward="true" selection-start-line="118" selection-start-column="50" selection-end-line="118" selection-end-column="50" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/pocketnode/network/mcpe/Info.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="246">
-          <caret line="27" selection-start-line="27" selection-end-line="27" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/pocketnode/command/defaults/TitleCommand.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="391">
-          <caret line="23" column="30" lean-forward="true" selection-start-line="23" selection-start-column="30" selection-end-line="23" selection-end-column="30" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/ExplodePacket.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="238">
-          <caret line="26" column="26" lean-forward="true" selection-start-line="26" selection-start-column="26" selection-end-line="26" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/pocketnode/network/mcpe/NetworkSession.js">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/pocketnode/item/ItemFactory.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="297">
-          <caret line="41" lean-forward="true" selection-start-line="41" selection-end-line="41" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/raknet/server/OfflineMessageHandler.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-13" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/raknet/protocol/EncapsulatedPacket.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="348">
-          <caret line="52" column="26" selection-start-line="52" selection-start-column="26" selection-end-line="52" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/raknet/protocol/Packet.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="32" selection-start-column="32" selection-end-column="32" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/raknet/server/SessionManager.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="467">
-          <caret line="79" column="13" lean-forward="true" selection-start-line="79" selection-start-column="13" selection-end-line="79" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/raknet/protocol/AcknowledgementPacket.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="8" column="5" lean-forward="true" selection-start-line="8" selection-start-column="5" selection-end-line="8" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/BatchPacket.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="15" column="16" lean-forward="true" selection-start-line="15" selection-start-column="16" selection-end-line="15" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$APPLICATION_CONFIG_DIR$/javascript/nodejs/10.16.0/node-typings/node_modules/@types/node/globals.d.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="195">
-          <caret line="191" column="4" selection-start-line="191" selection-start-column="4" selection-end-line="191" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/pocketnode/network/RakNetAdapter.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="30" column="5" lean-forward="true" selection-start-line="30" selection-start-column="5" selection-end-line="30" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/pocketnode/Server.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="551">
-          <caret line="460" column="33" lean-forward="true" selection-start-line="460" selection-start-column="33" selection-end-line="460" selection-end-column="33" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/pocketnode/PocketNode.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="187">
-          <caret line="11" column="27" lean-forward="true" selection-start-line="11" selection-start-column="27" selection-end-line="11" selection-end-column="27" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/TextPacket.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="378">
-          <caret line="92" column="25" lean-forward="true" selection-start-line="92" selection-start-column="25" selection-end-line="92" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/node_modules/pocketnode-binarystream/src/BinaryStream.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="221">
-          <caret line="13" column="19" selection-start-line="13" selection-start-column="19" selection-end-line="13" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/binarystream/BinaryStream.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-153">
-          <caret line="12" column="28" lean-forward="true" selection-start-line="12" selection-start-column="28" selection-end-line="12" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/DataPacket.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="85">
-          <caret line="5" column="29" selection-start-line="5" selection-start-column="29" selection-end-line="5" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/PlayStatusPacket.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="19" column="5" lean-forward="true" selection-start-line="19" selection-start-column="5" selection-end-line="19" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/InteractPacket.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="61">
-          <caret line="24" column="20" selection-start-line="24" selection-start-column="20" selection-end-line="24" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/types/CommandOriginData.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="483">
-          <caret line="31" selection-start-line="31" selection-end-line="31" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/MovePlayerPacket.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1190">
-          <caret line="70" column="5" selection-start-line="70" selection-start-column="5" selection-end-line="70" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/SetLocalPlayerAsInitializedPacket.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="272">
-          <caret line="16" selection-start-line="16" selection-end-line="16" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/LevelSoundEventPacket.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="5253">
-          <caret line="309" column="39" selection-start-line="309" selection-start-column="39" selection-end-line="309" selection-end-column="39" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/LevelSoundEventPacketV1.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="510">
-          <caret line="30" selection-start-line="30" selection-end-line="30" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/types/CommandData.js">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/UpdateSoftEnumPacket.js">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/UpdateBlockPacket.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="714">
-          <caret line="42" column="55" selection-start-line="42" selection-start-column="55" selection-end-line="42" selection-end-column="55" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/UpdateAttributesPacket.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="12" selection-start-line="12" selection-end-line="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/CommandRequestPacket.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="15" column="19" selection-start-line="15" selection-start-column="19" selection-end-line="15" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/CommandOutputPacket.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="704">
-          <caret line="73" column="29" lean-forward="true" selection-start-line="73" selection-start-column="29" selection-end-line="73" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/BlockEventPacket.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="340">
-          <caret line="20" lean-forward="true" selection-start-line="20" selection-end-line="20" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/pocketnode/network/mcpe/NetworkBinaryStream.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="214">
-          <caret line="232" column="35" lean-forward="true" selection-start-line="232" selection-start-column="35" selection-end-line="232" selection-end-column="35" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/ActorFallPacket.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="561">
-          <caret line="33" column="28" lean-forward="true" selection-start-line="33" selection-start-column="28" selection-end-line="33" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/PlayerHotbarPacket.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="17" column="36" lean-forward="true" selection-start-line="17" selection-start-column="36" selection-end-line="17" selection-end-column="36" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/BlockPickRequestPacket.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="476">
-          <caret line="28" lean-forward="true" selection-start-line="28" selection-end-line="28" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/PlayerInputPacket.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="493">
-          <caret line="29" lean-forward="true" selection-start-line="29" selection-end-line="29" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/LevelEventPacket.js">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/pocketnode/network/PlayerNetworkSessionAdapter.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="383">
-          <caret line="84" column="21" lean-forward="true" selection-start-line="84" selection-start-column="21" selection-end-line="84" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/PacketPool.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="397">
-          <caret line="114" column="45" lean-forward="true" selection-start-line="114" selection-start-column="45" selection-end-line="114" selection-end-column="45" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/pocketnode/resources/runtimeid_table.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="517">
-          <caret line="16541" column="3" lean-forward="true" selection-start-line="16541" selection-start-column="3" selection-end-line="16541" selection-end-column="3" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/PlayerActionPacket.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="731">
-          <caret line="64" column="35" selection-start-line="64" selection-start-column="35" selection-end-line="64" selection-end-column="35" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/pocketnode/player/Player.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="70">
-          <caret line="1112" column="18" lean-forward="true" selection-start-line="1112" selection-start-column="18" selection-end-line="1112" selection-end-column="18" />
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/LevelChunkPacket.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="6" column="47" lean-forward="true" selection-start-line="6" selection-start-column="47" selection-end-line="6" selection-end-column="47" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/StartGamePacket.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="364">
-          <caret line="222" column="51" lean-forward="true" selection-start-line="222" selection-start-column="51" selection-end-line="222" selection-end-column="51" />
-        </state>
-      </provider>
-    </entry>
+  <component name="WindowStateProjectService">
+    <state x="550" y="25" key="#Node.js_and_NPM" timestamp="1575404138913">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state x="550" y="25" key="#Node.js_and_NPM/0.0.1366.728@0.0.1366.728" timestamp="1575404138913" />
+    <state x="137" y="18" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1575404205133">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state x="137" y="18" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1366.728@0.0.1366.728" timestamp="1575404205133" />
+    <state x="463" y="118" key="FileChooserDialogImpl" timestamp="1575404203604">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state x="463" y="118" key="FileChooserDialogImpl/0.0.1366.728@0.0.1366.728" timestamp="1575404203604" />
+    <state width="661" height="177" key="GridCell.Tab.0.bottom" timestamp="1575404893588">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state width="661" height="177" key="GridCell.Tab.0.bottom/0.0.1366.728@0.0.1366.728" timestamp="1575404893588" />
+    <state width="661" height="177" key="GridCell.Tab.0.center" timestamp="1575404893588">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state width="661" height="177" key="GridCell.Tab.0.center/0.0.1366.728@0.0.1366.728" timestamp="1575404893588" />
+    <state width="661" height="177" key="GridCell.Tab.0.left" timestamp="1575404893588">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state width="661" height="177" key="GridCell.Tab.0.left/0.0.1366.728@0.0.1366.728" timestamp="1575404893588" />
+    <state width="661" height="177" key="GridCell.Tab.0.right" timestamp="1575404893588">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state width="661" height="177" key="GridCell.Tab.0.right/0.0.1366.728@0.0.1366.728" timestamp="1575404893588" />
+    <state x="184" y="6" key="SettingsEditor" timestamp="1575403725437">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state x="184" y="6" key="SettingsEditor/0.0.1366.728@0.0.1366.728" timestamp="1575403725437" />
   </component>
 </project>
