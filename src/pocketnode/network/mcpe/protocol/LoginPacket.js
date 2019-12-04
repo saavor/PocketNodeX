@@ -22,11 +22,12 @@ class LoginPacket extends DataPacket {
         this.identityPublicKey = "";
         this.serverAddress = "";
         this.locale = "";
-        this.skipVerification = false;
 
         this.chainData = [];
         this.clientDataJwt = "";
         this.clientData = [];
+
+        this.skipVerification = false;
     }
 
     constructor(){
@@ -72,7 +73,7 @@ class LoginPacket extends DataPacket {
 
                 if (hasExtraData){
                     // error to handle
-                    this.console.info("Found 'extraData' multiple times in key chain");
+                    console.log("Found 'extraData' multiple times in key chain");
                 }
 
                 hasExtraData = true;
@@ -97,10 +98,10 @@ class LoginPacket extends DataPacket {
         this.clientDataJwt = buffer.read(buffer.readLInt()).toString();
         this.clientData = Utils.decodeJWT(this.clientDataJwt);
 
-        this.clientId = Isset(this.clientData["ClientRandomId"]) ? this.clientData["ClientRandomId"] : null;
-        this.serverAddress = Isset(this.clientData["ServerAddress"]) ? this.clientData["ServerAddress"] : null;
+        this.clientId = this.clientData["ClientRandomId"] || null;
+        this.serverAddress = this.clientData["ServerAddress"] || null;
 
-        this.locale = Isset(this.clientData["LanguageCode"] ? this.clientData["LanguageCode"] : null);
+        this.locale = this.clientData["LanguageCode"] || null;
     }
 
     _encodePayload() {

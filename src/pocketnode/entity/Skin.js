@@ -92,6 +92,10 @@ class Skin {
         return this._premium;
     }
 
+    getPersona() {
+        return this._persona;
+    }
+
     getCapeOnClassic() {
         return this._capeOnClassic;
     }

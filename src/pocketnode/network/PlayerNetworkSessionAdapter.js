@@ -54,6 +54,8 @@ class PlayerNetworkSessionAdapter{
     }
 
     handleLogin(packet){
+
+        console.log(packet);
         //CheckTypes([LoginPacket, packet]);
 
         return this.player.handleLogin(packet);
@@ -97,6 +99,10 @@ class PlayerNetworkSessionAdapter{
     handleSetLocalPlayerAsInitialized(packet){
         this.player.doFirstSpawn();
         return true;
+    }
+
+    handleInventoryTransaction(packet) {
+        //TODO
     }
 
     handlePlayerSkin(packet){

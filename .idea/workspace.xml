@@ -2,17 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="fae901bb-40a3-4b37-a599-b130e892034e" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/pocketnode/utils/SerializedImage.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pocketnode/utils/SkinAnimation.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pocketnode/entity/Skin.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pocketnode/entity/Skin.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/AvailableCommandsPacket.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/AvailableCommandsPacket.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/ExplodePacket.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/ExplodePacket.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pocketnode/network/PlayerNetworkSessionAdapter.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pocketnode/network/PlayerNetworkSessionAdapter.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/InventoryTransactionPacket.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/InventoryTransactionPacket.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/MobEffectPacket.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/MobEffectPacket.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/StartGamePacket.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/StartGamePacket.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pocketnode/player/Player.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pocketnode/player/Player.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/LoginPacket.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/LoginPacket.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/PlayerSkinPacket.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/PlayerSkinPacket.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/ResourcePackChunkDataPacket.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pocketnode/network/mcpe/protocol/ResourcePackChunkDataPacket.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -165,7 +161,8 @@
       <workItem from="1566728803774" duration="19460000" />
       <workItem from="1566826339197" duration="1909000" />
       <workItem from="1566832726879" duration="3059000" />
-      <workItem from="1575403420362" duration="4850000" />
+      <workItem from="1575403420362" duration="10675000" />
+      <workItem from="1575452514463" duration="3344000" />
     </task>
     <servers />
   </component>
@@ -185,22 +182,22 @@
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state x="463" y="118" key="FileChooserDialogImpl/0.0.1366.728@0.0.1366.728" timestamp="1575404203604" />
-    <state width="661" height="177" key="GridCell.Tab.0.bottom" timestamp="1575404893588">
+    <state width="661" height="177" key="GridCell.Tab.0.bottom" timestamp="1575414659366">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="661" height="177" key="GridCell.Tab.0.bottom/0.0.1366.728@0.0.1366.728" timestamp="1575404893588" />
-    <state width="661" height="177" key="GridCell.Tab.0.center" timestamp="1575404893588">
+    <state width="661" height="177" key="GridCell.Tab.0.bottom/0.0.1366.728@0.0.1366.728" timestamp="1575414659366" />
+    <state width="661" height="177" key="GridCell.Tab.0.center" timestamp="1575414659365">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="661" height="177" key="GridCell.Tab.0.center/0.0.1366.728@0.0.1366.728" timestamp="1575404893588" />
-    <state width="661" height="177" key="GridCell.Tab.0.left" timestamp="1575404893588">
+    <state width="661" height="177" key="GridCell.Tab.0.center/0.0.1366.728@0.0.1366.728" timestamp="1575414659365" />
+    <state width="661" height="177" key="GridCell.Tab.0.left" timestamp="1575414659365">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="661" height="177" key="GridCell.Tab.0.left/0.0.1366.728@0.0.1366.728" timestamp="1575404893588" />
-    <state width="661" height="177" key="GridCell.Tab.0.right" timestamp="1575404893588">
+    <state width="661" height="177" key="GridCell.Tab.0.left/0.0.1366.728@0.0.1366.728" timestamp="1575414659365" />
+    <state width="661" height="177" key="GridCell.Tab.0.right" timestamp="1575414659366">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="661" height="177" key="GridCell.Tab.0.right/0.0.1366.728@0.0.1366.728" timestamp="1575404893588" />
+    <state width="661" height="177" key="GridCell.Tab.0.right/0.0.1366.728@0.0.1366.728" timestamp="1575414659366" />
     <state x="184" y="6" key="SettingsEditor" timestamp="1575403725437">
       <screen x="0" y="0" width="1366" height="728" />
     </state>

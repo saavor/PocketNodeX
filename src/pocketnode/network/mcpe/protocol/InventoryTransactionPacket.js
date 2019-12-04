@@ -59,15 +59,52 @@ class InventoryTransactionPacket extends DataPacket {
         }
 
         //TODO
-        // this.trData = new InventoryTransactionPacket();
+        this.trData = clone(new InventoryTransactionPacket());
         
         switch (this.transactionType) {
-            //TODO
+            case InventoryTransactionPacket.TYPE_NORMAL:
+            case InventoryTransactionPacket.TYPE_MISMATCH:
+                break;
+            case InventoryTransactionPacket.TYPE_USE_ITEM:
+                this.trData.actionType = this.readUnsignedVarInt();
+                this.readBlockPosition(this.trData.x, this.trData.y, this.trData.z);
+                this.trData.face = this.readVarInt();
+                this.trData.hotbarSlot = this.readVarInt();
+                this.trData.itemInHand = this.readSlot();
+                this.trData.playerPos = this.readVector3();
+                this.trData.clickPos = this.readVector3();
+                this.trData.blockRuntimeId = this.readUnsignedVarInt();
+                break;
         }
     }
 
     _encodePayload() {
+        this.writeUnsignedVarInt(this.transactionType);
 
+        this.writeUnsignedVarInt(this.actions.length);
+        this.actions.forEach(action => {
+            action.write(this);
+        });
+
+        switch (this.transactionType) {
+            case InventoryTransactionPacket.TYPE_NORMAL:
+            case InventoryTransactionPacket.TYPE_MISMATCH:
+                break;
+            case InventoryTransactionPacket.TYPE_USE_ITEM:
+                this.writeUnsignedVarInt(this.trData.actionType);
+                this.writeBlockPosition(this.trData.x, this.trData.y, this.trData.z);
+                this.writeVarInt(this.trData.face);
+                this.writeVarInt(this.trData.hotbarSlot);
+                this.writeSlot(this.trData.itemInHand);
+                this.writeVector3(this.trData.playerPos);
+                this.writeVector3(this.trData.clickPos);
+                this.writeUnsignedVarInt(this.trData.blockRuntimeId);
+                break;
+        }
+    }
+
+    handle(session) {
+        return session.handleInventoryTransaction(this);
     }
 }
 module.exports = InventoryTransactionPacket;
