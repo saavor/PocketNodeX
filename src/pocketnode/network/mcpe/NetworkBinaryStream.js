@@ -6,6 +6,7 @@ const CommandOriginData = require("./protocol/types/CommandOriginData");
 
 
 class NetworkBinaryStream extends require("../../../binarystream/BinaryStream") {
+
     /**
      * @return {string}
      */

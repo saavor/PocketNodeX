@@ -300,7 +300,6 @@ class Player extends multiple(Human, CommandSender) {
     }
 
     handleLogin(packet) {
-        CheckTypes([LoginPacket, packet]);
 
         if (this.loggedIn) {
             return false;
@@ -337,8 +336,8 @@ class Player extends multiple(Human, CommandSender) {
 
         this._randomClientId = packet.clientId;
 
-        //this._uuid = UUID.fromString(packet.clientUUID);
-        //this._rawUUID = this._uuid.toBinary();
+        this._uuid = UUID.fromString(packet.clientUUID);
+        this._rawUUID = this._uuid.toBinary();
 
         let animations = [];
         packet.clientData["AnimatedImageData"].forEach(animatedData => {

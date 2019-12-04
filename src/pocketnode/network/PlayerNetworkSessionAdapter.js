@@ -54,8 +54,6 @@ class PlayerNetworkSessionAdapter{
     }
 
     handleLogin(packet){
-
-        console.log(packet);
         //CheckTypes([LoginPacket, packet]);
 
         return this.player.handleLogin(packet);
