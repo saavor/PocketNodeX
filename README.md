@@ -18,6 +18,7 @@ PocketNodeX is a server software for Minecraft: Bedrock written in node.js, basi
 - [ ] Full player features (crunch, jump, swimming) handling.
 - [ ] player attributes.
 - [ ] find contributors
+- [x] UUID fix
 
 ## Running
 First Run:
